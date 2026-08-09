@@ -1,0 +1,120 @@
+{
+  "_descrizione": "Profilassi antibiotica chirurgica: un antibiotico definito una volta sola, con dose su peso/BMI, timing di somministrazione, ridose e alternative per allergia. Le alternative si richiamano per 'id' (non si ricopiano). NON riempito: i valori numerici a 0 e i campi vuoti sono placeholder di STRUTTURA, da sostituire con i dati verificati e la fonte corretta.",
+  "_schema_antibiotico": {
+    "id": "identificativo univoco, richiamato da 'allergia.alternative' di altre voci",
+    "nome": "nome molecola",
+    "indicazione": "es. profilassi chirurgica generale | cardiochirurgia | protesi ortopedica | allergia beta-lattamici | ...",
+    "dose": {
+      "valore/min/max": "per range usare min+max; il calcolatore mostra min*peso - max*peso",
+      "unita": "mg/kg | g/kg | mg",
+      "peso": "stringa ('reale'(=TBW) | IBW | LBW | corretto) OPPURE oggetto condizionale { tipo:'condizionale', default:'reale', eccezione:{ condizione:'BMI>=30', usa:'IBW' } } - in tal caso l'app sceglie in automatico dal BMI e lo ESPLICITA",
+      "dose_massima_mg": "tetto assoluto indipendente dal peso; 0 = nessun tetto impostato (placeholder)"
+    },
+    "timing": {
+      "minuti_prima_incisione": "finestra raccomandata di somministrazione prima dell'incisione",
+      "nota": "es. infusione lenta per vancomicina, testo libero"
+    },
+    "ridose": {
+      "ogni_ore": "intervallo di ridosaggio intraoperatorio in ore; 0 = non definito",
+      "sanguinamento_massivo_ml": "soglia di perdita ematica che impone ridose anticipata indipendentemente dall'intervallo; 0 = non definito",
+      "nota": "testo libero"
+    },
+    "allergia": {
+      "alternative": "array di 'id' di altre voci di questo file, da usare in caso di allergia",
+      "nota": "testo libero"
+    },
+    "verificato": "false finche non controllato dal medico",
+    "fonte": "'' finche non assegnata la fonte reale",
+    "revisione": "AAAA-MM alla verifica"
+  },
+  "antibiotici": [
+    {
+      "id": "cefazolina",
+      "nome": "Cefazolina",
+      "indicazione": "profilassi chirurgica generale (prima scelta)",
+      "dose": {
+        "valore": 0,
+        "unita": "mg/kg",
+        "peso": {
+          "tipo": "condizionale",
+          "default": "reale",
+          "eccezione": {
+            "condizione": "BMI>=30",
+            "usa": "IBW"
+          }
+        },
+        "dose_massima_mg": 0
+      },
+      "timing": {
+        "minuti_prima_incisione": 0,
+        "nota": ""
+      },
+      "ridose": {
+        "ogni_ore": 0,
+        "sanguinamento_massivo_ml": 0,
+        "nota": ""
+      },
+      "allergia": {
+        "alternative": ["clindamicina", "vancomicina"],
+        "nota": ""
+      },
+      "verificato": false,
+      "fonte": "",
+      "revisione": ""
+    },
+    {
+      "id": "clindamicina",
+      "nome": "Clindamicina",
+      "indicazione": "alternativa per allergia a beta-lattamici",
+      "dose": {
+        "valore": 0,
+        "unita": "mg/kg",
+        "peso": "reale",
+        "dose_massima_mg": 0
+      },
+      "timing": {
+        "minuti_prima_incisione": 0,
+        "nota": ""
+      },
+      "ridose": {
+        "ogni_ore": 0,
+        "sanguinamento_massivo_ml": 0,
+        "nota": ""
+      },
+      "allergia": {
+        "alternative": ["vancomicina"],
+        "nota": ""
+      },
+      "verificato": false,
+      "fonte": "",
+      "revisione": ""
+    },
+    {
+      "id": "vancomicina",
+      "nome": "Vancomicina",
+      "indicazione": "allergia severa a beta-lattamici / copertura MRSA / protesi",
+      "dose": {
+        "valore": 0,
+        "unita": "mg/kg",
+        "peso": "reale",
+        "dose_massima_mg": 0
+      },
+      "timing": {
+        "minuti_prima_incisione": 0,
+        "nota": "infusione lenta, iniziare con anticipo maggiore rispetto ai beta-lattamici"
+      },
+      "ridose": {
+        "ogni_ore": 0,
+        "sanguinamento_massivo_ml": 0,
+        "nota": ""
+      },
+      "allergia": {
+        "alternative": [],
+        "nota": ""
+      },
+      "verificato": false,
+      "fonte": "",
+      "revisione": ""
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+#calcolatore-infusione {
+  padding: 32px 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#calcolatore-infusione h1 {
+  font-size: 32px;
+  letter-spacing: normal;
+  margin: 0 0 4px;
+}
+
+.sottotitolo {
+  font-size: 14px;
+  color: var(--text);
+  margin: 8px 0 20px;
+}
+
+.diluizione {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.diluizione label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+  flex: 1;
+}
+
+.diluizione-in {
+  font-size: 14px;
+  color: var(--text);
+  padding-bottom: 10px;
+}
+
+.risultato-infusione label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  color: var(--text-h);
+  margin-bottom: 16px;
+}
+
+#calcolatore-infusione input {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.concentrazione-chip {
+  display: inline-block;
+  margin: 0 0 20px;
+}
+
+.modalita {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.modalita-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.modalita-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.risultato-infusione {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.risultato-evidenza {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}

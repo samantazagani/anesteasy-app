@@ -1,0 +1,58 @@
+{
+  "_descrizione": "Casa di TUTTI i farmaci. Ogni farmaco definito una volta sola; le dosi sono legate al contesto. Altri moduli richiamano per 'id'. NON riempito: i valori numerici sono esempi di STRUTTURA, da sostituire con i dati verificati e la fonte corretta.",
+  "_schema_dose": {
+    "contesto": "es. induzione_adulto | mantenimento | pediatrico | arresto | neuroassiale | tci_target | infusione",
+    "valore": "numero (dose tipica; per l'induzione usare min+max per l'intervallo)",
+    "unita": "mg/kg | mcg/kg/min | mg | mcg/ml | ...",
+    "peso": "reale | IBW | LBW | corretto  (quale peso usare nel calcolo)",
+    "min": "estremo inferiore range (per induzione: il calcolatore mostra min*peso)",
+    "max": "estremo superiore range / tetto (per induzione: il calcolatore mostra max*peso)",
+    "modello": "solo TCI: Marsh/Schnider/Minto",
+    "note": "opzionale",
+    "fonte": "id da fonti.json",
+    "revisione": "AAAA-MM"
+  },
+  "_nota_induzione": "Per i farmaci da induzione compilare SEMPRE min e max: il calcolatore dose bolo restituisce l'intervallo (es. 1.5-2.5 mg/kg x peso = X-Y mg), non un valore singolo.",
+  "farmaci": [
+    {
+      "id": "propofol",
+      "nome": "Propofol",
+      "classe": "ipnotico",
+      "dosi": [
+        { "contesto": "induzione_adulto", "valore": 0, "unita": "mg/kg", "peso": "LBW", "min": 0, "max": 0, "fonte": "", "revisione": "" },
+        { "contesto": "infusione_manuale", "valore": 0, "unita": "mg/kg/h", "peso": "reale", "note": "usare il calcolatore infusione propofol (1%/2%) per ml/h", "fonte": "", "revisione": "" },
+        { "contesto": "tci_target", "valore": 0, "unita": "mcg/ml", "modello": "Marsh/Schnider", "note": "induzione vs mantenimento", "fonte": "", "revisione": "" }
+      ]
+    },
+    {
+      "id": "fentanyl",
+      "nome": "Fentanyl",
+      "classe": "oppioide",
+      "dosi": [
+        { "contesto": "bolo_adulto", "valore": 0, "unita": "mcg/kg", "peso": "reale", "fonte": "", "revisione": "" },
+        { "contesto": "neuroassiale", "valore": 0, "unita": "mcg", "note": "intratecale/peridurale", "fonte": "", "revisione": "" }
+      ]
+    },
+    {
+      "id": "remifentanil",
+      "nome": "Remifentanil",
+      "classe": "oppioide",
+      "dosi": [
+        { "contesto": "infusione", "valore": 0, "unita": "mcg/kg/min", "peso": "IBW", "fonte": "", "revisione": "" },
+        { "contesto": "tci_target", "valore": 0, "unita": "ng/ml", "modello": "Minto", "note": "target effect-site; induzione vs mantenimento", "fonte": "", "revisione": "" }
+      ]
+    },
+    {
+      "id": "adrenalina",
+      "nome": "Adrenalina",
+      "classe": "vasoattivo",
+      "dosi": [
+        { "contesto": "infusione", "valore": 0, "unita": "mcg/kg/min", "peso": "reale", "fonte": "", "revisione": "" },
+        { "contesto": "arresto_adulto", "valore": 0, "unita": "mg", "fonte": "", "revisione": "" },
+        { "contesto": "arresto_pediatrico", "valore": 0, "unita": "mg/kg", "peso": "reale", "fonte": "", "revisione": "" },
+        { "contesto": "anafilassi_im", "valore": 0, "unita": "mcg", "fonte": "", "revisione": "" },
+        { "contesto": "neonato", "valore": 0, "unita": "mg/kg", "fonte": "", "revisione": "" }
+      ]
+    }
+  ]
+}

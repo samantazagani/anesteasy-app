@@ -1,0 +1,1246 @@
+{
+  "_stato": "IN REVISIONE. verificato=true = controllato dal medico su Mapar/Manuale. Ipnotici/oppioidi/curari/reversal: verificati. Vasoattivi-emergenza + antagonisti: BOZZA da verificare (naloxone da Mapar p.207).",
+  "_schema_dose": {
+    "contesto": "induzione | sedazione | mantenimento | premedicazione | analgesia | neuroassiale | tci_induzione | tci_mantenimento | carico | infusione | bolo | intubazione | rsi | reversal | arresto | anafilassi | bradicardia | crisi_ipertensiva | antiaritmico | infusione_continua | tampone | ipertermia_maligna | antagonista",
+    "fascia_eta": "pediatrico | adulto (default se assente) | anziano â l'app sceglie dall'eta del paziente; se manca la variante specifica usa 'adulto' (applicando 'aggiustamento_anziano' se presente) e lo ESPLICITA",
+    "aggiustamento_anziano": "modificatore da applicare all'anziano quando NON esiste una voce dedicata, es. '-20..-50%' o testo",
+    "valore/min/max": "per range usare min+max; il calcolatore mostra min*peso - max*peso",
+    "unita": "mg/kg | mcg/kg | mg/kg/h | mcg/kg/min | mg | mcg | mcg/ml | ng/ml",
+    "peso": "stringa ('reale'(=TBW) | IBW | LBW | corretto) OPPURE oggetto condizionale { tipo:'condizionale', default:'reale', eccezione:{ condizione:'BMI>=30', usa:'IBW' } } â in tal caso l'app sceglie in automatico dal BMI e ESPLICITA il peso usato",
+    "via": "IV | IM | os | peridurale | intratecale (default IV se assente)",
+    "modello": "solo TCI",
+    "verificato": "false finche non controllato",
+    "fonte": "'bozza' finche non assegnata la fonte reale",
+    "revisione": "AAAA-MM alla verifica"
+  },
+  "farmaci": [
+    {
+      "id": "propofol",
+      "nome": "Propofol",
+      "classe": "ipnotico",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "fascia_eta": "adulto",
+          "min": 1.5,
+          "max": 2.5,
+          "consigliato": 2,
+          "unita": "mg/kg",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            },
+            "display": "esplicitare il peso usato (es. 'IBW' per obeso)"
+          },
+          "note": "bambini: dose pediatrica 2.5-3 mg/kg",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "35, 41, 78"
+        },
+        {
+          "contesto": "induzione",
+          "fascia_eta": "anziano",
+          "valore": 1,
+          "unita": "mg/kg",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "note": "con oppioide prima dell'induzione",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "78"
+        },
+        {
+          "contesto": "sedazione",
+          "fascia_eta": "adulto",
+          "min": 0.5,
+          "max": 2,
+          "unita": "mg/kg/h",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "35, 41"
+        },
+        {
+          "contesto": "mantenimento",
+          "fascia_eta": "adulto",
+          "min": 3,
+          "max": 12,
+          "consigliato_min": 3,
+          "consigliato_max": 6,
+          "unita": "mg/kg/h",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "note": "TIVA",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "35, 78"
+        },
+        {
+          "contesto": "tci_induzione",
+          "fascia_eta": "adulto",
+          "min": 4,
+          "max": 8,
+          "unita": "mcg/ml",
+          "modello": "Marsh (plasmatica) / Schnider (sito d'azione 3-6; correggere se obeso)",
+          "aggiustamento_anziano": "ridurre il target 20-50% (anche con premed/oppioide/instabile)",
+          "note": "sito d'azione 3-6 mcg/ml",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "212"
+        },
+        {
+          "contesto": "tci_mantenimento",
+          "fascia_eta": "adulto",
+          "min": 2,
+          "max": 8,
+          "unita": "mcg/ml",
+          "note": "regolare in base a EEG/BIS; risveglio 1.5-2.5 mcg/ml; <2 in cardiochirurgia/ASA III-IV",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "213"
+        }
+      ],
+      "calcolatore_infusione": {
+        "descrizione": "infusione TIVA propofol manuale (trasporto / no TCI)",
+        "formula": "ml/h = (dose_mg_kg_h * peso_kg) / concentrazione_mg_ml",
+        "concentrazioni_mg_ml": {
+          "PPF 1%": 10,
+          "PPF 2%": 20
+        },
+        "display": "mostrare sia PPF 1% sia 2%"
+      }
+    },
+    {
+      "id": "midazolam",
+      "nome": "Midazolam",
+      "classe": "ipnotico/benzodiazepina",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "min": 0.2,
+          "max": 0.3,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "raro da solo; per lo piu co-induzione",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "41"
+        },
+        {
+          "contesto": "sedazione",
+          "min": 0.05,
+          "max": 0.2,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "titolato; boli 1-2.5 mg",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "41"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.03,
+          "max": 0.2,
+          "unita": "mg/kg/h",
+          "peso": "reale",
+          "note": "infusione sedazione",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "premedicazione",
+          "min": 0.05,
+          "max": 0.1,
+          "unita": "mg/kg",
+          "via": "IM",
+          "note": "os pediatrico 0.5 mg/kg -> pediatria",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "ketamina",
+      "nome": "Ketamina",
+      "classe": "ipnotico",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "min": 1,
+          "max": 3,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "IM 4-6 mg/kg",
+          "verificato": true,
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "41",
+          "revisione": "2026-07"
+        },
+        {
+          "contesto": "sedazione",
+          "valore": 0.2,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "dose subanestetica/analgesica",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.5,
+          "max": 2,
+          "unita": "mg/kg/h",
+          "peso": "reale",
+          "note": "infusione analgesica 0.1-0.5 mg/kg/h",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "etomidate",
+      "nome": "Etomidate",
+      "classe": "ipnotico",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "min": 0.2,
+          "max": 0.4,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "stabilita emodinamica",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "sedazione",
+          "non_applicabile": true,
+          "motivo": "soppressione surrenalica: non per infusione/sedazione prolungata"
+        },
+        {
+          "contesto": "mantenimento",
+          "non_applicabile": true,
+          "motivo": "soppressione surrenalica: non per mantenimento"
+        }
+      ]
+    },
+    {
+      "id": "dexmedetomidina",
+      "nome": "Dexmedetomidina",
+      "classe": "alfa2-agonista",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "non_applicabile": true,
+          "motivo": "non e un agente di induzione"
+        },
+        {
+          "contesto": "sedazione",
+          "valore": 0.7,
+          "unita": "mcg/kg/h",
+          "peso": "reale",
+          "note": "dose iniziale; titolare in base al livello di sedazione desiderato",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "valore": 0.7,
+          "unita": "mcg/kg/h",
+          "peso": "reale",
+          "note": "= sedazione, titolare",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "fentanyl",
+      "nome": "Fentanyl",
+      "classe": "oppioide",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "min": 1,
+          "max": 5,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "note": "fino a 5-10 per attenuare la risposta alla laringoscopia",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "sedazione",
+          "min": 0.5,
+          "max": 1,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "note": "analgesia procedurale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.5,
+          "max": 2.5,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "note": "boli ripetuti a domanda",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "intratecale",
+          "min": 10,
+          "max": 50,
+          "unita": "mcg",
+          "note": "subaracnoidea",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "peridurale",
+          "min": 0.5,
+          "max": 1,
+          "unita": "mcg/kg",
+          "note": "bolo iniziale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "remifentanil",
+      "nome": "Remifentanil",
+      "classe": "oppioide",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "valore": 1,
+          "unita": "mcg/kg",
+          "peso": "IBW",
+          "note": "in 30 s",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "78"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.05,
+          "max": 0.5,
+          "unita": "mcg/kg/min",
+          "peso": "IBW",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "58"
+        },
+        {
+          "contesto": "tci_induzione",
+          "min": 3,
+          "max": 6,
+          "unita": "ng/ml",
+          "modello": "Minto",
+          "note": "velocita 0.5-1 poi 0.1-0.3 mcg/kg/min",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "214"
+        },
+        {
+          "contesto": "tci_mantenimento",
+          "min": 2,
+          "max": 8,
+          "unita": "ng/ml",
+          "modello": "Minto",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "214"
+        }
+      ]
+    },
+    {
+      "id": "sufentanil",
+      "nome": "Sufentanil",
+      "classe": "oppioide",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "min": 0.1,
+          "max": 0.3,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "56"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.25,
+          "max": 1,
+          "unita": "mcg/kg/h",
+          "peso": "reale",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "56"
+        },
+        {
+          "contesto": "infusione",
+          "unita": "mcg/kg/h",
+          "note": "bolo iniziale 0.5 mcg/kg poi infusione 0.5 mcg/kg/h",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "56"
+        },
+        {
+          "contesto": "tci_induzione",
+          "min": 0.3,
+          "max": 0.4,
+          "unita": "ng/ml",
+          "modello": "Gepts",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "214"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "intratecale",
+          "min": 2.5,
+          "max": 10,
+          "unita": "mcg",
+          "note": "subaracnoidea",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "peridurale",
+          "valore": 0.1,
+          "unita": "mcg/kg",
+          "note": "bolo iniziale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "morfina",
+      "nome": "Morfina",
+      "classe": "oppioide",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "non_applicabile": true,
+          "motivo": "onset lento: non usata per l'induzione"
+        },
+        {
+          "contesto": "analgesia",
+          "min": 0.05,
+          "max": 0.2,
+          "consigliato": 0.1,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "titolata",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "intratecale",
+          "min": 50,
+          "max": 100,
+          "unita": "mcg",
+          "note": "subaracnoidea",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "neuroassiale",
+          "via": "peridurale",
+          "min": 2,
+          "max": 5,
+          "unita": "mg",
+          "note": "bolo iniziale, poi boli 1-2 mg; dose max 10 mg/24h",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "rocuronio",
+      "nome": "Rocuronio",
+      "classe": "miorilassante aminosteroide",
+      "dosi": [
+        {
+          "contesto": "intubazione",
+          "valore": 0.6,
+          "unita": "mg/kg",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "rsi",
+          "valore": 1.2,
+          "unita": "mg/kg",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "note": "sequenza rapida",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "valore": 0.15,
+          "unita": "mg/kg",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "note": "bolo di richiamo",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "infusione",
+          "min": 0.3,
+          "max": 0.4,
+          "unita": "mg/kg/h",
+          "peso": {
+            "tipo": "condizionale",
+            "default": "reale",
+            "eccezione": {
+              "condizione": "BMI>=30",
+              "usa": "IBW"
+            }
+          },
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "succinilcolina",
+      "nome": "Succinilcolina",
+      "classe": "miorilassante depolarizzante",
+      "dosi": [
+        {
+          "contesto": "rsi",
+          "valore": 1,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "intubazione a sequenza rapida",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "intubazione",
+          "min": 3,
+          "max": 4,
+          "unita": "mg/kg",
+          "via": "IM",
+          "peso": "reale",
+          "note": "se accesso EV non disponibile",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "cisatracurio",
+      "nome": "Cisatracurio",
+      "classe": "miorilassante benzilisochinolinico",
+      "dosi": [
+        {
+          "contesto": "intubazione",
+          "valore": 0.15,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "valore": 0.03,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "bolo di richiamo",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "infusione",
+          "min": 1,
+          "max": 3,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "atracurio",
+      "nome": "Atracurio",
+      "classe": "miorilassante benzilisochinolinico",
+      "dosi": [
+        {
+          "contesto": "intubazione",
+          "min": 0.3,
+          "max": 0.4,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "mantenimento",
+          "min": 0.1,
+          "max": 0.2,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "infusione",
+          "min": 5,
+          "max": 10,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "mivacurio",
+      "nome": "Mivacurio",
+      "classe": "miorilassante benzilisochinolinico",
+      "dosi": [
+        {
+          "contesto": "intubazione",
+          "min": 0.2,
+          "max": 0.25,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "infusione",
+          "min": 3,
+          "max": 15,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": true,
+          "fonte": "revisione-medico",
+          "revisione": "2026-07",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "sugammadex",
+      "nome": "Sugammadex",
+      "classe": "reversal (rocuronio/vecuronio)",
+      "dosi": [
+        {
+          "contesto": "reversal",
+          "valore": 2,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "blocco moderato (TOF 3-4)",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "reversal",
+          "valore": 4,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "blocco profondo (PTC 1-2 o TOF <=2)",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        },
+        {
+          "contesto": "reversal",
+          "valore": 16,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "reversal immediato dopo RSI con rocuronio",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "revisione-medico",
+          "pagina": "da precisare"
+        }
+      ]
+    },
+    {
+      "id": "neostigmina",
+      "nome": "Neostigmina",
+      "classe": "reversal (anticolinesterasico)",
+      "dosi": [
+        {
+          "contesto": "reversal",
+          "valore": 40,
+          "unita": "mcg/kg",
+          "peso": "IBW",
+          "note": "+ atropina 20 mcg/kg (0.02 mg/kg); 1/2 dose (20+10) se decurarizzazione quasi completa; onset <10 min",
+          "verificato": true,
+          "revisione": "2026-07",
+          "fonte": "mapar",
+          "pagina": "207"
+        }
+      ]
+    },
+    {
+      "id": "noradrenalina",
+      "nome": "Noradrenalina",
+      "classe": "vasoattivo",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 0.05,
+          "max": 0.5,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "note": "titolare su PA; dosi maggiori nello shock refrattario",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "adrenalina",
+      "nome": "Adrenalina",
+      "classe": "vasoattivo/emergenza",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 0.01,
+          "max": 0.5,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "arresto",
+          "fascia_eta": "adulto",
+          "valore": 1,
+          "unita": "mg",
+          "note": "ogni 3-5 min",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "arresto",
+          "fascia_eta": "pediatrico",
+          "valore": 0.01,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "anafilassi",
+          "fascia_eta": "adulto",
+          "valore": 0.5,
+          "unita": "mg",
+          "via": "IM",
+          "note": "500 mcg; ripetibile",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "anafilassi",
+          "fascia_eta": "pediatrico",
+          "valore": 0.01,
+          "unita": "mg/kg",
+          "via": "IM",
+          "note": "max 0.5 mg",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "neonato",
+          "min": 0.01,
+          "max": 0.03,
+          "unita": "mg/kg",
+          "note": "rianimazione neonatale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "dopamina",
+      "nome": "Dopamina",
+      "classe": "vasoattivo",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 2,
+          "max": 20,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "dobutamina",
+      "nome": "Dobutamina",
+      "classe": "inotropo",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 2,
+          "max": 20,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "argipressina",
+      "nome": "Argipressina (vasopressina)",
+      "classe": "vasoattivo",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 0.01,
+          "max": 0.04,
+          "unita": "U/min",
+          "note": "dose fissa, non su peso",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "milrinone",
+      "nome": "Milrinone",
+      "classe": "inodilatatore",
+      "dosi": [
+        {
+          "contesto": "carico",
+          "valore": 50,
+          "unita": "mcg/kg",
+          "note": "in 10 min, spesso omesso",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "infusione",
+          "min": 0.375,
+          "max": 0.75,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "isoprenalina",
+      "nome": "Isoprenalina",
+      "classe": "vasoattivo",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 0.01,
+          "max": 0.2,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "efedrina",
+      "nome": "Efedrina",
+      "classe": "pressore",
+      "dosi": [
+        {
+          "contesto": "bolo",
+          "min": 5,
+          "max": 10,
+          "unita": "mg",
+          "note": "ripetibile; ipotensione",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "fenilefrina",
+      "nome": "Fenilefrina",
+      "classe": "pressore",
+      "dosi": [
+        {
+          "contesto": "bolo",
+          "min": 50,
+          "max": 100,
+          "unita": "mcg",
+          "note": "ripetibile",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "infusione",
+          "min": 0.1,
+          "max": 0.5,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "labetalolo",
+      "nome": "Labetalolo",
+      "classe": "antipertensivo",
+      "dosi": [
+        {
+          "contesto": "bolo",
+          "min": 5,
+          "max": 20,
+          "unita": "mg",
+          "note": "crisi ipertensiva; ripetibile",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "amiodarone",
+      "nome": "Amiodarone",
+      "classe": "antiaritmico",
+      "dosi": [
+        {
+          "contesto": "arresto",
+          "valore": 300,
+          "unita": "mg",
+          "note": "FV/TV senza polso; poi 150 mg",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "antiaritmico",
+          "valore": 5,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "carico in 20-60 min",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "lidocaina-antiaritmico",
+      "nome": "Lidocaina (antiaritmico)",
+      "classe": "antiaritmico",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "min": 1,
+          "max": 1.5,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "come AL vedi anestetici-locali",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "adenosina",
+      "nome": "Adenosina",
+      "classe": "antiaritmico",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "valore": 6,
+          "unita": "mg",
+          "note": "bolo rapido; poi 12 mg (TPSV)",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "magnesio-solfato",
+      "nome": "Magnesio solfato",
+      "classe": "antiaritmico/elettrolita",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "min": 1,
+          "max": 2,
+          "unita": "g",
+          "note": "torsione di punta / ipomagnesemia; vedi anche eclampsia (ostetricia)",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "atropina",
+      "nome": "Atropina",
+      "classe": "vagolitico/emergenza",
+      "dosi": [
+        {
+          "contesto": "bradicardia",
+          "fascia_eta": "adulto",
+          "valore": 0.5,
+          "unita": "mg",
+          "note": "ripetibile; max 3 mg",
+          "verificato": false,
+          "fonte": "bozza"
+        },
+        {
+          "contesto": "bradicardia",
+          "fascia_eta": "pediatrico",
+          "valore": 0.02,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "min 0.1 mg",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "calcio-cloruro",
+      "nome": "Calcio cloruro 10%",
+      "classe": "elettrolita",
+      "dosi": [
+        {
+          "contesto": "tampone",
+          "min": 5,
+          "max": 10,
+          "unita": "ml",
+          "note": "10% EV lenta; iperK/ipoCa/tossicita Ca-antagonisti",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "bicarbonato-sodio",
+      "nome": "Bicarbonato di sodio",
+      "classe": "tampone",
+      "dosi": [
+        {
+          "contesto": "tampone",
+          "valore": 1,
+          "unita": "mEq/kg",
+          "peso": "reale",
+          "note": "acidosi grave/iperK",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "potassio-cloruro",
+      "nome": "Potassio cloruro",
+      "classe": "elettrolita",
+      "dosi": [
+        {
+          "contesto": "infusione",
+          "min": 10,
+          "max": 20,
+          "unita": "mEq/h",
+          "note": "velocita max periferica ~10, centrale ~20 mEq/h",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "naloxone",
+      "nome": "Naloxone",
+      "classe": "antagonista oppioidi",
+      "dosi": [
+        {
+          "contesto": "antagonista",
+          "min": 0.04,
+          "max": 0.08,
+          "unita": "mg",
+          "note": "diluire 0.4 mg in 9 ml SF; boli 0.08 mg/3 min fino a FR>10",
+          "verificato": false,
+          "fonte": "mapar",
+          "pagina": "207"
+        },
+        {
+          "contesto": "infusione",
+          "valore": 0.2,
+          "unita": "mg/h",
+          "note": "se rischio re-impregnazione (1-3h EV, 6-18h peri/IT)",
+          "verificato": false,
+          "fonte": "mapar",
+          "pagina": "207"
+        }
+      ]
+    },
+    {
+      "id": "flumazenil",
+      "nome": "Flumazenil",
+      "classe": "antagonista benzodiazepine",
+      "dosi": [
+        {
+          "contesto": "antagonista",
+          "valore": 0.2,
+          "unita": "mg",
+          "note": "poi 0.1 mg ogni 60 s; max ~1 mg",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "dantrolene",
+      "nome": "Dantrolene",
+      "classe": "emergenza (ipertermia maligna)",
+      "dosi": [
+        {
+          "contesto": "ipertermia_maligna",
+          "min": 2.5,
+          "max": 10,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "2.5 mg/kg ripetibile fino a 10 mg/kg totali",
+          "verificato": false,
+          "fonte": "bozza"
+        }
+      ]
+    }
+  ]
+}

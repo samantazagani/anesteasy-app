@@ -1,0 +1,62 @@
+.infusione-manuale {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.infusione-manuale h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  color: var(--text-h);
+}
+
+.infusione-manuale .sottotitolo {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.infusione-manuale .dose-oraria-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  color: var(--text-h);
+  max-width: 200px;
+  margin-bottom: 12px;
+}
+
+.infusione-manuale input {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.colonne-concentrazione {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.colonna-concentrazione {
+  flex: 1 1 220px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.colonna-concentrazione .formula {
+  font-size: 15px;
+}
+
+.colonna-concentrazione .risultato-evidenza {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 4px 0 0;
+}
