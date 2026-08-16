@@ -69,6 +69,41 @@ select {
   color: var(--text-h);
 }
 
+.eta-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eta-input input {
+  flex: 1;
+  min-width: 0;
+}
+
+.unita-eta {
+  display: flex;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.unita-eta-item {
+  font: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.unita-eta-item.selezionato {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
 button {
   font: inherit;
   padding: 10px 16px;

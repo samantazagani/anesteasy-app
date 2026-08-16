@@ -3,6 +3,7 @@ import pediatriaData from '../../data/pediatria-presidi.json'
 import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
+import { formatEta } from '../lib/etaConversione'
 import { risolviPeso } from '../lib/pesoResolver'
 import { calcolaDose } from '../lib/doseCalculator'
 import { selezionaDose } from '../lib/selezioneDose'
@@ -58,7 +59,7 @@ export function Pediatria() {
     <section id="pediatria">
       <h1>Pediatria</h1>
       <div className="riga-meta">
-        <span className="chip">Età: {etaAnni} anni</span>
+        <span className="chip">Età: {formatEta(etaAnni)}</span>
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
         <BadgeVerifica verificato={false} />
       </div>
