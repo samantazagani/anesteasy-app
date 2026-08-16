@@ -220,26 +220,28 @@ function SezioneRianimazioneNeonatale({ dati, adrenalina }) {
         <BadgeVerifica verificato={false} />
       </div>
 
-      <table className="tabella-apgar">
-        <thead>
-          <tr>
-            <th>Parametro</th>
-            <th>0</th>
-            <th>1</th>
-            <th>2</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dati.apgar.map((riga) => (
-            <tr key={riga.parametro}>
-              <td className="chip-capitalizza">{riga.parametro}</td>
-              <td>{riga['0']}</td>
-              <td>{riga['1']}</td>
-              <td>{riga['2']}</td>
+      <div className="tabella-scroll">
+        <table className="tabella-apgar">
+          <thead>
+            <tr>
+              <th>Parametro</th>
+              <th>0</th>
+              <th>1</th>
+              <th>2</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {dati.apgar.map((riga) => (
+              <tr key={riga.parametro}>
+                <td className="chip-capitalizza">{riga.parametro}</td>
+                <td>{riga['0']}</td>
+                <td>{riga['1']}</td>
+                <td>{riga['2']}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <p className="nota algoritmo-neonatale">{dati.algoritmo}</p>
 

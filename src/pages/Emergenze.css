@@ -156,6 +156,9 @@
   font-size: 14px;
   color: var(--text-h);
   flex: 1;
+  /* Senza questo, i figli flex non si restringono oltre la larghezza "naturale" del loro
+     contenuto (qui l'input): su schermi stretti la riga va in overflow orizzontale. */
+  min-width: 0;
 }
 
 .diluizione-in {

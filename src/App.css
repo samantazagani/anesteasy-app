@@ -1,9 +1,15 @@
 #tab-nav {
   display: flex;
   gap: 8px;
-  justify-content: center;
+  /* flex-start, non center: con molte schede la barra va spesso in overflow (non solo su
+     mobile, anche su una finestra desktop piu' stretta di #root), e "center" su un
+     contenitore scrollabile in overflow rende la prima scheda irraggiungibile in alcuni
+     browser. La barra scorre solo lei stessa (contenuta), mai la pagina. */
+  justify-content: flex-start;
   padding: 16px 20px 0;
   border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab-item {
@@ -15,6 +21,7 @@
   background: none;
   color: var(--text);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .tab-item.selezionato {

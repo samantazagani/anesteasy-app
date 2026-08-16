@@ -1,6 +1,13 @@
 /* Stili condivisi dai pannelli "risultato" dei calcolatori (dose bolo, infusione, ecc.):
    chip informativi, avvisi e la formula "a vista" richiesta da PROGETTO.md. */
 
+/* Contenitore per qualsiasi tabella che potrebbe non stare in larghezza su schermi
+   stretti: lo scorrimento resta dentro la tabella stessa, mai sulla pagina. */
+.tabella-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .riga-meta {
   display: flex;
   flex-wrap: wrap;

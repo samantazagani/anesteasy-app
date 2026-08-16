@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -52,6 +58,9 @@
 
 body {
   margin: 0;
+  /* Backstop: la pagina non deve mai scorrere in orizzontale. Lo scorrimento contenuto
+     dentro un singolo elemento (es. tabella con overflow-x: auto) resta possibile. */
+  overflow-x: hidden;
 }
 
 #root {
@@ -63,7 +72,6 @@ body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 h1,

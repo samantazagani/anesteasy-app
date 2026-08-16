@@ -102,30 +102,32 @@ export function TossicitaAdditiva({ anestetici, pesoKg }) {
 
       {risultato && (
         <div className="formula-a-vista">
-          <table className="tabella-tossicita">
-            <thead>
-              <tr>
-                <th>Anestetico</th>
-                <th>Tetto (min mg/kg, assoluto)</th>
-                <th>% del tetto</th>
-              </tr>
-            </thead>
-            <tbody>
-              {risultato.righe.map((riga) => (
-                <tr key={riga.id}>
-                  <td>{riga.nome}</td>
-                  <td>{riga.tettoMg} mg</td>
-                  <td>{riga.percentuale}%</td>
+          <div className="tabella-scroll">
+            <table className="tabella-tossicita">
+              <thead>
+                <tr>
+                  <th>Anestetico</th>
+                  <th>Tetto (min mg/kg, assoluto)</th>
+                  <th>% del tetto</th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className={risultato.supera ? 'riga-totale supera' : 'riga-totale'}>
-                <td colSpan={2}>Totale</td>
-                <td>{risultato.percentualeTotale}%</td>
-              </tr>
-            </tfoot>
-          </table>
+              </thead>
+              <tbody>
+                {risultato.righe.map((riga) => (
+                  <tr key={riga.id}>
+                    <td>{riga.nome}</td>
+                    <td>{riga.tettoMg} mg</td>
+                    <td>{riga.percentuale}%</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className={risultato.supera ? 'riga-totale supera' : 'riga-totale'}>
+                  <td colSpan={2}>Totale</td>
+                  <td>{risultato.percentualeTotale}%</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
           {risultato.supera && (
             <p className="avviso avviso-errore">
