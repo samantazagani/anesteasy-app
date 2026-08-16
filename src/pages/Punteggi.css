@@ -1,0 +1,138 @@
+#punteggi {
+  padding: 32px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#punteggi .sottotitolo {
+  font-size: 14px;
+  color: var(--text);
+  margin: 8px 0 20px;
+}
+
+.categorie-p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.categoria-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.categoria-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.riquadro-punteggio {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.riquadro-punteggio > .riga-meta {
+  margin-bottom: 10px;
+}
+
+.punteggio-titolo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.campo-numerico {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-h);
+  margin-bottom: 10px;
+}
+
+.campo-numerico input,
+.campo-numerico select {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.griglia-campi-p {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.checklist-punteggio {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.voce-riga {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-h);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.voce-attiva {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.risultato-evidenza-p {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 6px 0 4px;
+}
+
+.risultato-positivo {
+  color: #dc2626;
+}
+
+.lista-riferimenti {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.lista-riferimenti li {
+  margin-bottom: 4px;
+}
+
+.avviso-dati-mancanti {
+  border: 1px solid #d97706;
+  color: #92400e;
+  background: #fef3c7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .avviso-dati-mancanti {
+    background: rgba(217, 119, 6, 0.14);
+    color: #fde68a;
+  }
+}

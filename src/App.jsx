@@ -9,6 +9,7 @@ import { Pediatria } from './pages/Pediatria.jsx'
 import { Ostetricia } from './pages/Ostetricia.jsx'
 import { Nutrizione } from './pages/Nutrizione.jsx'
 import { CalcolatoriTI } from './pages/CalcolatoriTI.jsx'
+import { Punteggi } from './pages/Punteggi.jsx'
 import './App.css'
 
 const VISTE = [
@@ -22,6 +23,7 @@ const VISTE = [
   { id: 'ostetricia', label: 'Ostetricia' },
   { id: 'nutrizione', label: 'Nutrizione' },
   { id: 'calcolatori-ti', label: 'Calcolatori TI' },
+  { id: 'punteggi', label: 'Punteggi' },
 ]
 
 function App() {
@@ -74,6 +76,9 @@ function App() {
       </div>
       <div hidden={vista !== 'calcolatori-ti'}>
         <CalcolatoriTI />
+      </div>
+      <div hidden={vista !== 'punteggi'}>
+        <Punteggi />
       </div>
     </>
   )
