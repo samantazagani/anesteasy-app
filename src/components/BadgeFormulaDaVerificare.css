@@ -1,0 +1,22 @@
+.badge-formula-incerta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #dc2626;
+  border: 1px solid #991b1b;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .badge-formula-incerta {
+    background: #7f1d1d;
+    border-color: #dc2626;
+    color: #fecaca;
+  }
+}
