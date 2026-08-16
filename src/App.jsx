@@ -7,6 +7,7 @@ import { AnestesiaLocale } from './pages/AnestesiaLocale.jsx'
 import { Emergenze } from './pages/Emergenze.jsx'
 import { Pediatria } from './pages/Pediatria.jsx'
 import { Ostetricia } from './pages/Ostetricia.jsx'
+import { Nutrizione } from './pages/Nutrizione.jsx'
 import './App.css'
 
 const VISTE = [
@@ -18,6 +19,7 @@ const VISTE = [
   { id: 'emergenze', label: 'Emergenze' },
   { id: 'pediatria', label: 'Pediatria' },
   { id: 'ostetricia', label: 'Ostetricia' },
+  { id: 'nutrizione', label: 'Nutrizione' },
 ]
 
 function App() {
@@ -64,6 +66,9 @@ function App() {
       </div>
       <div hidden={vista !== 'ostetricia'}>
         <Ostetricia />
+      </div>
+      <div hidden={vista !== 'nutrizione'}>
+        <Nutrizione />
       </div>
     </>
   )

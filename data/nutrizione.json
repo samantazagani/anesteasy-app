@@ -1,0 +1,34 @@
+{
+  "_stato": "BOZZA da verificare. Da linee guida ESPEN/pratica TI standard e scheda Nutrizione TI del medico (Nutrizione_Terapia_Intensiva_scheda.pdf). verificato=false.",
+  "fabbisogno_calorico": {
+    "peso_based": { "kcal_kg": [25, 30], "peso": "reale", "note": "fase acuta: partire piu bassi (permissive underfeeding)", "verificato": false, "fonte": "bozza" },
+    "harris_benedict": {
+      "formula_uomo": "66.5 + (13.75*peso_kg) + (5.003*altezza_cm) - (6.75*eta)",
+      "formula_donna": "655.1 + (9.563*peso_kg) + (1.850*altezza_cm) - (4.676*eta)",
+      "fattore_stress": "moltiplicare per 1.2-1.5 secondo gravita",
+      "verificato": false, "fonte": "bozza"
+    }
+  },
+  "proteine": [
+    { "fase": "critico standard", "g_kg": [1.2, 2.0], "peso": "reale", "verificato": false, "fonte": "bozza" },
+    { "fase": "CRRT / ustionato", "g_kg": [1.5, 2.5], "peso": "reale", "verificato": false, "fonte": "bozza" }
+  ],
+  "fabbisogno_idrico": { "ml_kg_die": [30, 35], "verificato": false, "fonte": "bozza" },
+  "micronutrienti": { "glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)", "note": "aggiungere vitamine e oligoelementi", "verificato": false, "fonte": "bozza" },
+  "refeeding_syndrome": {
+    "rischio": ["BMI <16", "calo ponderale >15% in 3-6 mesi", "scarso apporto >10 gg", "ipoK/ipoPO4/ipoMg pre-esistenti"],
+    "gestione": {
+      "avvio_kcal": "10 kcal/kg/die, aumento graduale in 4-7 gg",
+      "correzione_elettroliti": { "fosfato": "monitorare e reintegrare", "potassio": "reintegrare", "magnesio": "reintegrare" },
+      "tiamina": "200-300 mg/die prima di iniziare",
+      "verificato": false, "fonte": "bozza"
+    }
+  },
+  "npt_calcolatore": {
+    "descrizione": "Input: peso, target kcal/kg, ripartizione macro, volume. Output: g/die e ml di ciascun componente.",
+    "densita_kcal": { "glucosio_g": 4, "lipidi_g": 9, "aminoacidi_g": 4 },
+    "ripartizione_tipica": { "glucidi_percent": [50, 60], "lipidi_percent": [25, 35], "aminoacidi_da_proteine": "vedi sopra" },
+    "limiti": { "glucosio_max_mg_kg_min": 4, "lipidi_max_g_kg_die": 1.5 },
+    "verificato": false, "fonte": "bozza"
+  }
+}

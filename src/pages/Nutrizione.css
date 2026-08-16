@@ -1,0 +1,176 @@
+#nutrizione {
+  padding: 32px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#nutrizione > .riga-meta {
+  margin-bottom: 20px;
+}
+
+.riquadro-nutrizione {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.riquadro-nutrizione h2 {
+  margin: 0 0 12px;
+}
+
+.riquadro-nutrizione > .riga-meta {
+  margin-bottom: 12px;
+}
+
+.scheda {
+  margin: 16px 0;
+}
+
+.scheda:first-child {
+  margin-top: 0;
+}
+
+.scheda:last-child {
+  margin-bottom: 0;
+}
+
+.scheda .riga-meta {
+  margin-bottom: 6px;
+}
+
+.scheda-titolo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 6px;
+}
+
+.fasi-proteine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fase-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.fase-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.campo-numerico {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.campo-numerico input,
+.campo-numerico select {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.campo-target {
+  max-width: 280px;
+  margin-top: 12px;
+}
+
+.griglia-campi-piccola {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 8px 0 12px;
+}
+
+.formula-piccola {
+  font-size: 14px;
+  margin: 0;
+}
+
+.risultato-evidenza {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 2px 0 8px;
+}
+
+.checklist-refeeding {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.criterio-riga {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-h);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.criterio-riga input[type='checkbox'] {
+  flex-shrink: 0;
+}
+
+.criterio-riga .chip {
+  margin-left: auto;
+}
+
+.criterio-attivo {
+  border-color: #d97706;
+  background: #fef3c7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .criterio-attivo {
+    background: rgba(217, 119, 6, 0.14);
+  }
+}
+
+.avviso-refeeding {
+  border: 1px solid #d97706;
+  color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .avviso-refeeding {
+    color: #fde68a;
+  }
+}
+
+.lista-voci-nutrizione {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 12px 0;
+}
+
+.voce-nutrizione {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
