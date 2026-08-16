@@ -1,0 +1,91 @@
+{
+  "_stato": "BOZZA. Algoritmi che RICHIAMANO i farmaci (farmaci.json) per id+contesto, non li ridefiniscono. Verificare passi e dosi con linee guida (ERC/SIAARTI). verificato=false.",
+  "emergenze": [
+    {
+      "id": "acls-adulto", "titolo": "Arresto cardiaco adulto (ALS)",
+      "passi": [
+        { "step": 1, "azione": "RCP 30:2, applicare defibrillatore" },
+        { "step": 2, "azione": "Ritmo defibrillabile (FV/TV): shock 150-200 J bifasico" },
+        { "step": 3, "azione": "Adrenalina 1 mg ogni 3-5 min", "farmaco_id": "adrenalina", "contesto": "arresto" },
+        { "step": 4, "azione": "Amiodarone 300 mg dopo 3 shock (poi 150 mg)", "farmaco_id": "amiodarone", "contesto": "arresto" },
+        { "step": 5, "azione": "Trattare cause reversibili (4H/4T)" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "acls-pediatrico", "titolo": "Arresto cardiaco pediatrico",
+      "passi": [
+        { "step": 1, "azione": "RCP 15:2 (2 soccorritori)" },
+        { "step": 2, "azione": "Adrenalina 0.01 mg/kg ogni 3-5 min", "farmaco_id": "adrenalina", "contesto": "arresto", "fascia_eta": "pediatrico" },
+        { "step": 3, "azione": "Defibrillazione 4 J/kg se ritmo defibrillabile" },
+        { "step": 4, "azione": "Amiodarone 5 mg/kg dopo 3 shock" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "anafilassi", "titolo": "Anafilassi",
+      "passi": [
+        { "step": 1, "azione": "Stop agente scatenante, chiamare aiuto, O2 alto flusso" },
+        { "step": 2, "azione": "Adrenalina 0.5 mg IM (adulto)", "farmaco_id": "adrenalina", "contesto": "anafilassi", "fascia_eta": "adulto" },
+        { "step": 3, "azione": "Fluidi cristalloidi in bolo" },
+        { "step": 4, "azione": "Adrenalina in infusione se refrattaria", "farmaco_id": "adrenalina", "contesto": "infusione" },
+        { "step": 5, "azione": "Seconda linea: corticosteroidi, antistaminici" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "last", "titolo": "LAST (tossicita sistemica da anestetici locali)",
+      "passi": [
+        { "step": 1, "azione": "Stop iniezione, chiamare aiuto, gestire vie aeree/convulsioni" },
+        { "step": 2, "azione": "Emulsione lipidica 20%: bolo 1.5 ml/kg poi 0.25 ml/kg/min", "riferimento": "anestetici-locali.json -> last" },
+        { "step": 3, "azione": "RCP se arresto; evitare/ridurre adrenalina (<1 mcg/kg); NO propofol" }
+      ], "verificato": false, "fonte": "manuale-giovane-anestesista", "pagina": "109"
+    },
+    {
+      "id": "ipertermia-maligna", "titolo": "Ipertermia maligna",
+      "passi": [
+        { "step": 1, "azione": "Stop agenti trigger (volatili/succinilcolina), O2 100% alto flusso" },
+        { "step": 2, "azione": "Dantrolene 2.5 mg/kg, ripetere fino a 10 mg/kg", "farmaco_id": "dantrolene", "contesto": "ipertermia_maligna" },
+        { "step": 3, "azione": "Raffreddamento, trattare iperK/acidosi/aritmie, diuresi" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "laringospasmo", "titolo": "Laringospasmo",
+      "passi": [
+        { "step": 1, "azione": "O2 100%, CPAP, manovra di Larson (pressione punti retromandibolari)" },
+        { "step": 2, "azione": "Approfondire anestesia (propofol bolo)", "farmaco_id": "propofol", "contesto": "induzione" },
+        { "step": 3, "azione": "Succinilcolina se persiste", "farmaco_id": "succinilcolina", "contesto": "rsi" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "broncospasmo", "titolo": "Broncospasmo",
+      "passi": [
+        { "step": 1, "azione": "O2 100%, approfondire anestesia, escludere cause meccaniche" },
+        { "step": 2, "azione": "Beta2-agonista inalatorio (salbutamolo)" },
+        { "step": 3, "azione": "Adrenalina se grave", "farmaco_id": "adrenalina", "contesto": "infusione" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "crisi-ipertensiva", "titolo": "Crisi ipertensiva perioperatoria",
+      "passi": [
+        { "step": 1, "azione": "Escludere dolore/ipercapnia/vescica piena" },
+        { "step": 2, "azione": "Labetalolo 5-20 mg bolo", "farmaco_id": "labetalolo", "contesto": "bolo" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "trasfusione-massiva", "titolo": "Protocollo trasfusione massiva",
+      "passi": [
+        { "step": 1, "azione": "Attivare protocollo; rapporto GR:plasma:piastrine ~ 1:1:1" },
+        { "step": 2, "azione": "Acido tranexamico 1 g (poi 1 g in 8h)" },
+        { "step": 3, "azione": "Calcio (monitorare ipoCa da citrato)", "farmaco_id": "calcio-cloruro", "contesto": "tampone" },
+        { "step": 4, "azione": "Prevenire ipotermia; target fibrinogeno, EGA/emogas seriati" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "via-aerea-difficile", "titolo": "Algoritmo via aerea difficile",
+      "passi": [
+        { "step": 1, "azione": "Ottimizzare ventilazione in maschera / posizione" },
+        { "step": 2, "azione": "Massimo 3+1 tentativi di laringoscopia; considerare videolaringoscopio/bougie" },
+        { "step": 3, "azione": "Presidio sovraglottico di seconda generazione" },
+        { "step": 4, "azione": "Scenario CICO (can't intubate can't oxygenate): accesso cricotiroideo" }
+      ], "verificato": false, "fonte": "bozza"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+#emergenze {
+  padding: 32px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.banner-emergenza {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 2px solid #d97706;
+  background: #fef3c7;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.banner-emergenza p {
+  font-size: 13px;
+  color: #78350f;
+}
+
+@media (prefers-color-scheme: dark) {
+  .banner-emergenza {
+    background: rgba(217, 119, 6, 0.14);
+  }
+
+  .banner-emergenza p {
+    color: #fde68a;
+  }
+}
+
+.badge-emergenza {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #d97706;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.lista-emergenze {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.emergenza-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.emergenza-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.stepper {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stepper h2 {
+  margin: 0;
+}
+
+.stepper-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0 12px;
+}
+
+.stepper-nav button {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.stepper-nav button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.stepper-indice {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.stepper-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.dot.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent);
+}
+
+.passo-azione {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 16px;
+}
+
+.diluizione {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.diluizione label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+  flex: 1;
+}
+
+.diluizione-in {
+  font-size: 14px;
+  color: var(--text);
+  padding-bottom: 10px;
+}
+
+.campo-dose-infusione {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+  max-width: 220px;
+  margin-bottom: 12px;
+}
+
+#emergenze input {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
