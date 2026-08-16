@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import antibioticiData from '../../data/antibiotici_template.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
+import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { calcolaDose } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
@@ -20,7 +21,8 @@ export function CalcolatoreAntibiotici() {
   // struttura: non va mai mostrato un numero calcolato come se fosse una dose vera.
   const nonCompilato = antibiotico ? !antibiotico.fonte : true
 
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi }
+  const categoria = categoriaEta(profile.eta)
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
 
   let peso = null
   let risultato = null
@@ -86,6 +88,13 @@ export function CalcolatoreAntibiotici() {
                 )}
                 <BadgeVerifica verificato={antibiotico.verificato} />
               </div>
+
+              {peso?.pesoPediatricoEscluso && (
+                <p className="avviso avviso-pediatrico">
+                  Questo antibiotico richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido
+                  su un paziente pediatrico (formula per adulti): usato il peso reale.
+                </p>
+              )}
 
               {erroreCalcolo && <p className="avviso avviso-errore">{erroreCalcolo}</p>}
 

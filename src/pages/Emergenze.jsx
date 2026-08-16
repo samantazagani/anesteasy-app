@@ -33,7 +33,7 @@ export function Emergenze() {
   }
 
   const categoria = categoriaEta(profile.eta)
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi }
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
 
   return (
     <section id="emergenze">
@@ -187,6 +187,13 @@ function PassoBolo({ farmaco, doseScelta, fasciaUsata, fallback, passo, derivati
         <p className="avviso avviso-pediatrico">
           Nessuna voce dedicata alla fascia richiesta per questo contesto: mostrato il dosaggio
           adulto.
+        </p>
+      )}
+
+      {peso.pesoPediatricoEscluso && (
+        <p className="avviso avviso-pediatrico">
+          Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
+          paziente pediatrico (formula per adulti): usato il peso reale.
         </p>
       )}
 

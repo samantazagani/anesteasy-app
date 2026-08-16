@@ -40,7 +40,7 @@ export function Pediatria() {
   const categoria = categoriaEta(profile.eta)
   const etaAnni = profile.eta
   const pesoKg = profile.pesoKg
-  const derivati = { pesoKg, ibw, lbw, bmi }
+  const derivati = { pesoKg, ibw, lbw, bmi, categoria }
 
   if (categoria !== 'pediatrico') {
     return (
@@ -377,6 +377,12 @@ function SezionePremedicazione({ lista, derivati }) {
               {!(peso.valoreKg > 0) && (
                 <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
               )}
+              {peso.pesoPediatricoEscluso && (
+                <p className="avviso avviso-pediatrico">
+                  Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
+                  paziente pediatrico: usato il peso reale.
+                </p>
+              )}
               {errore && <p className="avviso avviso-errore">{errore}</p>}
               {risultato && (
                 <>
@@ -454,6 +460,12 @@ function SezioneEmergenzePediatriche({ lista, farmaci, derivati }) {
               )}
               {!(peso.valoreKg > 0) && (
                 <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
+              )}
+              {peso.pesoPediatricoEscluso && (
+                <p className="avviso avviso-pediatrico">
+                  Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
+                  paziente pediatrico: usato il peso reale.
+                </p>
               )}
               {errore && <p className="avviso avviso-errore">{errore}</p>}
               {risultato && (

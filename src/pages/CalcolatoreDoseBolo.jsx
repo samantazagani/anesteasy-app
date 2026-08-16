@@ -88,7 +88,7 @@ export function CalcolatoreDoseBolo() {
 
   const doseScelta = selezione.candidati[varianteIndice] ?? selezione.candidati[0] ?? null
 
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi }
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
 
   let peso = null
   let risultato = null
@@ -224,6 +224,13 @@ export function CalcolatoreDoseBolo() {
                     disponibile): mostrato il dosaggio adulto come riferimento, non idoneo per la
                     prescrizione pediatrica senza verifica clinica.
                     {doseScelta.note ? ` Nota: ${doseScelta.note}` : ''}
+                  </p>
+                )}
+
+                {peso?.pesoPediatricoEscluso && (
+                  <p className="avviso avviso-pediatrico">
+                    Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
+                    paziente pediatrico (formula per adulti): usato il peso reale.
                   </p>
                 )}
 
