@@ -3,6 +3,7 @@ import { ProfiloPaziente } from './pages/ProfiloPaziente.jsx'
 import { CalcolatoreDoseBolo } from './pages/CalcolatoreDoseBolo.jsx'
 import { CalcolatoreInfusione } from './pages/CalcolatoreInfusione.jsx'
 import { CalcolatoreAntibiotici } from './pages/CalcolatoreAntibiotici.jsx'
+import { AnestesiaLocale } from './pages/AnestesiaLocale.jsx'
 import './App.css'
 
 const VISTE = [
@@ -10,6 +11,7 @@ const VISTE = [
   { id: 'farmaci', label: 'Farmaci' },
   { id: 'infusione', label: 'γ/ml/h' },
   { id: 'antibiotici', label: 'Antibiotici' },
+  { id: 'al', label: 'Anestetici locali' },
 ]
 
 function App() {
@@ -44,6 +46,9 @@ function App() {
       </div>
       <div hidden={vista !== 'antibiotici'}>
         <CalcolatoreAntibiotici />
+      </div>
+      <div hidden={vista !== 'al'}>
+        <AnestesiaLocale />
       </div>
     </>
   )

@@ -1,0 +1,75 @@
+.riquadro-last {
+  border: 2px solid #d97706;
+  background: #fef3c7;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.riquadro-last h2 {
+  color: #92400e;
+  margin: 8px 0 4px;
+}
+
+.riquadro-last .sottotitolo {
+  font-size: 13px;
+  color: #92400e;
+  margin: 0 0 12px;
+}
+
+.riquadro-last .formula,
+.riquadro-last .nota,
+.riquadro-last .fonte {
+  color: #78350f;
+}
+
+.riquadro-last .risultato-evidenza {
+  color: #b45309;
+}
+
+.badge-emergenza {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #d97706;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.etichetta-last {
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 12px 0 2px;
+}
+
+.etichetta-last:first-of-type {
+  margin-top: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .riquadro-last {
+    background: rgba(217, 119, 6, 0.12);
+    border-color: #d97706;
+  }
+
+  .riquadro-last h2,
+  .riquadro-last .sottotitolo,
+  .riquadro-last .formula,
+  .riquadro-last .nota,
+  .riquadro-last .fonte,
+  .etichetta-last {
+    color: #fde68a;
+  }
+
+  .riquadro-last .risultato-evidenza {
+    color: #fbbf24;
+  }
+}

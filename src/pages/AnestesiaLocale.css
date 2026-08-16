@@ -1,0 +1,107 @@
+#anestesia-locale {
+  padding: 32px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#anestesia-locale .sottotitolo {
+  font-size: 14px;
+  color: var(--text);
+  margin: 8px 0 20px;
+}
+
+.lista-anestetici {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.anestetico-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.anestetico-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.controlli-comuni {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.toggle-adrenalina {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.riquadro-calcolatore {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.riquadro-calcolatore h2 {
+  margin: 0 0 12px;
+}
+
+.campo-numerico {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.campo-numerico input {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.griglia-campi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.chip-scelte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+
+.chip-bottone {
+  font: inherit;
+  cursor: pointer;
+}
+
+.risultato-evidenza {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 4px 0 8px;
+}

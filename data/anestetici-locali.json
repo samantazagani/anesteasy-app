@@ -1,0 +1,550 @@
+{
+  "_stato": "BOZZA da verificare. Dosi max, onset/durata e LAST estratti dal Manuale del giovane anestesista pag. 108-109 (tabella AL). I mg/kg 'standard' sono bozza da confermare; i tetti assoluti in mg (senza/con adrenalina) sono dal Manuale. verificato=false finche il medico non controlla.",
+  "_note_unita": "dose_max_mg_kg = tetto per kg (per il calcolo del volume). tetto_assoluto_mg = tetto in mg per singola somministrazione (senza/con adrenalina), dal Manuale. Usare il PIU BASSO dei due.",
+  "anestetici": [
+    {
+      "id": "lidocaina",
+      "nome": "Lidocaina",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 3,
+        "con_adrenalina": 7
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 300,
+        "con_adrenalina": 500
+      },
+      "onset_min": [
+        10,
+        20
+      ],
+      "durata_min": [
+        120,
+        240
+      ],
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    },
+    {
+      "id": "mepivacaina",
+      "nome": "Mepivacaina (Carbocaina)",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 4,
+        "con_adrenalina": 7
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 300,
+        "con_adrenalina": 500
+      },
+      "onset_min": [
+        10,
+        20
+      ],
+      "durata_min": [
+        180,
+        300
+      ],
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    },
+    {
+      "id": "prilocaina",
+      "nome": "Prilocaina",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 6,
+        "con_adrenalina": 8
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 400,
+        "con_adrenalina": 600
+      },
+      "onset_min": [
+        10,
+        20
+      ],
+      "durata_min": [
+        180,
+        300
+      ],
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    },
+    {
+      "id": "bupivacaina",
+      "nome": "Bupivacaina (Marcaina)",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 2,
+        "con_adrenalina": 2.5
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 175,
+        "con_adrenalina": 225
+      },
+      "onset_min": [
+        15,
+        30
+      ],
+      "durata_min": [
+        360,
+        720
+      ],
+      "note": "maggior rischio di cardiotossicita",
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    },
+    {
+      "id": "levobupivacaina",
+      "nome": "Levobupivacaina (Chirocaina)",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 2.5,
+        "con_adrenalina": 3
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 175,
+        "con_adrenalina": 250
+      },
+      "onset_min": [
+        15,
+        30
+      ],
+      "durata_min": [
+        360,
+        720
+      ],
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    },
+    {
+      "id": "ropivacaina",
+      "nome": "Ropivacaina (Naropina)",
+      "dose_max_mg_kg": {
+        "senza_adrenalina": 3,
+        "con_adrenalina": 3.5
+      },
+      "tetto_assoluto_mg": {
+        "senza_adrenalina": 200,
+        "con_adrenalina": 250
+      },
+      "onset_min": [
+        20,
+        30
+      ],
+      "durata_min": [
+        360,
+        720
+      ],
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "108"
+    }
+  ],
+  "tossicita_additiva": {
+    "regola": "con AL misti la tossicita si somma come % della dose max di ciascuno (es. 50% max lido + 50% max ropi = 100% = tetto)",
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "calcolatori": [
+    {
+      "id": "volume_max",
+      "nome": "Volume massimo iniettabile",
+      "formula": "dose_max_mg = min(mg_kg * peso, tetto_assoluto_mg); volume_max_ml = dose_max_mg / concentrazione_mg_ml",
+      "input": [
+        "anestetico",
+        "con_adrenalina",
+        "peso",
+        "concentrazione_percento"
+      ],
+      "note": "concentrazione %: usare conversione_concentrazione (1% = 10 mg/ml)"
+    },
+    {
+      "id": "diluizione",
+      "nome": "Diluizione da fiala",
+      "formula": "volume_da_prelevare_ml = (conc_target_mg_ml * volume_finale_ml) / conc_fiala_mg_ml; fisiologica_ml = volume_finale_ml - volume_da_prelevare_ml",
+      "input": [
+        "conc_fiala_mg_ml",
+        "conc_target_mg_ml",
+        "volume_finale_ml"
+      ],
+      "note": "usa conversione_concentrazione per %<->mg/ml; avvisare se ml_da_prelevare supera il volume delle fiale disponibili (calcolare quante fiale servono)"
+    },
+    {
+      "id": "elastomero",
+      "nome": "Riempimento elastomero",
+      "formula": "mg_totali = conc_target_mg_ml * volume_totale_ml; n_fiale = mg_totali / mg_per_fiala; volume_AL_ml = n_fiale * volume_fiala_ml; fisiologica_ml = volume_totale_ml - volume_AL_ml",
+      "input": [
+        "conc_target_mg_ml",
+        "volume_totale_ml",
+        "mg_per_fiala",
+        "volume_fiala_ml"
+      ],
+      "note": "mg_per_fiala e volume_fiala si possono precompilare da preparazioni_commerciali"
+    }
+  ],
+  "last": {
+    "descrizione": "Local Anesthetic Systemic Toxicity - emulsione lipidica 20% (NON propofol, es. Intralipid)",
+    "bolo": {
+      "valore": 1.5,
+      "unita": "ml/kg",
+      "note": "20%; il Manuale scrive 1,5 mg/kg = refuso per ml/kg"
+    },
+    "infusione": {
+      "valore": 0.25,
+      "unita": "ml/kg/min",
+      "durata_min": 20
+    },
+    "ripetizione": "fino a 2 boli a intervalli di 5 min fino al ripristino del circolo",
+    "verificato": false,
+    "fonte": "manuale-giovane-anestesista",
+    "pagina": "109"
+  },
+  "dermatomeri": [
+    {
+      "livello": "C6",
+      "riferimento": "pollice"
+    },
+    {
+      "livello": "T4",
+      "riferimento": "capezzoli"
+    },
+    {
+      "livello": "T6",
+      "riferimento": "processo xifoideo"
+    },
+    {
+      "livello": "T10",
+      "riferimento": "ombelico"
+    },
+    {
+      "livello": "L1",
+      "riferimento": "regione inguinale"
+    }
+  ],
+  "volumi_per_blocco": [
+    {
+      "blocco": "interscalenico",
+      "distretto": "spalla / clavicola",
+      "volume_ml": [
+        10,
+        20
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "sovraclaveare",
+      "distretto": "arto superiore",
+      "volume_ml": [
+        15,
+        25
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "ascellare",
+      "distretto": "avambraccio / mano",
+      "volume_ml": [
+        20,
+        30
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "TAP",
+      "distretto": "parete addominale",
+      "volume_ml": [
+        15,
+        20
+      ],
+      "note": "per lato",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "femorale",
+      "distretto": "coscia anteriore",
+      "volume_ml": [
+        15,
+        20
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "popliteo (sciatico)",
+      "distretto": "gamba / piede",
+      "volume_ml": [
+        20,
+        30
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "blocco": "ESP",
+      "distretto": "parete toracica / addominale",
+      "volume_ml": [
+        20,
+        30
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    }
+  ],
+  "sospensione_anticoagulanti": {
+    "_nota": "tempi prima di blocco neuroassiale; BOZZA da verificare su linee guida (ESAIC/SIAARTI)",
+    "voci": [
+      {
+        "farmaco": "EBPM dose profilattica",
+        "sospensione_pre": "12 h",
+        "ripresa_post": "4-6 h",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "EBPM dose terapeutica",
+        "sospensione_pre": "24 h",
+        "ripresa_post": "4-6 h",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "Fondaparinux",
+        "sospensione_pre": "36-42 h",
+        "ripresa_post": "6-12 h",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "Aspirina",
+        "sospensione_pre": "non necessaria (da sola)",
+        "ripresa_post": "-",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "Clopidogrel",
+        "sospensione_pre": "5-7 giorni",
+        "ripresa_post": "dopo catetere",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "Warfarin",
+        "sospensione_pre": "INR <= 1.4",
+        "ripresa_post": "-",
+        "verificato": false,
+        "fonte": "bozza"
+      },
+      {
+        "farmaco": "DOAC (es. rivaroxaban)",
+        "sospensione_pre": "3 giorni (funzione renale normale)",
+        "ripresa_post": "6 h",
+        "verificato": false,
+        "fonte": "bozza"
+      }
+    ]
+  },
+  "soglie_tossicita_snc_mg_kg": {
+    "_nota": "dose soglia EV per reazioni SNC (Manuale pag. 110)",
+    "lidocaina": 6.4,
+    "mepivacaina": 9.8,
+    "prilocaina": 6,
+    "bupivacaina": 1.6,
+    "verificato": false,
+    "fonte": "manuale-giovane-anestesista",
+    "pagina": "110"
+  },
+  "conversione_concentrazione": {
+    "regola": "mg_ml = concentrazione_percento * 10",
+    "inverso": "concentrazione_percento = mg_ml / 10",
+    "esempi": {
+      "1%": 10,
+      "0.75%": 7.5,
+      "0.5%": 5,
+      "0.2%": 2,
+      "2%": 20
+    },
+    "note": "l'app mostra sempre entrambe le forme (% e mg/ml)"
+  },
+  "preparazioni_commerciali": {
+    "_nota": "BOZZA da verificare col prontuario di reparto (le confezioni variano). mg_per_fiala = mg_ml * volume_ml.",
+    "voci": [
+      {
+        "anestetico": "lidocaina",
+        "forme": [
+          {
+            "conc_percento": 1,
+            "mg_ml": 10,
+            "volumi_ml": [
+              5,
+              10
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 2,
+            "mg_ml": 20,
+            "volumi_ml": [
+              5,
+              10
+            ],
+            "tipo": "fiala"
+          }
+        ]
+      },
+      {
+        "anestetico": "mepivacaina",
+        "forme": [
+          {
+            "conc_percento": 1,
+            "mg_ml": 10,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 2,
+            "mg_ml": 20,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          }
+        ]
+      },
+      {
+        "anestetico": "prilocaina",
+        "forme": [
+          {
+            "conc_percento": 1,
+            "mg_ml": 10,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 2,
+            "mg_ml": 20,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          }
+        ]
+      },
+      {
+        "anestetico": "bupivacaina",
+        "forme": [
+          {
+            "conc_percento": 0.25,
+            "mg_ml": 2.5,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 0.5,
+            "mg_ml": 5,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 0.5,
+            "mg_ml": 5,
+            "volumi_ml": [
+              4
+            ],
+            "tipo": "fiala iperbarica (spinale)"
+          }
+        ]
+      },
+      {
+        "anestetico": "levobupivacaina",
+        "forme": [
+          {
+            "conc_percento": 0.25,
+            "mg_ml": 2.5,
+            "volumi_ml": [
+              10
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 0.5,
+            "mg_ml": 5,
+            "volumi_ml": [
+              10
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 0.75,
+            "mg_ml": 7.5,
+            "volumi_ml": [
+              10
+            ],
+            "tipo": "fiala"
+          }
+        ]
+      },
+      {
+        "anestetico": "ropivacaina",
+        "forme": [
+          {
+            "conc_percento": 0.2,
+            "mg_ml": 2,
+            "volumi_ml": [
+              100,
+              200
+            ],
+            "tipo": "sacca"
+          },
+          {
+            "conc_percento": 0.5,
+            "mg_ml": 5,
+            "volumi_ml": [
+              10
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 0.75,
+            "mg_ml": 7.5,
+            "volumi_ml": [
+              10,
+              20
+            ],
+            "tipo": "fiala"
+          },
+          {
+            "conc_percento": 1,
+            "mg_ml": 10,
+            "volumi_ml": [
+              10
+            ],
+            "tipo": "fiala"
+          }
+        ]
+      }
+    ],
+    "verificato": false,
+    "fonte": "bozza"
+  }
+}

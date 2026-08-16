@@ -1,0 +1,66 @@
+#tossicita-additiva .sottotitolo {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.voci-tossicita {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+
+.voce-tossicita {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.voce-nome {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  min-width: 140px;
+}
+
+.campo-dose {
+  flex: 1 1 160px;
+}
+
+.tabella-tossicita {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.tabella-tossicita th,
+.tabella-tossicita td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabella-tossicita th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tabella-tossicita td {
+  color: var(--text-h);
+}
+
+.riga-totale td {
+  font-weight: 700;
+  border-bottom: none;
+  border-top: 2px solid var(--border);
+}
+
+.riga-totale.supera td {
+  color: #dc2626;
+}
