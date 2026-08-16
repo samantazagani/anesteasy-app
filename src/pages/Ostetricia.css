@@ -1,0 +1,92 @@
+#ostetricia {
+  padding: 32px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#ostetricia > .nota {
+  margin-bottom: 20px;
+}
+
+.riquadro-ostetricia {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.riquadro-ostetricia h2 {
+  margin: 0 0 12px;
+}
+
+.riquadro-ostetricia > .riga-meta {
+  margin-bottom: 12px;
+}
+
+.scheda {
+  margin-bottom: 16px;
+}
+
+.scheda:last-child {
+  margin-bottom: 0;
+}
+
+.scheda .riga-meta {
+  margin-bottom: 6px;
+}
+
+.scheda-titolo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.lista-voci-ostetricia {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.voce-ostetricia {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.chip-capitalizza {
+  text-transform: capitalize;
+}
+
+.tabella-apgar {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.tabella-apgar th,
+.tabella-apgar td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabella-apgar th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tabella-apgar td {
+  color: var(--text-h);
+}
+
+.algoritmo-neonatale {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}

@@ -1,0 +1,60 @@
+{
+  "_stato": "BOZZA da verificare. Dosi da pratica/linee guida ostetriche standard (nessuna pagina Mapar/Manuale dedicata, salvo MgSO4 dalla scheda del medico). verificato=false.",
+  "parto_analgesia": {
+    "epidurale": {
+      "soluzione": "ropivacaina 0.1-0.2% (o levobupivacaina 0.0625-0.125%) + oppioide",
+      "oppioide": "sufentanil ~0.5 mcg/ml o fentanyl ~2 mcg/ml",
+      "bolo_iniziale_ml": [10, 15],
+      "pcea": { "bolo_ml": 5, "lockout_min": [10, 20], "infusione_basale_ml_h": [5, 10] },
+      "verificato": false, "fonte": "bozza"
+    },
+    "combinata_spinale_epidurale": {
+      "componente_spinale": "bupivacaina 2.5 mg + sufentanil 2.5-5 mcg",
+      "verificato": false, "fonte": "bozza"
+    }
+  },
+  "taglio_cesareo": {
+    "spinale": { "farmaco": "bupivacaina iperbarica 0.5%", "dose_mg": [10, 12], "oppioidi": "fentanyl 15-25 mcg + morfina 100 mcg", "verificato": false, "fonte": "bozza" },
+    "dose_test_peridurale": { "soluzione": "lidocaina 2% 3 ml (+/- adrenalina 15 mcg)", "verificato": false, "fonte": "bozza" }
+  },
+  "dose_max_peridurale": { "nota": "usare i tetti degli anestetici locali (vedi anestetici-locali.json)", "verificato": false, "fonte": "bozza" },
+  "oppioidi_neuroassiali": [
+    { "farmaco": "morfina", "via": "intratecale", "valore": 100, "unita": "mcg", "durata_h": [12, 24], "verificato": false, "fonte": "bozza" },
+    { "farmaco": "morfina", "via": "peridurale", "min": 2, "max": 4, "unita": "mg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "fentanyl", "via": "intratecale", "min": 15, "max": 25, "unita": "mcg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "sufentanil", "via": "intratecale", "min": 2.5, "max": 5, "unita": "mcg", "verificato": false, "fonte": "bozza" }
+  ],
+  "profilassi_ipotensione_post_spinale": {
+    "farmaco": "fenilefrina", "schema": "infusione profilattica 25-50 mcg/min (o 0.1 mcg/kg/min), titolare su PA", "verificato": false, "fonte": "bozza"
+  },
+  "emorragia_postpartum": {
+    "uterotonici": [
+      { "ordine": 1, "farmaco": "ossitocina", "dose": "5 UI EV lenta + infusione 40 UI in 500 ml", "verificato": false, "fonte": "bozza" },
+      { "ordine": 2, "farmaco": "carbetocina", "dose": "100 mcg EV", "verificato": false, "fonte": "bozza" },
+      { "ordine": 3, "farmaco": "metilergometrina", "dose": "0.2 mg IM", "controindicazioni": "ipertensione/preeclampsia; NON EV", "verificato": false, "fonte": "bozza" },
+      { "ordine": 4, "farmaco": "sulprostone", "dose": "100-500 mcg/h EV (max 1500 mcg/24h)", "verificato": false, "fonte": "bozza" }
+    ],
+    "antifibrinolitico": { "farmaco": "acido tranexamico", "dose": "1 g EV", "verificato": false, "fonte": "bozza" }
+  },
+  "preeclampsia_eclampsia": {
+    "mgso4": {
+      "carico": "4-6 g EV in 15-20 min",
+      "mantenimento": "1-2 g/h EV",
+      "monitoraggio": "riflessi osteotendinei, diuresi >30 ml/h, FR >12",
+      "antidoto": "calcio gluconato 1 g EV (10 ml 10%)",
+      "note": "vedi anche scheda MgSO4 (uso analgesico 30-50 mg/kg, diverso da questo)",
+      "verificato": false, "fonte": "bozza"
+    }
+  },
+  "rianimazione_neonatale": {
+    "apgar": [
+      { "parametro": "FC", "0": "assente", "1": "<100", "2": ">100" },
+      { "parametro": "respiro", "0": "assente", "1": "irregolare/gasping", "2": "pianto valido" },
+      { "parametro": "tono", "0": "flaccido", "1": "flessione arti", "2": "movimenti attivi" },
+      { "parametro": "riflessi", "0": "assenti", "1": "smorfia", "2": "pianto/tosse" },
+      { "parametro": "colore", "0": "cianotico/pallido", "1": "acrocianosi", "2": "roseo" }
+    ],
+    "algoritmo": "riscaldare-asciugare-stimolare -> se FC<100 o apnea: VPP -> se FC<60 dopo VPP efficace: compressioni 3:1 -> adrenalina",
+    "adrenalina": { "valore": "0.01-0.03 mg/kg EV (0.05-0.1 mg/kg ET)", "note": "vedi farmaci.json (adrenalina, neonato)", "verificato": false, "fonte": "bozza" }
+  }
+}

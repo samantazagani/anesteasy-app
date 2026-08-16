@@ -6,6 +6,7 @@ import { CalcolatoreAntibiotici } from './pages/CalcolatoreAntibiotici.jsx'
 import { AnestesiaLocale } from './pages/AnestesiaLocale.jsx'
 import { Emergenze } from './pages/Emergenze.jsx'
 import { Pediatria } from './pages/Pediatria.jsx'
+import { Ostetricia } from './pages/Ostetricia.jsx'
 import './App.css'
 
 const VISTE = [
@@ -16,6 +17,7 @@ const VISTE = [
   { id: 'al', label: 'Anestetici locali' },
   { id: 'emergenze', label: 'Emergenze' },
   { id: 'pediatria', label: 'Pediatria' },
+  { id: 'ostetricia', label: 'Ostetricia' },
 ]
 
 function App() {
@@ -59,6 +61,9 @@ function App() {
       </div>
       <div hidden={vista !== 'pediatria'}>
         <Pediatria />
+      </div>
+      <div hidden={vista !== 'ostetricia'}>
+        <Ostetricia />
       </div>
     </>
   )
