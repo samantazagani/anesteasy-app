@@ -1,0 +1,87 @@
+{
+  "_stato": "BOZZA da verificare. Valori da standard pediatrici (APLS/PALS/ESAIC) - nessuna pagina Mapar/Manuale dedicata alla pediatria. verificato=false: controllare 1-a-1 e assegnare la fonte.",
+  "presidi": {
+    "tubo_iot": {
+      "formula_diametro_non_cuffiato": "eta_anni/4 + 4",
+      "formula_diametro_cuffiato": "eta_anni/4 + 3.5",
+      "formula_profondita_cm_labbro": "eta_anni/2 + 12",
+      "note": "formule valide >1-2 anni; sotto usare la tabella per età",
+      "tabella_eta": [
+        { "fascia": "prematuro", "diametro_mm": 2.5, "profondita_cm": 7 },
+        { "fascia": "neonato a termine", "diametro_mm": 3.0, "profondita_cm": 9 },
+        { "fascia": "1-6 mesi", "diametro_mm": 3.5, "profondita_cm": 10 },
+        { "fascia": "6-12 mesi", "diametro_mm": 3.5, "profondita_cm": 11 },
+        { "fascia": "1-2 anni", "diametro_mm": 4.0, "profondita_cm": 12 }
+      ],
+      "verificato": false, "fonte": "bozza"
+    },
+    "lama_laringoscopio": [
+      { "fascia": "prematuro/neonato", "tipo": "Miller", "misura": "0" },
+      { "fascia": "lattante", "tipo": "Miller", "misura": "1" },
+      { "fascia": "1-5 anni", "tipo": "Miller/Macintosh", "misura": "1-2" },
+      { "fascia": ">6 anni", "tipo": "Macintosh", "misura": "2-3" }
+    ],
+    "lma_per_peso": [
+      { "peso_kg": [0, 5], "misura": "1" },
+      { "peso_kg": [5, 10], "misura": "1.5" },
+      { "peso_kg": [10, 20], "misura": "2" },
+      { "peso_kg": [20, 30], "misura": "2.5" },
+      { "peso_kg": [30, 50], "misura": "3" }
+    ],
+    "sng_of": { "formula_french": "circa 2 x diametro tubo IOT", "note": "es. tubo 4.0 -> SNG 8 Fr" },
+    "cvc": [
+      { "fascia": "neonato/lattante", "french": 4, "lunghezza_cm": [4, 5] },
+      { "fascia": "bambino", "french": 5, "lunghezza_cm": [5, 8] },
+      { "fascia": ">6 anni", "french": "5-7", "lunghezza_cm": [8, 12] }
+    ],
+    "catetere_vescicale": [
+      { "fascia": "neonato", "french": "5-6" },
+      { "fascia": "lattante", "french": "6-8" },
+      { "fascia": "bambino", "french": "8-10" },
+      { "fascia": "adolescente", "french": "10-12" }
+    ],
+    "defibrillazione": { "defibrillazione_J_kg": 4, "cardioversione_J_kg": "0.5-1 poi 2", "verificato": false, "fonte": "bozza" }
+  },
+  "parametri_vitali": [
+    { "fascia": "neonato (0-28 gg)", "fc_bpm": [100, 180], "pa_sistolica_mmHg": [60, 90], "fr_atti_min": [40, 60] },
+    { "fascia": "lattante (1-12 mesi)", "fc_bpm": [100, 160], "pa_sistolica_mmHg": [70, 100], "fr_atti_min": [30, 53] },
+    { "fascia": "1-2 anni", "fc_bpm": [90, 150], "pa_sistolica_mmHg": [80, 110], "fr_atti_min": [22, 37] },
+    { "fascia": "3-5 anni", "fc_bpm": [80, 140], "pa_sistolica_mmHg": [80, 110], "fr_atti_min": [20, 28] },
+    { "fascia": "6-11 anni", "fc_bpm": [70, 120], "pa_sistolica_mmHg": [85, 120], "fr_atti_min": [18, 25] },
+    { "fascia": "12-15 anni", "fc_bpm": [60, 100], "pa_sistolica_mmHg": [95, 140], "fr_atti_min": [12, 20] }
+  ],
+  "stime": {
+    "peso_stimato_kg": {
+      "formule": [
+        { "eta": "0-12 mesi", "formula": "(0.5 * eta_mesi) + 4" },
+        { "eta": "1-5 anni", "formula": "(2 * eta_anni) + 8" },
+        { "eta": "6-12 anni", "formula": "(3 * eta_anni) + 7" }
+      ],
+      "alternativa_APLS": "(eta_anni + 4) * 2", "verificato": false, "fonte": "bozza"
+    },
+    "volemia_ml_kg": [
+      { "fascia": "neonato", "valore": [80, 90] },
+      { "fascia": "lattante", "valore": [75, 80] },
+      { "fascia": "bambino", "valore": [70, 75] }
+    ],
+    "perdita_ematica_max_ml": { "formula": "volemia_ml_kg * peso * (Hct_iniziale - Hct_minimo) / Hct_iniziale", "verificato": false, "fonte": "bozza" }
+  },
+  "fluidi": {
+    "mantenimento_4_2_1": { "formula": "4 ml/kg/h (primi 10 kg) + 2 ml/kg/h (10-20 kg) + 1 ml/kg/h (>20 kg)", "verificato": false, "fonte": "bozza" },
+    "bolo_riempimento": { "valore": [10, 20], "unita": "ml/kg", "note": "cristalloide isotonico, ripetibile", "verificato": false, "fonte": "bozza" },
+    "ipoglicemia": { "valore": [2, 5], "unita": "ml/kg glucosata 10%", "verificato": false, "fonte": "bozza" }
+  },
+  "premedicazione_analgesia": [
+    { "farmaco": "midazolam", "via": "os", "valore": 0.5, "unita": "mg/kg", "note": "max 15-20 mg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "ketamina", "via": "IM", "min": 4, "max": 6, "unita": "mg/kg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "paracetamolo", "via": "EV/os", "valore": 15, "unita": "mg/kg/dose", "note": "max 60 mg/kg/die", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "ibuprofene", "via": "os", "valore": 10, "unita": "mg/kg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "fentanyl", "via": "EV", "min": 1, "max": 2, "unita": "mcg/kg", "verificato": false, "fonte": "bozza" },
+    { "farmaco": "morfina", "via": "EV", "min": 0.05, "max": 0.1, "unita": "mg/kg", "verificato": false, "fonte": "bozza" }
+  ],
+  "emergenze_pediatriche": [
+    { "voce": "adrenalina arresto", "valore": 0.01, "unita": "mg/kg", "note": "vedi farmaci.json (adrenalina, pediatrico)", "verificato": false, "fonte": "bozza" },
+    { "voce": "atropina bradicardia", "valore": 0.02, "unita": "mg/kg", "note": "min 0.1 mg", "verificato": false, "fonte": "bozza" },
+    { "voce": "amiodarone arresto", "valore": 5, "unita": "mg/kg", "verificato": false, "fonte": "bozza" }
+  ]
+}
