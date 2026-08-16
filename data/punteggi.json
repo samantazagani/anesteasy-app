@@ -1,0 +1,86 @@
+{
+  "_stato": "BOZZA. Punteggi vie aeree/preop -> perioperatori -> TI. Alcuni completi (voci+punteggi), altri complessi (SOFA/APACHE) stub con componenti da completare. verificato=false.",
+  "punteggi": [
+    {
+      "id": "mallampati", "nome": "Mallampati modificato", "categoria": "vie_aeree",
+      "classi": [
+        { "classe": "I", "descrizione": "visibili palato molle, ugola, pilastri" },
+        { "classe": "II", "descrizione": "palato molle e ugola" },
+        { "classe": "III", "descrizione": "palato molle e base ugola" },
+        { "classe": "IV", "descrizione": "solo palato duro" }
+      ], "interpretazione": "III-IV: possibile via aerea difficile", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "el-ganzouri", "nome": "El-Ganzouri (EGRI)", "categoria": "vie_aeree",
+      "voci": ["peso", "apertura bocca", "distanza tiromentoniera", "Mallampati", "mobilita collo", "capacita di prognatismo", "storia di intubazione difficile"],
+      "interpretazione": ">=4 alto rischio di intubazione difficile", "nota": "completare punteggi delle singole voci", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "stop-bang", "nome": "STOP-BANG (OSA)", "categoria": "vie_aeree",
+      "voci": ["Snoring", "Tiredness", "Observed apnea", "Pressione alta", "BMI>35", "Age>50", "Neck>40cm", "Gender maschile"],
+      "punteggio": "1 punto ciascuno", "interpretazione": "0-2 basso, 3-4 intermedio, 5-8 alto rischio OSA", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "mrc-dispnea", "nome": "MRC dispnea", "categoria": "preoperatorio",
+      "gradi": [
+        { "grado": 1, "descrizione": "dispnea per esercizio intenso" },
+        { "grado": 2, "descrizione": "dispnea camminando in salita/di fretta" },
+        { "grado": 3, "descrizione": "cammina piu lento dei coetanei o si ferma" },
+        { "grado": 4, "descrizione": "si ferma dopo ~100 m" },
+        { "grado": 5, "descrizione": "dispnea per attivita minime (vestirsi)" }
+      ], "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "rcri", "nome": "RCRI (indice di Lee)", "categoria": "preoperatorio",
+      "voci": ["chirurgia ad alto rischio", "cardiopatia ischemica", "scompenso cardiaco", "malattia cerebrovascolare", "diabete in insulina", "creatinina >2 mg/dl"],
+      "punteggio": "1 punto ciascuno", "interpretazione": "0:0.4% - 1:0.9% - 2:6.6% - >=3:11% eventi cardiaci maggiori", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "ariscat", "nome": "ARISCAT (rischio polmonare)", "categoria": "preoperatorio",
+      "voci": ["eta", "SpO2 preop", "infezione respiratoria ultimo mese", "anemia", "sede chirurgica", "durata intervento", "chirurgia in urgenza"],
+      "interpretazione": "<26 basso, 26-44 intermedio, >=45 alto rischio complicanze polmonari", "nota": "completare punteggi", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "mets", "nome": "METs (capacita funzionale)", "categoria": "preoperatorio",
+      "riferimenti": ["1 MET: attivita di base", "4 MET: salire 2 rampe di scale / camminare in salita", ">10 MET: sport intensi"],
+      "interpretazione": "<4 MET = scarsa capacita funzionale, aumenta il rischio", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "apfel", "nome": "Apfel (PONV)", "categoria": "perioperatorio",
+      "voci": ["sesso femminile", "non fumatore", "storia di PONV/cinetosi", "oppioidi postoperatori"],
+      "punteggio": "1 punto ciascuno", "interpretazione": "rischio PONV ~10/20/40/60/80% per 0-4 fattori", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "aldrete", "nome": "Aldrete (dimissione dal risveglio)", "categoria": "perioperatorio",
+      "voci": ["attivita", "respiro", "circolo", "coscienza", "SpO2"], "punteggio": "0-2 ciascuno",
+      "interpretazione": ">=9 dimissibile dalla recovery", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "gcs", "nome": "Glasgow Coma Scale", "categoria": "terapia_intensiva",
+      "componenti": {
+        "apertura_occhi": [ {"p":4,"d":"spontanea"}, {"p":3,"d":"alla voce"}, {"p":2,"d":"al dolore"}, {"p":1,"d":"assente"} ],
+        "risposta_verbale": [ {"p":5,"d":"orientata"}, {"p":4,"d":"confusa"}, {"p":3,"d":"parole inappropriate"}, {"p":2,"d":"suoni"}, {"p":1,"d":"assente"} ],
+        "risposta_motoria": [ {"p":6,"d":"obbedisce"}, {"p":5,"d":"localizza"}, {"p":4,"d":"retrae"}, {"p":3,"d":"flessione anomala"}, {"p":2,"d":"estensione"}, {"p":1,"d":"assente"} ]
+      }, "interpretazione": "3-15; <=8 coma", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "rass", "nome": "RASS (sedazione-agitazione)", "categoria": "terapia_intensiva",
+      "scala": [ {"p":4,"d":"combattivo"}, {"p":3,"d":"molto agitato"}, {"p":2,"d":"agitato"}, {"p":1,"d":"irrequieto"}, {"p":0,"d":"vigile e calmo"}, {"p":-1,"d":"sonnolento"}, {"p":-2,"d":"sedazione lieve"}, {"p":-3,"d":"sedazione moderata"}, {"p":-4,"d":"sedazione profonda"}, {"p":-5,"d":"non risvegliabile"} ],
+      "nota": "coincide con la scala del Manuale (RASS)", "verificato": false, "fonte": "manuale-giovane-anestesista", "pagina": "41-42"
+    },
+    {
+      "id": "cam-icu", "nome": "CAM-ICU (delirium)", "categoria": "terapia_intensiva",
+      "criteri": ["1. esordio acuto/fluttuante", "2. inattenzione", "3. alterato livello di coscienza (RASS != 0)", "4. pensiero disorganizzato"],
+      "interpretazione": "positivo se 1 e 2 + (3 o 4)", "verificato": false, "fonte": "bozza"
+    },
+    {
+      "id": "sofa", "nome": "SOFA", "categoria": "terapia_intensiva",
+      "componenti": ["respiro (P/F)", "coagulazione (piastrine)", "fegato (bilirubina)", "cardiovascolare (MAP/vasoattivi)", "SNC (GCS)", "rene (creatinina/diuresi)"],
+      "nota": "ogni componente 0-4; completare le soglie", "verificato": false, "fonte": "bozza"
+    },
+    { "id": "apache2", "nome": "APACHE II", "categoria": "terapia_intensiva", "nota": "score complesso: 12 variabili fisiologiche + eta + patologie croniche; completare tabelle", "verificato": false, "fonte": "bozza" },
+    { "id": "four", "nome": "FOUR score", "categoria": "terapia_intensiva", "componenti": ["occhi", "motorio", "riflessi tronco", "respiro"], "nota": "0-4 ciascuno", "verificato": false, "fonte": "bozza" },
+    { "id": "hacor", "nome": "HACOR", "categoria": "terapia_intensiva", "componenti": ["FC", "acidosi (pH)", "coscienza (GCS)", "ossigenazione (P/F)", "FR"], "nota": "predice fallimento NIV; completare punteggi", "verificato": false, "fonte": "bozza" },
+    { "id": "rox", "nome": "ROX index", "categoria": "terapia_intensiva", "formula": "(SpO2/FiO2) / FR", "interpretazione": ">=4.88 a 2-6-12h predice successo HFNC", "verificato": false, "fonte": "bozza" }
+  ]
+}

@@ -105,7 +105,7 @@ export function calcolaInfusioneOraria({ pesoKg, concentrazioneMgMl, doseMgKgH, 
       throw new Error('calcolaInfusioneOraria: doseMgKgH deve essere un numero positivo')
     }
     const mgOra = doseMgKgH * pesoKg
-    const mlHCalcolato = mgOra / concentrazioneMgMl
+    const { mlH: mlHCalcolato } = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl, doseMgOra: mgOra, decimali })
     const formula =
       `${formatNumero(doseMgKgH, decimali)} mg/kg/h × ${formatNumero(pesoKg, decimali)} kg = ` +
       `${formatNumero(mgOra, decimali)} mg/h ÷ ${formatNumero(concentrazioneMgMl, decimali)} mg/ml = ` +
@@ -139,4 +139,27 @@ export function calcolaInfusioneOraria({ pesoKg, concentrazioneMgMl, doseMgKgH, 
     mlH: Number(mlH.toFixed(decimali)),
     formula,
   }
+}
+
+/**
+ * Nucleo condiviso "dose oraria assoluta (mg/h) ÷ concentrazione (mg/ml) = ml/h", senza
+ * peso: lo stesso conto di calcolaInfusioneOraria (che lo usa internamente dopo aver
+ * moltiplicato dose_mg_kg_h × peso), ma per calcolatori che partono gia' da una dose
+ * oraria assoluta invece che da mg/kg/h — es. Modulo 6 "infusione da dose oraria e
+ * diluizione" (data/calcolatori-ti.json).
+ *
+ * @param {{ concentrazioneMgMl: number, doseMgOra: number, decimali?: number }} input
+ */
+export function calcolaMlOrariDaConcentrazione({ concentrazioneMgMl, doseMgOra, decimali = 2 }) {
+  if (!(concentrazioneMgMl > 0)) {
+    throw new Error('calcolaMlOrariDaConcentrazione: concentrazione mancante o non valida')
+  }
+  if (!(doseMgOra > 0)) {
+    throw new Error('calcolaMlOrariDaConcentrazione: dose oraria mancante o non valida')
+  }
+
+  const mlH = doseMgOra / concentrazioneMgMl
+  const formula = `${formatNumero(doseMgOra, decimali)} mg/h ÷ ${formatNumero(concentrazioneMgMl, decimali)} mg/ml = ${formatNumero(mlH, decimali)} ml/h`
+
+  return { mlH: Number(mlH.toFixed(decimali)), formula }
 }

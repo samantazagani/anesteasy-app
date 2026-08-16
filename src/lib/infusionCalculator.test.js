@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { calcolaConcentrazione, calcolaInfusione, calcolaInfusioneOraria } from './infusionCalculator'
+import {
+  calcolaConcentrazione,
+  calcolaInfusione,
+  calcolaInfusioneOraria,
+  calcolaMlOrariDaConcentrazione,
+} from './infusionCalculator'
 
 describe('calcolaConcentrazione', () => {
   it('4 mg in 250 ml -> 16 mcg/ml (diluizione tipica noradrenalina)', () => {
@@ -126,5 +131,28 @@ describe('calcolaInfusioneOraria - validazione input', () => {
   it('rifiuta valori non positivi per la grandezza di partenza', () => {
     expect(() => calcolaInfusioneOraria({ pesoKg: 70, concentrazioneMgMl: 10, doseMgKgH: 0 })).toThrow()
     expect(() => calcolaInfusioneOraria({ pesoKg: 70, concentrazioneMgMl: 10, mlH: -1 })).toThrow()
+  })
+})
+
+describe('calcolaMlOrariDaConcentrazione', () => {
+  // Caso reale da data/calcolatori-ti.json > infusione_da_dose_oraria (Modulo 6): 1 g
+  // (=1000 mg) in 50 ml, dose 125 mg/h -> 20 mg/ml -> 6.25 ml/h.
+  it('1000 mg in 50 ml (20 mg/ml), dose 125 mg/h -> 6.25 ml/h', () => {
+    const r = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 1000 / 50, doseMgOra: 125 })
+
+    expect(r.mlH).toBe(6.25)
+    expect(r.formula).toBe('125 mg/h ÷ 20 mg/ml = 6.25 ml/h')
+  })
+
+  it('e\' lo stesso nucleo aritmetico usato da calcolaInfusioneOraria (peso × dose/kg = dose oraria)', () => {
+    const oraria = calcolaInfusioneOraria({ pesoKg: 70, concentrazioneMgMl: 10, doseMgKgH: 3 })
+    const daConcentrazione = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 10, doseMgOra: 3 * 70 })
+
+    expect(daConcentrazione.mlH).toBe(oraria.mlH)
+  })
+
+  it('lancia un errore se concentrazione o dose oraria mancano o non sono validi', () => {
+    expect(() => calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 0, doseMgOra: 125 })).toThrow(/concentrazione/i)
+    expect(() => calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 20, doseMgOra: 0 })).toThrow(/dose oraria/i)
   })
 })

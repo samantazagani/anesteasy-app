@@ -1,0 +1,23 @@
+{
+  "_stato": "Ventilazione: calcolatori (formule) + valori limite. Formule affidabili; soglie limite da verificare (verificato=false). Mechanical power: verificare coefficiente con la fonte.",
+  "calcolatori": [
+    { "id": "vt_pbw", "nome": "Vt su peso ideale (PBW)", "formula": "PBW_uomo = 50 + 0.91*(altezza_cm-152.4); PBW_donna = 45.5 + 0.91*(altezza_cm-152.4); Vt = ml_kg * PBW", "input": ["sesso","altezza_cm","ml_kg"], "output": "ml", "limite_id": "vt_kg" },
+    { "id": "compliance_statica", "nome": "Compliance statica", "formula": "Vt / (Pplat - PEEP)", "output": "ml/cmH2O" },
+    { "id": "compliance_dinamica", "nome": "Compliance dinamica", "formula": "Vt / (Ppeak - PEEP)", "output": "ml/cmH2O" },
+    { "id": "driving_pressure", "nome": "Driving pressure", "formula": "Pplat - PEEP", "output": "cmH2O", "limite_id": "driving_pressure" },
+    { "id": "mechanical_power", "nome": "Mechanical power", "formula": "0.098 * RR * Vt_L * (Ppeak - 0.5*(Pplat - PEEP))", "output": "J/min", "note": "equazione di Gattinoni; VERIFICARE coefficiente" },
+    { "id": "spazio_morto", "nome": "Spazio morto (Vd/Vt)", "formula": "(PaCO2 - PetCO2) / PaCO2", "note": "Bohr-Enghoff" },
+    { "id": "pf", "nome": "P/F", "formula": "PaO2 / FiO2" },
+    { "id": "oxygenation_index", "nome": "Indice di ossigenazione", "formula": "(FiO2 * Paw_media * 100) / PaO2" },
+    { "id": "o2_extraction", "nome": "Estrazione O2 (O2ER)", "formula": "(CaO2 - CvO2)/CaO2 ; CaO2 = 1.34*Hb*SaO2 + 0.003*PaO2" },
+    { "id": "vo2", "nome": "Consumo O2 (VO2)", "formula": "CO * (CaO2 - CvO2) * 10", "note": "Fick" },
+    { "id": "autonomia_bombola", "nome": "Autonomia bombola O2", "formula": "durata_min = (pressione_bar * capacita_bombola_L) / flusso_L_min" }
+  ],
+  "valori_limite": [
+    { "id": "vt_kg", "parametro": "Vt / kg PBW", "target": "6 (4-8)", "unita": "ml/kg", "verificato": false, "fonte": "bozza" },
+    { "id": "pplat", "parametro": "Pplateau", "soglia_max": 30, "unita": "cmH2O", "verificato": false, "fonte": "bozza" },
+    { "id": "driving_pressure", "parametro": "Driving pressure", "soglia_max": 15, "unita": "cmH2O", "verificato": false, "fonte": "bozza" },
+    { "id": "peep", "parametro": "PEEP", "range": [5, 15], "unita": "cmH2O", "note": "titolare; ARDS piu alta", "verificato": false, "fonte": "bozza" },
+    { "id": "ppeak", "parametro": "Ppeak", "soglia_max": 35, "unita": "cmH2O", "verificato": false, "fonte": "bozza" }
+  ]
+}

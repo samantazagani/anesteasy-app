@@ -1,0 +1,33 @@
+{
+  "_stato": "Da linee guida ASHP/IDSA/SIS 2013 (Clinical practice guidelines for antimicrobial prophylaxis in surgery), sintesi via StatPearls NBK442032. verificato=false: confermare con il protocollo locale / SNLG italiane prima dell'uso.",
+  "_fonti": [
+    { "id": "ashp-idsa-sis-2013", "titolo": "ASHP/IDSA/SIS - Antimicrobial prophylaxis in surgery (2013)", "via": "StatPearls", "url": "https://www.ncbi.nlm.nih.gov/books/NBK442032/" }
+  ],
+  "prima_scelta": {
+    "farmaco": "cefazolina",
+    "dose_adulto": { "standard": "2 g", "peso_alto": "3 g se peso >= 120 kg", "unita": "g EV", "peso": "reale" },
+    "dose_pediatrica": { "valore": 30, "unita": "mg/kg", "note": "non superare la dose adulto" },
+    "timing": "entro 60 min prima dell'incisione (idealmente 30-60 min)",
+    "ridose_intraoperatoria": "ogni 4 h (o dopo perdita ematica importante)",
+    "verificato": false, "fonte": "ashp-idsa-sis-2013"
+  },
+  "allergia_beta_lattamici": {
+    "_nota": "verificare sempre l'allergia: i farmaci di 2a linea hanno esiti inferiori e piu rischi (C. difficile, resistenze)",
+    "alternative": [
+      { "farmaco": "clindamicina", "dose_adulto": "900 mg EV", "dose_pediatrica": "10 mg/kg", "timing": "entro 60 min", "ridose": "ogni 6 h (ASHP)", "verificato": false, "fonte": "ashp-idsa-sis-2013" },
+      { "farmaco": "vancomicina", "dose_adulto": "15 mg/kg EV", "dose_pediatrica": "15 mg/kg (non superare dose adulto)", "timing": "entro 120 min (infusione lenta)", "ridose": "non necessaria (emivita lunga)", "verificato": false, "fonte": "ashp-idsa-sis-2013" }
+    ]
+  },
+  "mrsa": {
+    "indicazione": "colonizzazione nota o alto rischio MRSA",
+    "farmaco": "vancomicina 15 mg/kg EV",
+    "note": "aggiungere cefazolina/agente gram-negativi-anaerobi se la sede chirurgica lo richiede (la vanco da sola non copre gram- ne anaerobi)",
+    "verificato": false, "fonte": "ashp-idsa-sis-2013"
+  },
+  "timing_generale": {
+    "standard": "30-60 min prima dell'incisione",
+    "vancomicina_fluorochinoloni": "entro 120 min (tempi di infusione piu lunghi)",
+    "verificato": false, "fonte": "ashp-idsa-sis-2013"
+  },
+  "_da_completare": "profilassi specifica per tipo di chirurgia (es. colon-retto: + copertura anaerobi/gram-; cardiochirurgia; ortopedia protesica): da aggiungere con la fonte SNLG/locale"
+}
