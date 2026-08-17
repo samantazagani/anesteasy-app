@@ -17,6 +17,31 @@
   margin: 8px 0 20px;
 }
 
+.riquadro-calcolatore {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.riquadro-calcolatore h2 {
+  margin: 0 0 4px;
+}
+
+.riquadro-calcolatore:last-child {
+  margin-bottom: 0;
+}
+
+.campo-dose-oraria {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  color: var(--text-h);
+  max-width: 220px;
+  margin-bottom: 12px;
+}
+
 .diluizione {
   display: flex;
   align-items: flex-end;

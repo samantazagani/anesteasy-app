@@ -144,6 +144,15 @@ describe('calcolaMlOrariDaConcentrazione', () => {
     expect(r.formula).toBe('125 mg/h ÷ 20 mg/ml = 6.25 ml/h')
   })
 
+  // Caso reale del calcolatore "Dose oraria -> ml/h" nel Modulo 1 (γ/ml/h), accanto a
+  // γ/kg/min <-> ml/h: 500 mg in 40 ml, dose 2 mg/h -> 12.5 mg/ml -> 0.16 ml/h.
+  it('500 mg in 40 ml (12.5 mg/ml), dose 2 mg/h -> 0.16 ml/h', () => {
+    const r = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 500 / 40, doseMgOra: 2 })
+
+    expect(r.mlH).toBe(0.16)
+    expect(r.formula).toBe('2 mg/h ÷ 12.5 mg/ml = 0.16 ml/h')
+  })
+
   it('e\' lo stesso nucleo aritmetico usato da calcolaInfusioneOraria (peso × dose/kg = dose oraria)', () => {
     const oraria = calcolaInfusioneOraria({ pesoKg: 70, concentrazioneMgMl: 10, doseMgKgH: 3 })
     const daConcentrazione = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 10, doseMgOra: 3 * 70 })
