@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calcolaDose } from './doseCalculator'
+import { calcolaDose, formatoRisultato } from './doseCalculator'
 
 describe('calcolaDose - caso range (min/max)', () => {
   // Caso reale da data/farmaci.json: propofol, contesto "induzione", fascia_eta "adulto".
@@ -99,5 +99,17 @@ describe('calcolaDose - caso valore singolo', () => {
 
   it('lancia un errore se manca la unita', () => {
     expect(() => calcolaDose({ valore: 1 }, 70)).toThrow(/unita/i)
+  })
+})
+
+describe('formatoRisultato - solo il numero finale, per il risultato "in evidenza"', () => {
+  it('caso range: "105–175 mg", senza la dose per kg', () => {
+    const risultato = calcolaDose({ min: 1.5, max: 2.5, unita: 'mg/kg' }, 70)
+    expect(formatoRisultato(risultato)).toBe('105–175 mg')
+  })
+
+  it('caso valore singolo: "60 mg"', () => {
+    const risultato = calcolaDose({ valore: 1, unita: 'mg/kg' }, 60)
+    expect(formatoRisultato(risultato)).toBe('60 mg')
   })
 })

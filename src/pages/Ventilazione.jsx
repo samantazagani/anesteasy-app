@@ -201,8 +201,8 @@ function CalcVtPbw({ sesso, vtN, pbw }) {
       {!pbw && <p className="avviso">Inserisci altezza (e sesso) nel pannello condiviso.</p>}
       {pbw && (
         <>
+          <p className="risultato-primario">PBW {pbw.pbwKg} kg (sesso {sesso})</p>
           <p className="formula">{pbw.formula}</p>
-          <p className="risultato-evidenza-vent">→ PBW {pbw.pbwKg} kg (sesso {sesso})</p>
 
           <div className="griglia-campi-vent">
             <Campo etichetta="Target (ml/kg)" valore={mlKg} onChange={setMlKg} />
@@ -214,10 +214,13 @@ function CalcVtPbw({ sesso, vtN, pbw }) {
           )}
 
           {attuale ? (
-            <p className="risultato-evidenza-vent">
-              → Vt attuale / PBW: {attuale.mlKg} ml/kg{' '}
-              <IndicatoreLimite valore={attuale.mlKg} limite={trovaLimite('vt_kg')} />
-            </p>
+            <>
+              <p className="risultato-primario">
+                Vt attuale/PBW: {attuale.mlKg} ml/kg{' '}
+                <IndicatoreLimite valore={attuale.mlKg} limite={trovaLimite('vt_kg')} />
+              </p>
+              <p className="formula">{attuale.formula}</p>
+            </>
           ) : (
             <p className="avviso">
               Inserisci il Vt nel pannello condiviso per verificare il rapporto ml/kg PBW.
@@ -247,8 +250,8 @@ function CalcComplianceStatica({ vtN, pplatN, peepN }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.compliance} ml/cmH2O</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ {risultato.compliance} ml/cmH2O</p>
         </>
       )}
     </Calcolatore>
@@ -273,8 +276,8 @@ function CalcComplianceDinamica({ vtN, ppeakN, peepN }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.compliance} ml/cmH2O</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ {risultato.compliance} ml/cmH2O</p>
         </>
       )}
     </Calcolatore>
@@ -299,11 +302,11 @@ function CalcDrivingPressure({ pplatN, peepN }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
-          <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">
-            → {risultato.drivingPressure} cmH2O{' '}
+          <p className="risultato-primario">
+            {risultato.drivingPressure} cmH2O{' '}
             <IndicatoreLimite valore={risultato.drivingPressure} limite={trovaLimite('driving_pressure')} />
           </p>
+          <p className="formula">{risultato.formula}</p>
         </>
       )}
     </Calcolatore>
@@ -331,8 +334,8 @@ function CalcMechanicalPower({ rrN, vtN, ppeakN, pplatN, peepN }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.power} J/min</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ {risultato.power} J/min</p>
         </>
       )}
       <p className="nota">Equazione di Gattinoni.</p>
@@ -367,8 +370,8 @@ function CalcSpazioMorto() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">Vd/Vt {risultato.vdVt}</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ Vd/Vt {risultato.vdVt}</p>
         </>
       )}
       <p className="nota">Bohr-Enghoff.</p>
@@ -401,8 +404,8 @@ function CalcPF() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">P/F {risultato.pf}</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ P/F {risultato.pf}</p>
         </>
       )}
     </Calcolatore>
@@ -437,8 +440,8 @@ function CalcOxygenationIndex() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">OI {risultato.oi}</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ OI {risultato.oi}</p>
         </>
       )}
     </Calcolatore>
@@ -479,11 +482,11 @@ function CalcO2ER() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">O2ER {risultato.o2er}</p>
+          <p className="formula">{risultato.formula}</p>
           <p className="nota">
             CaO2 {risultato.caO2} ml/dL · CvO2 {risultato.cvO2} ml/dL
           </p>
-          <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ O2ER {risultato.o2er}</p>
         </>
       )}
     </Calcolatore>
@@ -527,8 +530,8 @@ function CalcVO2() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">VO2 {risultato.vo2} ml/min</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-vent">→ VO2 {risultato.vo2} ml/min</p>
         </>
       )}
       <p className="nota">Fick.</p>
@@ -562,7 +565,12 @@ function CalcAutonomiaBombola() {
         <Campo etichetta="Flusso (L/min)" valore={flussoLMin} onChange={setFlussoLMin} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="risultato-evidenza-vent">→ {risultato.durataMin} min</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.durataMin} min</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
     </Calcolatore>
   )
 }

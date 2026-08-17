@@ -4,7 +4,7 @@ import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { selezionaDose, etichettaVariante } from '../lib/selezioneDose'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
@@ -238,6 +238,7 @@ export function CalcolatoreDoseBolo() {
 
                 {risultato && (
                   <div className="formula-a-vista">
+                    <p className="risultato-primario">{formatoRisultato(risultato)}</p>
                     <p className="formula">{risultato.formula}</p>
                     {/* se la nota e' gia' mostrata come etichetta della variante (sugammadex ecc.), non ripeterla */}
                     {doseScelta.note && !(selezione.candidati.length > 1 && !doseScelta.via) && (

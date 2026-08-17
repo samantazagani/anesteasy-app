@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import nutrizioneData from '../../data/nutrizione.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import {
   calcolaHarrisBenedict,
   calcolaNPT,
@@ -102,7 +102,10 @@ function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTarg
       <div className="scheda">
         <p className="scheda-titolo">Range su peso reale</p>
         {risultatoRange ? (
-          <p className="formula">{risultatoRange.formula}</p>
+          <>
+            <p className="risultato-primario">{formatoRisultato(risultatoRange)}</p>
+            <p className="formula">{risultatoRange.formula}</p>
+          </>
         ) : (
           <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
         )}
@@ -157,12 +160,12 @@ function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTarg
         {erroreHb && <p className="avviso avviso-errore">{erroreHb}</p>}
         {hb && (
           <>
+            <p className="risultato-primario">{hb.basaleKcal} kcal/die (basale)</p>
             <p className="formula">{hb.formulaBasale}</p>
-            <p className="risultato-evidenza">→ {hb.basaleKcal} kcal/die (basale)</p>
             {hb.formulaStress && (
               <>
+                <p className="risultato-primario">{hb.kcalConStress} kcal/die (con stress)</p>
                 <p className="formula">{hb.formulaStress}</p>
-                <p className="risultato-evidenza">→ {hb.kcalConStress} kcal/die (con stress)</p>
               </>
             )}
           </>
@@ -200,7 +203,10 @@ function SezioneProteine({ lista, pesoKg, faseIndice, onFaseChange, gKgAminoacid
       </div>
 
       {risultato ? (
-        <p className="formula">{risultato.formula}</p>
+        <>
+          <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
       ) : (
         <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
       )}
@@ -231,7 +237,10 @@ function SezioneFabbisognoIdrico({ dati, pesoKg }) {
         <BadgeVerifica verificato={dati.verificato} />
       </div>
       {risultato ? (
-        <p className="formula">{risultato.formula}</p>
+        <>
+          <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
       ) : (
         <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
       )}
@@ -398,16 +407,22 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
 
       {npt && (
         <>
-          <p className="risultato-evidenza">→ {npt.kcalTotali} kcal/die totali</p>
+          <p className="risultato-primario">{npt.kcalTotali} kcal/die totali</p>
 
           <div className="lista-voci-nutrizione">
             <div className="voce-nutrizione">
               <p className="scheda-titolo">Aminoacidi</p>
+              <p className="risultato-primario">
+                {npt.aminoacidi.g} g ({npt.aminoacidi.kcal} kcal)
+              </p>
               <p className="formula">{npt.aminoacidi.formula}</p>
             </div>
 
             <div className="voce-nutrizione">
               <p className="scheda-titolo">Glucidi</p>
+              <p className="risultato-primario">
+                {npt.glucidi.g} g ({npt.glucidi.kcal} kcal)
+              </p>
               <p className="formula">{npt.glucidi.formula}</p>
               <p className="nota">{npt.glucidi.mgKgMin} mg/kg/min (limite {dati.limiti.glucosio_max_mg_kg_min})</p>
               {npt.glucidi.superaLimite && (
@@ -417,6 +432,9 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
 
             <div className="voce-nutrizione">
               <p className="scheda-titolo">Lipidi</p>
+              <p className="risultato-primario">
+                {npt.lipidi.g} g ({npt.lipidi.kcal} kcal)
+              </p>
               <p className="formula">{npt.lipidi.formula}</p>
               <p className="nota">{npt.lipidi.gKgDie} g/kg/die (limite {dati.limiti.lipidi_max_g_kg_die})</p>
               {npt.lipidi.superaLimite && (

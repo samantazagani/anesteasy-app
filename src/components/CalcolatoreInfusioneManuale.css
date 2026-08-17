@@ -50,13 +50,7 @@
   padding: 14px;
 }
 
-.colonna-concentrazione .formula {
-  font-size: 15px;
-}
-
-.colonna-concentrazione .risultato-evidenza {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 4px 0 0;
+.colonna-concentrazione .risultato-primario {
+  font-size: 20px;
+  margin: 4px 0 4px;
 }

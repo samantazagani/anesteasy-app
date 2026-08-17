@@ -163,7 +163,12 @@ function CalcSodioCorretto() {
         <Campo etichetta="Glicemia (mg/dL)" valore={glicemia} onChange={setGlicemia} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.naCorretto} mmol/L</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Alcuni usano 0.024 per glicemie molto alte.</p>
     </Calcolatore>
   )
@@ -204,7 +209,12 @@ function CalcDeficitSodio({ profile }) {
         <Campo etichetta="Na target (mmol/L)" valore={naTarget} onChange={setNaTarget} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.deficitMmol} mmol</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Correggere max 8-10 mmol/L per 24h.</p>
     </Calcolatore>
   )
@@ -230,7 +240,14 @@ function CalcDeficitPotassio() {
         <Campo etichetta="K attuale (mmol/L)" valore={kAttuale} onChange={setKAttuale} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">
+            {risultato.deficitMinMmol}-{risultato.deficitMaxMmol} mmol
+          </p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Stima grossolana: guidare con emogas seriati.</p>
     </Calcolatore>
   )
@@ -267,6 +284,7 @@ function CalcAnionGap() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">AG {risultato.agCorretto ?? risultato.ag} mmol/L</p>
           <p className="formula">{risultato.formula}</p>
           {risultato.formulaCorretto && <p className="formula">{risultato.formulaCorretto}</p>}
         </>
@@ -307,6 +325,7 @@ function CalcGapOsmolare() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">Gap {risultato.gap} mOsm/L</p>
           <p className="formula">{risultato.formulaCalcolata}</p>
           <p className="formula">{risultato.formulaGap}</p>
         </>
@@ -348,7 +367,12 @@ function CalcDeficitIdrico({ profile }) {
         <Campo etichetta="Na attuale (mmol/L)" valore={naAttuale} onChange={setNaAttuale} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.deficitL} L</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
     </Calcolatore>
   )
 }
@@ -376,7 +400,12 @@ function CalcCalcioCorretto() {
         <Campo etichetta="Albumina (g/dL)" valore={albumina} onChange={setAlbumina} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.caCorretto} mg/dL</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
     </Calcolatore>
   )
 }
@@ -412,7 +441,12 @@ function CalcAaGradient() {
         <Campo etichetta="PaO2 (mmHg)" valore={paO2} onChange={setPaO2} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">A-a {risultato.aa} mmHg</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Normale ~ età/4 + 4.</p>
     </Calcolatore>
   )
@@ -440,10 +474,10 @@ function CalcWinter() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
-          <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-ti">
-            → {risultato.attesoMin}-{risultato.attesoMax} mmHg
+          <p className="risultato-primario">
+            {risultato.attesoMin}-{risultato.attesoMax} mmHg
           </p>
+          <p className="formula">{risultato.formula}</p>
         </>
       )}
       <p className="nota">Per acidosi metabolica.</p>
@@ -476,7 +510,12 @@ function CalcMAP() {
         <Campo etichetta="PAD (mmHg)" valore={pad} onChange={setPad} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">MAP {risultato.map} mmHg</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
     </Calcolatore>
   )
 }
@@ -504,7 +543,12 @@ function CalcShockIndex() {
         <Campo etichetta="PAS (mmHg)" valore={pas} onChange={setPas} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">SI {risultato.si}</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Normale 0.5-0.7; &gt;0.9 allarme.</p>
     </Calcolatore>
   )
@@ -550,7 +594,12 @@ function CalcClearanceCreatinina({ profile }) {
         <Campo etichetta="Creatinina (mg/dL)" valore={creatinina} onChange={setCreatinina} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.clcrMlMin} ml/min</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
     </Calcolatore>
   )
 }
@@ -580,7 +629,12 @@ function CalcQTc() {
         <Campo etichetta="FC (bpm)" valore={fc} onChange={setFc} />
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && <p className="formula">{risultato.formula}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">QTc {risultato.qtcMs} ms</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
       <p className="nota">Prolungato &gt;450 ms (uomo) / &gt;470 ms (donna).</p>
     </Calcolatore>
   )
@@ -623,8 +677,8 @@ function CalcGamma({ profile }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.mlH} ml/h</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-ti">→ {risultato.mlH} ml/h</p>
         </>
       )}
       <p className="nota">
@@ -666,8 +720,8 @@ function CalcInfusioneOraria() {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.mlH} ml/h</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-ti">→ {risultato.mlH} ml/h</p>
         </>
       )}
       <p className="nota">

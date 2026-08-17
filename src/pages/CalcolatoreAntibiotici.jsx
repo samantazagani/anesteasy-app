@@ -3,7 +3,7 @@ import antibioticiData from '../../data/antibiotici_template.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreAntibiotici.css'
@@ -107,6 +107,7 @@ export function CalcolatoreAntibiotici() {
 
               {risultato && (
                 <div className="formula-a-vista">
+                  <p className="risultato-primario">{formatoRisultato(risultato)}</p>
                   <p className="formula">{risultato.formula}</p>
                   {superaTetto && (
                     <p className="avviso avviso-errore">

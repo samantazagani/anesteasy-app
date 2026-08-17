@@ -134,8 +134,8 @@ function ChecklistPunteggio({ dati, calcola }) {
           </label>
         ))}
       </div>
-      <p className="risultato-evidenza-p">
-        → {risultato.punteggio}/{dati.voci.length} — {risultato.interpretazione}
+      <p className="risultato-primario">
+        {risultato.punteggio}/{dati.voci.length} — {risultato.interpretazione}
       </p>
     </Punteggio>
   )
@@ -158,8 +158,8 @@ function CalcClassificazione({ dati, opzioni, chiaveLabel, chiaveDescrizione }) 
           ))}
         </select>
       </label>
-      <p className="risultato-evidenza-p">
-        → {opzione[chiaveLabel]}: {opzione[chiaveDescrizione]}
+      <p className="risultato-primario">
+        {opzione[chiaveLabel]}: {opzione[chiaveDescrizione]}
       </p>
       {dati.interpretazione && <p className="nota">{dati.interpretazione}</p>}
     </Punteggio>
@@ -239,8 +239,8 @@ function CalcManuale({ dati, voci, max, calcola, unitaMassima, interpretaEtichet
       </div>
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
-        <p className="risultato-evidenza-p">
-          → {risultato.punteggio}/{unitaMassima}
+        <p className="risultato-primario">
+          {risultato.punteggio}/{unitaMassima}
           {interpretaEtichetta ? ` — ${interpretaEtichetta(risultato)}` : ''}
         </p>
       )}
@@ -301,8 +301,8 @@ function CalcGCS({ dati }) {
         <SelectComponente etichetta="Risposta verbale" opzioni={opz.risposta_verbale} indice={iVerbale} onChange={setIVerbale} />
         <SelectComponente etichetta="Risposta motoria" opzioni={opz.risposta_motoria} indice={iMotoria} onChange={setIMotoria} />
       </div>
-      <p className="risultato-evidenza-p">
-        → GCS {risultato.punteggio}/15{risultato.coma ? ' — coma' : ''}
+      <p className="risultato-primario">
+        GCS {risultato.punteggio}/15{risultato.coma ? ' — coma' : ''}
       </p>
       <p className="nota">{dati.interpretazione}</p>
     </Punteggio>
@@ -326,8 +326,8 @@ function CalcRASS({ dati }) {
           ))}
         </select>
       </label>
-      <p className="risultato-evidenza-p">
-        → RASS {opzione.p >= 0 ? `+${opzione.p}` : opzione.p}: {opzione.d}
+      <p className="risultato-primario">
+        RASS {opzione.p >= 0 ? `+${opzione.p}` : opzione.p}: {opzione.d}
       </p>
       {dati.nota && <p className="nota">{dati.nota}</p>}
     </Punteggio>
@@ -358,8 +358,8 @@ function CalcCamIcu({ dati }) {
           </label>
         ))}
       </div>
-      <p className={risultato.positivo ? 'risultato-evidenza-p risultato-positivo' : 'risultato-evidenza-p'}>
-        → {risultato.positivo ? 'CAM-ICU positivo (delirium presente)' : 'CAM-ICU negativo'}
+      <p className={risultato.positivo ? 'risultato-primario risultato-positivo' : 'risultato-primario'}>
+        {risultato.positivo ? 'CAM-ICU positivo (delirium presente)' : 'CAM-ICU negativo'}
       </p>
       <p className="nota">{dati.interpretazione}</p>
     </Punteggio>
@@ -394,10 +394,10 @@ function CalcROX({ dati }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
-          <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza-p">
-            → ROX {risultato.indice} {risultato.successoProbabile ? '(≥4.88)' : '(<4.88)'}
+          <p className="risultato-primario">
+            ROX {risultato.indice} {risultato.successoProbabile ? '(≥4.88)' : '(<4.88)'}
           </p>
+          <p className="formula">{risultato.formula}</p>
         </>
       )}
       <p className="nota">{dati.interpretazione}</p>

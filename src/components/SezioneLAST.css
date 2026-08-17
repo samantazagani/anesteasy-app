@@ -23,7 +23,7 @@
   color: #78350f;
 }
 
-.riquadro-last .risultato-evidenza {
+.riquadro-last .risultato-primario {
   color: #b45309;
 }
 
@@ -69,7 +69,7 @@
     color: #fde68a;
   }
 
-  .riquadro-last .risultato-evidenza {
+  .riquadro-last .risultato-primario {
     color: #fbbf24;
   }
 }

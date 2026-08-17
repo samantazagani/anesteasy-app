@@ -47,11 +47,29 @@
   margin-top: 8px;
 }
 
+/* Risultato finale del calcolo (es. "150–250 mg"): l'elemento primario, grande e ad alto
+   contrasto — quello che si legge al volo. */
+.risultato-primario {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 2px 0 6px;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* La formula per esteso (dose per kg × peso = risultato): informazione secondaria, sotto
+   al risultato primario, piu' piccola e in grigio. Resta comunque sempre a vista (mai
+   nascosta) per la trasparenza del calcolo richiesta da PROGETTO.md. */
 .formula {
   font-family: var(--mono);
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--text-h);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
   margin: 0 0 8px;
   word-break: break-word;
 }

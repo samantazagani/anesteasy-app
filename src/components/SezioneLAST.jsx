@@ -26,12 +26,12 @@ export function SezioneLAST({ lastData, pesoKg }) {
       {last && (
         <div className="formula-a-vista">
           <p className="etichetta-last">Bolo</p>
+          <p className="risultato-primario">{last.boloMl} ml</p>
           <p className="formula">{last.formulaBolo}</p>
-          <p className="risultato-evidenza">→ {last.boloMl} ml</p>
 
           <p className="etichetta-last">Infusione</p>
+          <p className="risultato-primario">{last.infusioneMlH} ml/h</p>
           <p className="formula">{last.formulaInfusione}</p>
-          <p className="risultato-evidenza">→ {last.infusioneMlH} ml/h</p>
 
           <p className="nota">Ripetizione: {lastData.ripetizione}</p>
         </div>

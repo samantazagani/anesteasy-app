@@ -79,3 +79,15 @@ export function calcolaDose(dose, pesoKg, { decimali = 2 } = {}) {
     formula,
   }
 }
+
+/**
+ * Solo il risultato finale (es. "105–175 mg"), senza il resto della formula: per il
+ * numero "in evidenza" mostrato in primo piano, mentre .formula (con la dose per kg e il
+ * peso) resta la spiegazione completa mostrata sotto, piu' piccola.
+ * @param {ReturnType<typeof calcolaDose>} risultato
+ */
+export function formatoRisultato(risultato) {
+  return risultato.tipo === 'range'
+    ? `${risultato.min}–${risultato.max} ${risultato.unita}`
+    : `${risultato.valore} ${risultato.unita}`
+}

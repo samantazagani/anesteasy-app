@@ -192,8 +192,8 @@ export function AnestesiaLocale() {
                   </span>
                   <BadgeVerifica verificato={anestetico.verificato} />
                 </div>
+                <p className="risultato-primario">{volumeMassimo.volumeMaxMl} ml</p>
                 <p className="formula">{volumeMassimo.formula}</p>
-                <p className="risultato-evidenza">→ {volumeMassimo.volumeMaxMl} ml</p>
                 <p className="fonte">
                   Fonte: {anestetico.fonte}
                   {anestetico.pagina ? `, p. ${anestetico.pagina}` : ''}
@@ -256,6 +256,7 @@ export function AnestesiaLocale() {
 
             {diluizione && (
               <div className="formula-a-vista">
+                <p className="risultato-primario">{diluizione.volumeDaPrelevareMl} ml</p>
                 <p className="formula">{diluizione.formula}</p>
                 {diluizione.fialeNecessarie !== null && (
                   <p className="nota">Fiale necessarie: {diluizione.fialeNecessarie}</p>
@@ -323,6 +324,9 @@ export function AnestesiaLocale() {
 
             {elastomero && (
               <div className="formula-a-vista">
+                <p className="risultato-primario">
+                  {elastomero.nFiale} fiale ({elastomero.volumeALMl} ml AL)
+                </p>
                 <p className="formula">{elastomero.formula}</p>
                 {elastomero.superaVolumeTotale && (
                   <p className="avviso avviso-errore">

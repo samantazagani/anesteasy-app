@@ -102,13 +102,6 @@
   background: var(--accent-bg);
 }
 
-.risultato-evidenza-p {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 6px 0 4px;
-}
-
 .risultato-positivo {
   color: #dc2626;
 }

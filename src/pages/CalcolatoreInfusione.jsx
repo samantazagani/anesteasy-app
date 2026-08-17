@@ -152,12 +152,12 @@ export function CalcolatoreInfusione() {
 
         {risultato && (
           <div className="formula-a-vista">
-            <p className="formula">{risultato.formula}</p>
-            <p className="risultato-evidenza">
+            <p className="risultato-primario">
               {risultato.direzione === 'dose->mlH'
-                ? `→ ${risultato.mlH} ml/h`
-                : `→ ${risultato.doseMcgKgMin} mcg/kg/min`}
+                ? `${risultato.mlH} ml/h`
+                : `${risultato.doseMcgKgMin} mcg/kg/min`}
             </p>
+            <p className="formula">{risultato.formula}</p>
           </div>
         )}
       </div>

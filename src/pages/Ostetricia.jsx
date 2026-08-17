@@ -1,7 +1,7 @@
 import ostetriciaData from '../../data/ostetricia.json'
 import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Ostetricia.css'
@@ -141,6 +141,7 @@ function SezioneOppioidiNeuroassiali({ lista }) {
                 <span className="chip chip-capitalizza">Via: {dose.via}</span>
                 <BadgeVerifica verificato={dose.verificato} />
               </div>
+              <p className="risultato-primario">{formatoRisultato(risultato)}</p>
               <p className="formula">{risultato.formula}</p>
               {dose.durata_h && <p className="nota">Durata: {intervallo(dose.durata_h, 'h')}</p>}
             </div>
@@ -249,7 +250,7 @@ function SezioneRianimazioneNeonatale({ dati, adrenalina }) {
         <p className="scheda-titolo">Adrenalina</p>
         {adrenalina ? (
           <>
-            <p className="formula">
+            <p className="risultato-primario">
               {adrenalina.min}-{adrenalina.max} {adrenalina.unita}
             </p>
             <p className="nota">

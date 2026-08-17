@@ -57,8 +57,8 @@ export function CalcolatoreInfusioneManuale({ config, pesoKg }) {
                 {errore && <p className="avviso avviso-errore">{errore}</p>}
                 {risultato && (
                   <div className="formula-a-vista">
+                    <p className="risultato-primario">{risultato.mlH} ml/h</p>
                     <p className="formula">{risultato.formula}</p>
-                    <p className="risultato-evidenza">→ {risultato.mlH} ml/h</p>
                   </div>
                 )}
               </div>

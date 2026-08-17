@@ -99,9 +99,3 @@
   cursor: pointer;
 }
 
-.risultato-evidenza {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 4px 0 8px;
-}

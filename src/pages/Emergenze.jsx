@@ -5,7 +5,7 @@ import anesteticiData from '../../data/anestetici-locali.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { calcolaConcentrazione, calcolaInfusione } from '../lib/infusionCalculator'
 import { calcolaLAST } from '../lib/anestesiaLocaleCalculator'
 import { tipoPasso, risolviPassoFarmaco } from '../lib/emergenzaStepEngine'
@@ -201,6 +201,7 @@ function PassoBolo({ farmaco, doseScelta, fasciaUsata, fallback, passo, derivati
 
       {risultato && (
         <>
+          <p className="risultato-primario">{formatoRisultato(risultato)}</p>
           <p className="formula">{risultato.formula}</p>
           {doseScelta.note && <p className="nota">{doseScelta.note}</p>}
           {doseScelta.fonte && (
@@ -299,8 +300,8 @@ function PassoInfusione({ farmaco, doseScelta, pesoKg }) {
 
       {risultato && (
         <>
+          <p className="risultato-primario">{risultato.mlH} ml/h</p>
           <p className="formula">{risultato.formula}</p>
-          <p className="risultato-evidenza">→ {risultato.mlH} ml/h</p>
         </>
       )}
     </div>
@@ -327,12 +328,12 @@ function PassoLAST({ lastData, pesoKg }) {
       {last && (
         <>
           <p className="nota">Bolo</p>
+          <p className="risultato-primario">{last.boloMl} ml</p>
           <p className="formula">{last.formulaBolo}</p>
-          <p className="risultato-evidenza">→ {last.boloMl} ml</p>
 
           <p className="nota">Infusione</p>
+          <p className="risultato-primario">{last.infusioneMlH} ml/h</p>
           <p className="formula">{last.formulaInfusione}</p>
-          <p className="risultato-evidenza">→ {last.infusioneMlH} ml/h</p>
 
           <p className="nota">Ripetizione: {lastData.ripetizione}</p>
         </>

@@ -5,7 +5,7 @@ import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
 import { formatEta } from '../lib/etaConversione'
 import { risolviPeso } from '../lib/pesoResolver'
-import { calcolaDose } from '../lib/doseCalculator'
+import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { selezionaDose } from '../lib/selezioneDose'
 import {
   trovaFasciaTuboIOT,
@@ -85,7 +85,7 @@ function PresidioRiga({ titolo, riga, render, avviso }) {
       {avviso ? (
         <p className="avviso">{avviso}</p>
       ) : riga ? (
-        <p className="formula">{render(riga)}</p>
+        <p className="risultato-primario">{render(riga)}</p>
       ) : (
         <p className="avviso">Nessuna fascia trovata per questa età.</p>
       )}
@@ -116,7 +116,7 @@ function SezionePresidi({ presidi, etaAnni, pesoKg }) {
         {rigaTabella ? (
           <>
             <p className="nota">Tabella per età: {rigaTabella.fascia}</p>
-            <p className="formula">
+            <p className="risultato-primario">
               Diametro {rigaTabella.diametro_mm} mm · profondità {rigaTabella.profondita_cm} cm al
               labbro
             </p>
@@ -124,9 +124,12 @@ function SezionePresidi({ presidi, etaAnni, pesoKg }) {
         ) : (
           <>
             <p className="nota">Formula (&gt;2 anni)</p>
-            <p className="formula">{formulaTubo.formulaNonCuffiato} (non cuffiato)</p>
-            <p className="formula">{formulaTubo.formulaCuffiato} (cuffiato)</p>
-            <p className="formula">{formulaTubo.formulaProfondita} (profondità al labbro)</p>
+            <p className="risultato-primario">{formulaTubo.diametroNonCuffiatoMm} mm (non cuffiato)</p>
+            <p className="formula">{formulaTubo.formulaNonCuffiato}</p>
+            <p className="risultato-primario">{formulaTubo.diametroCuffiatoMm} mm (cuffiato)</p>
+            <p className="formula">{formulaTubo.formulaCuffiato}</p>
+            <p className="risultato-primario">{formulaTubo.profonditaLabbroCm} cm (profondità al labbro)</p>
+            <p className="formula">{formulaTubo.formulaProfondita}</p>
           </>
         )}
         <p className="nota">{tubo_iot.note}</p>
@@ -230,8 +233,8 @@ function SezioneStime({ stime, etaAnni, pesoKg }) {
         <p className="presidio-titolo">Peso stimato</p>
         {pesoStimato ? (
           <>
+            <p className="risultato-primario">{pesoStimato.pesoKg} kg</p>
             <p className="formula">{pesoStimato.formula}</p>
-            <p className="risultato-evidenza">→ {pesoStimato.pesoKg} kg</p>
             <p className="nota">
               Alternativa APLS: {pesoStimato.formulaAPLS} → {pesoStimato.pesoAPLS} kg
             </p>
@@ -247,6 +250,9 @@ function SezioneStime({ stime, etaAnni, pesoKg }) {
           <>
             <p className="nota">
               Fascia: {volemiaRow.fascia} · peso usato: {pesoKg > 0 ? 'reale' : 'stimato'}
+            </p>
+            <p className="risultato-primario">
+              {volemia.volMinMl}-{volemia.volMaxMl} ml
             </p>
             <p className="formula">{volemia.formula}</p>
           </>
@@ -284,10 +290,10 @@ function SezioneStime({ stime, etaAnni, pesoKg }) {
         {errorePerdita && <p className="avviso avviso-errore">{errorePerdita}</p>}
         {perdita && (
           <>
-            <p className="formula">{perdita.formula}</p>
-            <p className="risultato-evidenza">
-              → {perdita.perditaMinMl}-{perdita.perditaMaxMl} ml
+            <p className="risultato-primario">
+              {perdita.perditaMinMl}-{perdita.perditaMaxMl} ml
             </p>
+            <p className="formula">{perdita.formula}</p>
           </>
         )}
       </div>
@@ -324,7 +330,12 @@ function SezioneFluidi({ fluidi, pesoKg }) {
           <BadgeVerifica verificato={fluidi.mantenimento_4_2_1.verificato} />
         </div>
         {erroreMantenimento && <p className="avviso avviso-errore">{erroreMantenimento}</p>}
-        {mantenimento && <p className="formula">{mantenimento.formula}</p>}
+        {mantenimento && (
+          <>
+            <p className="risultato-primario">{mantenimento.mlH} ml/h</p>
+            <p className="formula">{mantenimento.formula}</p>
+          </>
+        )}
       </div>
 
       <div className="presidio">
@@ -334,6 +345,7 @@ function SezioneFluidi({ fluidi, pesoKg }) {
         </div>
         {bolo && (
           <>
+            <p className="risultato-primario">{formatoRisultato(bolo)}</p>
             <p className="formula">{bolo.formula}</p>
             <p className="nota">{fluidi.bolo_riempimento.note}</p>
           </>
@@ -345,7 +357,12 @@ function SezioneFluidi({ fluidi, pesoKg }) {
           <p className="presidio-titolo">Ipoglicemia</p>
           <BadgeVerifica verificato={fluidi.ipoglicemia.verificato} />
         </div>
-        {ipoglicemia && <p className="formula">{ipoglicemia.formula}</p>}
+        {ipoglicemia && (
+          <>
+            <p className="risultato-primario">{formatoRisultato(ipoglicemia)}</p>
+            <p className="formula">{ipoglicemia.formula}</p>
+          </>
+        )}
       </div>
     </div>
   )
@@ -387,6 +404,7 @@ function SezionePremedicazione({ lista, derivati }) {
               {errore && <p className="avviso avviso-errore">{errore}</p>}
               {risultato && (
                 <>
+                  <p className="risultato-primario">{formatoRisultato(risultato)}</p>
                   <p className="formula">{risultato.formula}</p>
                   {farmaco.note && <p className="nota">{farmaco.note}</p>}
                 </>
@@ -471,6 +489,7 @@ function SezioneEmergenzePediatriche({ lista, farmaci, derivati }) {
               {errore && <p className="avviso avviso-errore">{errore}</p>}
               {risultato && (
                 <>
+                  <p className="risultato-primario">{formatoRisultato(risultato)}</p>
                   <p className="formula">{risultato.formula}</p>
                   {doseScelta.note && <p className="nota">{doseScelta.note}</p>}
                 </>
