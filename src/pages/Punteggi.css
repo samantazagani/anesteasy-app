@@ -117,15 +117,13 @@
   margin-bottom: 4px;
 }
 
-.avviso-dati-mancanti {
-  border: 1px solid #d97706;
-  color: #92400e;
-  background: #fef3c7;
+.scheda-titolo-p {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 12px 0 6px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .avviso-dati-mancanti {
-    background: rgba(217, 119, 6, 0.14);
-    color: #fde68a;
-  }
+.scheda-titolo-p:first-child {
+  margin-top: 0;
 }

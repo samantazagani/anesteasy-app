@@ -1,86 +1,1142 @@
 {
-  "_stato": "BOZZA. Punteggi vie aeree/preop -> perioperatori -> TI. Alcuni completi (voci+punteggi), altri complessi (SOFA/APACHE) stub con componenti da completare. verificato=false.",
+  "_stato": "BOZZA. 18 punteggi (vie aeree/preop -> perioperatori -> TI) con voci e punteggi completi. verificato=false: revisione clinica del medico da fare.",
   "punteggi": [
     {
-      "id": "mallampati", "nome": "Mallampati modificato", "categoria": "vie_aeree",
+      "id": "mallampati",
+      "nome": "Mallampati modificato",
+      "categoria": "vie_aeree",
       "classi": [
-        { "classe": "I", "descrizione": "visibili palato molle, ugola, pilastri" },
-        { "classe": "II", "descrizione": "palato molle e ugola" },
-        { "classe": "III", "descrizione": "palato molle e base ugola" },
-        { "classe": "IV", "descrizione": "solo palato duro" }
-      ], "interpretazione": "III-IV: possibile via aerea difficile", "verificato": false, "fonte": "bozza"
+        {
+          "classe": "I",
+          "descrizione": "visibili palato molle, ugola, pilastri"
+        },
+        {
+          "classe": "II",
+          "descrizione": "palato molle e ugola"
+        },
+        {
+          "classe": "III",
+          "descrizione": "palato molle e base ugola"
+        },
+        {
+          "classe": "IV",
+          "descrizione": "solo palato duro"
+        }
+      ],
+      "interpretazione": "III-IV: possibile via aerea difficile",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "el-ganzouri", "nome": "El-Ganzouri (EGRI)", "categoria": "vie_aeree",
-      "voci": ["peso", "apertura bocca", "distanza tiromentoniera", "Mallampati", "mobilita collo", "capacita di prognatismo", "storia di intubazione difficile"],
-      "interpretazione": ">=4 alto rischio di intubazione difficile", "nota": "completare punteggi delle singole voci", "verificato": false, "fonte": "bozza"
+      "id": "el-ganzouri",
+      "nome": "El-Ganzouri (EGRI)",
+      "categoria": "vie_aeree",
+      "voci": [
+        {
+          "parametro": "apertura bocca",
+          "opzioni": [
+            {
+              "d": ">=4 cm",
+              "p": 0
+            },
+            {
+              "d": "<4 cm",
+              "p": 1
+            }
+          ]
+        },
+        {
+          "parametro": "distanza tiromentoniera",
+          "opzioni": [
+            {
+              "d": ">6.5 cm",
+              "p": 0
+            },
+            {
+              "d": "6-6.5 cm",
+              "p": 1
+            },
+            {
+              "d": "<6 cm",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "Mallampati",
+          "opzioni": [
+            {
+              "d": "I-II",
+              "p": 0
+            },
+            {
+              "d": "III",
+              "p": 1
+            },
+            {
+              "d": "IV",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "mobilita del collo",
+          "opzioni": [
+            {
+              "d": ">90 gradi",
+              "p": 0
+            },
+            {
+              "d": "80-90 gradi",
+              "p": 1
+            },
+            {
+              "d": "<80 gradi",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "prognatismo (underbite)",
+          "opzioni": [
+            {
+              "d": "si",
+              "p": 0
+            },
+            {
+              "d": "no",
+              "p": 1
+            }
+          ]
+        },
+        {
+          "parametro": "peso",
+          "opzioni": [
+            {
+              "d": "<90 kg",
+              "p": 0
+            },
+            {
+              "d": "90-110 kg",
+              "p": 1
+            },
+            {
+              "d": ">110 kg",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "storia di intubazione difficile",
+          "opzioni": [
+            {
+              "d": "assente",
+              "p": 0
+            },
+            {
+              "d": "dubbia",
+              "p": 1
+            },
+            {
+              "d": "certa",
+              "p": 2
+            }
+          ]
+        }
+      ],
+      "range": "0-12",
+      "interpretazione": ">=4 = intubazione difficile probabile",
+      "verificato": false,
+      "fonte": "Simplified Airway Risk Index (El-Ganzouri)",
+      "url": "https://en.wikipedia.org/wiki/Simplified_Airway_Risk_Index"
     },
     {
-      "id": "stop-bang", "nome": "STOP-BANG (OSA)", "categoria": "vie_aeree",
-      "voci": ["Snoring", "Tiredness", "Observed apnea", "Pressione alta", "BMI>35", "Age>50", "Neck>40cm", "Gender maschile"],
-      "punteggio": "1 punto ciascuno", "interpretazione": "0-2 basso, 3-4 intermedio, 5-8 alto rischio OSA", "verificato": false, "fonte": "bozza"
+      "id": "stop-bang",
+      "nome": "STOP-BANG (OSA)",
+      "categoria": "vie_aeree",
+      "voci": [
+        "Snoring",
+        "Tiredness",
+        "Observed apnea",
+        "Pressione alta",
+        "BMI>35",
+        "Age>50",
+        "Neck>40cm",
+        "Gender maschile"
+      ],
+      "punteggio": "1 punto ciascuno",
+      "interpretazione": "0-2 basso, 3-4 intermedio, 5-8 alto rischio OSA",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "mrc-dispnea", "nome": "MRC dispnea", "categoria": "preoperatorio",
+      "id": "mrc-dispnea",
+      "nome": "MRC dispnea",
+      "categoria": "preoperatorio",
       "gradi": [
-        { "grado": 1, "descrizione": "dispnea per esercizio intenso" },
-        { "grado": 2, "descrizione": "dispnea camminando in salita/di fretta" },
-        { "grado": 3, "descrizione": "cammina piu lento dei coetanei o si ferma" },
-        { "grado": 4, "descrizione": "si ferma dopo ~100 m" },
-        { "grado": 5, "descrizione": "dispnea per attivita minime (vestirsi)" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "grado": 1,
+          "descrizione": "dispnea per esercizio intenso"
+        },
+        {
+          "grado": 2,
+          "descrizione": "dispnea camminando in salita/di fretta"
+        },
+        {
+          "grado": 3,
+          "descrizione": "cammina piu lento dei coetanei o si ferma"
+        },
+        {
+          "grado": 4,
+          "descrizione": "si ferma dopo ~100 m"
+        },
+        {
+          "grado": 5,
+          "descrizione": "dispnea per attivita minime (vestirsi)"
+        }
+      ],
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "rcri", "nome": "RCRI (indice di Lee)", "categoria": "preoperatorio",
-      "voci": ["chirurgia ad alto rischio", "cardiopatia ischemica", "scompenso cardiaco", "malattia cerebrovascolare", "diabete in insulina", "creatinina >2 mg/dl"],
-      "punteggio": "1 punto ciascuno", "interpretazione": "0:0.4% - 1:0.9% - 2:6.6% - >=3:11% eventi cardiaci maggiori", "verificato": false, "fonte": "bozza"
+      "id": "rcri",
+      "nome": "RCRI (indice di Lee)",
+      "categoria": "preoperatorio",
+      "voci": [
+        "chirurgia ad alto rischio",
+        "cardiopatia ischemica",
+        "scompenso cardiaco",
+        "malattia cerebrovascolare",
+        "diabete in insulina",
+        "creatinina >2 mg/dl"
+      ],
+      "punteggio": "1 punto ciascuno",
+      "interpretazione": "0:0.4% - 1:0.9% - 2:6.6% - >=3:11% eventi cardiaci maggiori",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "ariscat", "nome": "ARISCAT (rischio polmonare)", "categoria": "preoperatorio",
-      "voci": ["eta", "SpO2 preop", "infezione respiratoria ultimo mese", "anemia", "sede chirurgica", "durata intervento", "chirurgia in urgenza"],
-      "interpretazione": "<26 basso, 26-44 intermedio, >=45 alto rischio complicanze polmonari", "nota": "completare punteggi", "verificato": false, "fonte": "bozza"
+      "id": "ariscat",
+      "nome": "ARISCAT (rischio polmonare)",
+      "categoria": "preoperatorio",
+      "voci": [
+        {
+          "parametro": "eta",
+          "opzioni": [
+            {
+              "d": "<=50",
+              "p": 0
+            },
+            {
+              "d": "51-80",
+              "p": 3
+            },
+            {
+              "d": ">80",
+              "p": 16
+            }
+          ]
+        },
+        {
+          "parametro": "SpO2 preop",
+          "opzioni": [
+            {
+              "d": ">=96%",
+              "p": 0
+            },
+            {
+              "d": "91-95%",
+              "p": 8
+            },
+            {
+              "d": "<=90%",
+              "p": 24
+            }
+          ]
+        },
+        {
+          "parametro": "infezione respiratoria ultimo mese",
+          "opzioni": [
+            {
+              "d": "no",
+              "p": 0
+            },
+            {
+              "d": "si",
+              "p": 17
+            }
+          ]
+        },
+        {
+          "parametro": "anemia (Hb <=10 g/dl)",
+          "opzioni": [
+            {
+              "d": "no",
+              "p": 0
+            },
+            {
+              "d": "si",
+              "p": 11
+            }
+          ]
+        },
+        {
+          "parametro": "sede incisione",
+          "opzioni": [
+            {
+              "d": "periferica",
+              "p": 0
+            },
+            {
+              "d": "addome superiore",
+              "p": 15
+            },
+            {
+              "d": "intratoracica",
+              "p": 24
+            }
+          ]
+        },
+        {
+          "parametro": "durata intervento",
+          "opzioni": [
+            {
+              "d": "<2 h",
+              "p": 0
+            },
+            {
+              "d": "2-3 h",
+              "p": 16
+            },
+            {
+              "d": ">3 h",
+              "p": 23
+            }
+          ]
+        },
+        {
+          "parametro": "urgenza",
+          "opzioni": [
+            {
+              "d": "no",
+              "p": 0
+            },
+            {
+              "d": "si",
+              "p": 8
+            }
+          ]
+        }
+      ],
+      "interpretazione": "<26 basso (~1.6%), 26-44 intermedio (~13%), >=45 alto (~42%) di complicanze polmonari",
+      "verificato": false,
+      "fonte": "ARISCAT (MDCalc)",
+      "url": "https://www.mdcalc.com/calc/10022/ariscat-score-postoperative-pulmonary-complications"
     },
     {
-      "id": "mets", "nome": "METs (capacita funzionale)", "categoria": "preoperatorio",
-      "riferimenti": ["1 MET: attivita di base", "4 MET: salire 2 rampe di scale / camminare in salita", ">10 MET: sport intensi"],
-      "interpretazione": "<4 MET = scarsa capacita funzionale, aumenta il rischio", "verificato": false, "fonte": "bozza"
+      "id": "mets",
+      "nome": "METs (capacita funzionale)",
+      "categoria": "preoperatorio",
+      "riferimenti": [
+        "1 MET: attivita di base",
+        "4 MET: salire 2 rampe di scale / camminare in salita",
+        ">10 MET: sport intensi"
+      ],
+      "interpretazione": "<4 MET = scarsa capacita funzionale, aumenta il rischio",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "apfel", "nome": "Apfel (PONV)", "categoria": "perioperatorio",
-      "voci": ["sesso femminile", "non fumatore", "storia di PONV/cinetosi", "oppioidi postoperatori"],
-      "punteggio": "1 punto ciascuno", "interpretazione": "rischio PONV ~10/20/40/60/80% per 0-4 fattori", "verificato": false, "fonte": "bozza"
+      "id": "apfel",
+      "nome": "Apfel (PONV)",
+      "categoria": "perioperatorio",
+      "voci": [
+        "sesso femminile",
+        "non fumatore",
+        "storia di PONV/cinetosi",
+        "oppioidi postoperatori"
+      ],
+      "punteggio": "1 punto ciascuno",
+      "interpretazione": "rischio PONV ~10/20/40/60/80% per 0-4 fattori",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "aldrete", "nome": "Aldrete (dimissione dal risveglio)", "categoria": "perioperatorio",
-      "voci": ["attivita", "respiro", "circolo", "coscienza", "SpO2"], "punteggio": "0-2 ciascuno",
-      "interpretazione": ">=9 dimissibile dalla recovery", "verificato": false, "fonte": "bozza"
+      "id": "aldrete",
+      "nome": "Aldrete (dimissione dal risveglio)",
+      "categoria": "perioperatorio",
+      "voci": [
+        {
+          "parametro": "attivita (muove arti)",
+          "opzioni": [
+            {
+              "d": "4 arti",
+              "p": 2
+            },
+            {
+              "d": "2 arti",
+              "p": 1
+            },
+            {
+              "d": "0 arti",
+              "p": 0
+            }
+          ]
+        },
+        {
+          "parametro": "respiro",
+          "opzioni": [
+            {
+              "d": "respira e tossisce",
+              "p": 2
+            },
+            {
+              "d": "dispnea/superficiale",
+              "p": 1
+            },
+            {
+              "d": "apnea",
+              "p": 0
+            }
+          ]
+        },
+        {
+          "parametro": "circolo (PA vs pre)",
+          "opzioni": [
+            {
+              "d": "+/-20%",
+              "p": 2
+            },
+            {
+              "d": "+/-20-50%",
+              "p": 1
+            },
+            {
+              "d": "+/->50%",
+              "p": 0
+            }
+          ]
+        },
+        {
+          "parametro": "coscienza",
+          "opzioni": [
+            {
+              "d": "sveglio",
+              "p": 2
+            },
+            {
+              "d": "risvegliabile alla chiamata",
+              "p": 1
+            },
+            {
+              "d": "non risponde",
+              "p": 0
+            }
+          ]
+        },
+        {
+          "parametro": "SpO2",
+          "opzioni": [
+            {
+              "d": ">92% in aria",
+              "p": 2
+            },
+            {
+              "d": "O2 per >90%",
+              "p": 1
+            },
+            {
+              "d": "<90% con O2",
+              "p": 0
+            }
+          ]
+        }
+      ],
+      "interpretazione": ">=9 dimissibile dalla recovery",
+      "verificato": false,
+      "fonte": "riferimento standard (Aldrete)"
     },
     {
-      "id": "gcs", "nome": "Glasgow Coma Scale", "categoria": "terapia_intensiva",
+      "id": "gcs",
+      "nome": "Glasgow Coma Scale",
+      "categoria": "terapia_intensiva",
       "componenti": {
-        "apertura_occhi": [ {"p":4,"d":"spontanea"}, {"p":3,"d":"alla voce"}, {"p":2,"d":"al dolore"}, {"p":1,"d":"assente"} ],
-        "risposta_verbale": [ {"p":5,"d":"orientata"}, {"p":4,"d":"confusa"}, {"p":3,"d":"parole inappropriate"}, {"p":2,"d":"suoni"}, {"p":1,"d":"assente"} ],
-        "risposta_motoria": [ {"p":6,"d":"obbedisce"}, {"p":5,"d":"localizza"}, {"p":4,"d":"retrae"}, {"p":3,"d":"flessione anomala"}, {"p":2,"d":"estensione"}, {"p":1,"d":"assente"} ]
-      }, "interpretazione": "3-15; <=8 coma", "verificato": false, "fonte": "bozza"
+        "apertura_occhi": [
+          {
+            "p": 4,
+            "d": "spontanea"
+          },
+          {
+            "p": 3,
+            "d": "alla voce"
+          },
+          {
+            "p": 2,
+            "d": "al dolore"
+          },
+          {
+            "p": 1,
+            "d": "assente"
+          }
+        ],
+        "risposta_verbale": [
+          {
+            "p": 5,
+            "d": "orientata"
+          },
+          {
+            "p": 4,
+            "d": "confusa"
+          },
+          {
+            "p": 3,
+            "d": "parole inappropriate"
+          },
+          {
+            "p": 2,
+            "d": "suoni"
+          },
+          {
+            "p": 1,
+            "d": "assente"
+          }
+        ],
+        "risposta_motoria": [
+          {
+            "p": 6,
+            "d": "obbedisce"
+          },
+          {
+            "p": 5,
+            "d": "localizza"
+          },
+          {
+            "p": 4,
+            "d": "retrae"
+          },
+          {
+            "p": 3,
+            "d": "flessione anomala"
+          },
+          {
+            "p": 2,
+            "d": "estensione"
+          },
+          {
+            "p": 1,
+            "d": "assente"
+          }
+        ]
+      },
+      "interpretazione": "3-15; <=8 coma",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "rass", "nome": "RASS (sedazione-agitazione)", "categoria": "terapia_intensiva",
-      "scala": [ {"p":4,"d":"combattivo"}, {"p":3,"d":"molto agitato"}, {"p":2,"d":"agitato"}, {"p":1,"d":"irrequieto"}, {"p":0,"d":"vigile e calmo"}, {"p":-1,"d":"sonnolento"}, {"p":-2,"d":"sedazione lieve"}, {"p":-3,"d":"sedazione moderata"}, {"p":-4,"d":"sedazione profonda"}, {"p":-5,"d":"non risvegliabile"} ],
-      "nota": "coincide con la scala del Manuale (RASS)", "verificato": false, "fonte": "manuale-giovane-anestesista", "pagina": "41-42"
+      "id": "rass",
+      "nome": "RASS (sedazione-agitazione)",
+      "categoria": "terapia_intensiva",
+      "scala": [
+        {
+          "p": 4,
+          "d": "combattivo"
+        },
+        {
+          "p": 3,
+          "d": "molto agitato"
+        },
+        {
+          "p": 2,
+          "d": "agitato"
+        },
+        {
+          "p": 1,
+          "d": "irrequieto"
+        },
+        {
+          "p": 0,
+          "d": "vigile e calmo"
+        },
+        {
+          "p": -1,
+          "d": "sonnolento"
+        },
+        {
+          "p": -2,
+          "d": "sedazione lieve"
+        },
+        {
+          "p": -3,
+          "d": "sedazione moderata"
+        },
+        {
+          "p": -4,
+          "d": "sedazione profonda"
+        },
+        {
+          "p": -5,
+          "d": "non risvegliabile"
+        }
+      ],
+      "nota": "coincide con la scala del Manuale (RASS)",
+      "verificato": false,
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "41-42"
     },
     {
-      "id": "cam-icu", "nome": "CAM-ICU (delirium)", "categoria": "terapia_intensiva",
-      "criteri": ["1. esordio acuto/fluttuante", "2. inattenzione", "3. alterato livello di coscienza (RASS != 0)", "4. pensiero disorganizzato"],
-      "interpretazione": "positivo se 1 e 2 + (3 o 4)", "verificato": false, "fonte": "bozza"
+      "id": "cam-icu",
+      "nome": "CAM-ICU (delirium)",
+      "categoria": "terapia_intensiva",
+      "criteri": [
+        "1. esordio acuto/fluttuante",
+        "2. inattenzione",
+        "3. alterato livello di coscienza (RASS != 0)",
+        "4. pensiero disorganizzato"
+      ],
+      "interpretazione": "positivo se 1 e 2 + (3 o 4)",
+      "verificato": false,
+      "fonte": "bozza"
     },
     {
-      "id": "sofa", "nome": "SOFA", "categoria": "terapia_intensiva",
-      "componenti": ["respiro (P/F)", "coagulazione (piastrine)", "fegato (bilirubina)", "cardiovascolare (MAP/vasoattivi)", "SNC (GCS)", "rene (creatinina/diuresi)"],
-      "nota": "ogni componente 0-4; completare le soglie", "verificato": false, "fonte": "bozza"
+      "id": "sofa",
+      "nome": "SOFA",
+      "categoria": "terapia_intensiva",
+      "componenti": {
+        "respiratorio_PF": [
+          {
+            "d": ">=400",
+            "p": 0
+          },
+          {
+            "d": "<400",
+            "p": 1
+          },
+          {
+            "d": "<300",
+            "p": 2
+          },
+          {
+            "d": "<200 con supporto",
+            "p": 3
+          },
+          {
+            "d": "<100 con supporto",
+            "p": 4
+          }
+        ],
+        "coagulazione_piastrine_x10e3": [
+          {
+            "d": ">=150",
+            "p": 0
+          },
+          {
+            "d": "<150",
+            "p": 1
+          },
+          {
+            "d": "<100",
+            "p": 2
+          },
+          {
+            "d": "<50",
+            "p": 3
+          },
+          {
+            "d": "<20",
+            "p": 4
+          }
+        ],
+        "fegato_bilirubina_mg_dl": [
+          {
+            "d": "<1.2",
+            "p": 0
+          },
+          {
+            "d": "1.2-1.9",
+            "p": 1
+          },
+          {
+            "d": "2.0-5.9",
+            "p": 2
+          },
+          {
+            "d": "6.0-11.9",
+            "p": 3
+          },
+          {
+            "d": ">12",
+            "p": 4
+          }
+        ],
+        "cardiovascolare": [
+          {
+            "d": "MAP>=70",
+            "p": 0
+          },
+          {
+            "d": "MAP<70",
+            "p": 1
+          },
+          {
+            "d": "dopamina<=5 o dobutamina",
+            "p": 2
+          },
+          {
+            "d": "dopamina>5 o adr<=0.1 o noradr<=0.1",
+            "p": 3
+          },
+          {
+            "d": "dopamina>15 o adr>0.1 o noradr>0.1",
+            "p": 4
+          }
+        ],
+        "snc_GCS": [
+          {
+            "d": "15",
+            "p": 0
+          },
+          {
+            "d": "13-14",
+            "p": 1
+          },
+          {
+            "d": "10-12",
+            "p": 2
+          },
+          {
+            "d": "6-9",
+            "p": 3
+          },
+          {
+            "d": "<6",
+            "p": 4
+          }
+        ],
+        "rene_creatinina_mg_dl": [
+          {
+            "d": "<1.2",
+            "p": 0
+          },
+          {
+            "d": "1.2-1.9",
+            "p": 1
+          },
+          {
+            "d": "2.0-3.4",
+            "p": 2
+          },
+          {
+            "d": "3.5-4.9 o diuresi<500 ml/die",
+            "p": 3
+          },
+          {
+            "d": ">5 o diuresi<200 ml/die",
+            "p": 4
+          }
+        ]
+      },
+      "interpretazione": "somma 0-24; la mortalita cresce col punteggio",
+      "verificato": false,
+      "fonte": "riferimento standard (SOFA)"
     },
-    { "id": "apache2", "nome": "APACHE II", "categoria": "terapia_intensiva", "nota": "score complesso: 12 variabili fisiologiche + eta + patologie croniche; completare tabelle", "verificato": false, "fonte": "bozza" },
-    { "id": "four", "nome": "FOUR score", "categoria": "terapia_intensiva", "componenti": ["occhi", "motorio", "riflessi tronco", "respiro"], "nota": "0-4 ciascuno", "verificato": false, "fonte": "bozza" },
-    { "id": "hacor", "nome": "HACOR", "categoria": "terapia_intensiva", "componenti": ["FC", "acidosi (pH)", "coscienza (GCS)", "ossigenazione (P/F)", "FR"], "nota": "predice fallimento NIV; completare punteggi", "verificato": false, "fonte": "bozza" },
-    { "id": "rox", "nome": "ROX index", "categoria": "terapia_intensiva", "formula": "(SpO2/FiO2) / FR", "interpretazione": ">=4.88 a 2-6-12h predice successo HFNC", "verificato": false, "fonte": "bozza" }
+    {
+      "id": "four",
+      "nome": "FOUR score",
+      "categoria": "terapia_intensiva",
+      "componenti": {
+        "occhi": [
+          {
+            "d": "palpebre aperte, segue/ammicca a comando",
+            "p": 4
+          },
+          {
+            "d": "aperte non segue",
+            "p": 3
+          },
+          {
+            "d": "aperte a voce forte",
+            "p": 2
+          },
+          {
+            "d": "aperte al dolore",
+            "p": 1
+          },
+          {
+            "d": "restano chiuse",
+            "p": 0
+          }
+        ],
+        "motorio": [
+          {
+            "d": "pollice su/pugno/vittoria a comando",
+            "p": 4
+          },
+          {
+            "d": "localizza il dolore",
+            "p": 3
+          },
+          {
+            "d": "flessione al dolore",
+            "p": 2
+          },
+          {
+            "d": "estensione al dolore",
+            "p": 1
+          },
+          {
+            "d": "nessuna risposta/mioclono",
+            "p": 0
+          }
+        ],
+        "riflessi_tronco": [
+          {
+            "d": "pupillari e corneali presenti",
+            "p": 4
+          },
+          {
+            "d": "una pupilla fissa dilatata",
+            "p": 3
+          },
+          {
+            "d": "pupillari o corneali assenti",
+            "p": 2
+          },
+          {
+            "d": "entrambi assenti",
+            "p": 1
+          },
+          {
+            "d": "assenti + tosse assente",
+            "p": 0
+          }
+        ],
+        "respiro": [
+          {
+            "d": "non intubato, regolare",
+            "p": 4
+          },
+          {
+            "d": "non intubato, Cheyne-Stokes",
+            "p": 3
+          },
+          {
+            "d": "non intubato, irregolare",
+            "p": 2
+          },
+          {
+            "d": "intubato, respira sopra il ventilatore",
+            "p": 1
+          },
+          {
+            "d": "intubato, a frequenza ventilatore/apnea",
+            "p": 0
+          }
+        ]
+      },
+      "interpretazione": "0-16; 0 = prognosi peggiore. Utile anche nel paziente intubato (a differenza del GCS)",
+      "verificato": false,
+      "fonte": "riferimento standard (FOUR score)"
+    },
+    {
+      "id": "hacor",
+      "nome": "HACOR",
+      "categoria": "terapia_intensiva",
+      "componenti": {
+        "FC": [
+          {
+            "d": "<120",
+            "p": 0
+          },
+          {
+            "d": ">=120",
+            "p": 1
+          }
+        ],
+        "acidosi_pH": [
+          {
+            "d": ">=7.35",
+            "p": 0
+          },
+          {
+            "d": "7.30-7.34",
+            "p": 2
+          },
+          {
+            "d": "7.25-7.29",
+            "p": 3
+          },
+          {
+            "d": "<7.25",
+            "p": 4
+          }
+        ],
+        "coscienza_GCS": [
+          {
+            "d": "15",
+            "p": 0
+          },
+          {
+            "d": "13-14",
+            "p": 2
+          },
+          {
+            "d": "11-12",
+            "p": 5
+          },
+          {
+            "d": "<=10",
+            "p": 6
+          }
+        ],
+        "ossigenazione_PF": [
+          {
+            "d": ">=201",
+            "p": 0
+          },
+          {
+            "d": "176-200",
+            "p": 2
+          },
+          {
+            "d": "151-175",
+            "p": 3
+          },
+          {
+            "d": "126-150",
+            "p": 4
+          },
+          {
+            "d": "101-125",
+            "p": 5
+          },
+          {
+            "d": "<=100",
+            "p": 6
+          }
+        ],
+        "FR": [
+          {
+            "d": "<=30",
+            "p": 0
+          },
+          {
+            "d": "31-35",
+            "p": 1
+          },
+          {
+            "d": "36-40",
+            "p": 2
+          },
+          {
+            "d": "41-45",
+            "p": 3
+          },
+          {
+            "d": ">=46",
+            "p": 4
+          }
+        ]
+      },
+      "interpretazione": "predice fallimento NIV; >5 (a 1-2 h) alto rischio. Range 0-27",
+      "verificato": false,
+      "fonte": "HACOR aggiornato (Critical Care 2022)",
+      "url": "https://ccforum.biomedcentral.com/articles/10.1186/s13054-022-04060-7"
+    },
+    {
+      "id": "rox",
+      "nome": "ROX index",
+      "categoria": "terapia_intensiva",
+      "formula": "(SpO2/FiO2) / FR",
+      "interpretazione": ">=4.88 a 2-6-12h predice successo HFNC",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "id": "macocha",
+      "nome": "MACOCHA (intubazione difficile in TI)",
+      "categoria": "terapia_intensiva",
+      "voci": [
+        {
+          "parametro": "Mallampati III o IV",
+          "p": 5
+        },
+        {
+          "parametro": "sindrome delle apnee ostruttive",
+          "p": 2
+        },
+        {
+          "parametro": "ridotta mobilita del rachide cervicale",
+          "p": 1
+        },
+        {
+          "parametro": "apertura bocca <3 cm",
+          "p": 1
+        },
+        {
+          "parametro": "coma",
+          "p": 1
+        },
+        {
+          "parametro": "ipossiemia grave (SpO2 <80%)",
+          "p": 1
+        },
+        {
+          "parametro": "operatore non anestesista",
+          "p": 1
+        }
+      ],
+      "range": "0-12",
+      "interpretazione": ">=3 alto rischio di intubazione difficile in TI (NPV 97-98%)",
+      "verificato": false,
+      "fonte": "MACOCHA (De Jong, AJRCCM 2013)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3642422/"
+    },
+    {
+      "id": "bromage",
+      "nome": "Bromage (blocco motorio)",
+      "categoria": "perioperatorio",
+      "gradi": [
+        {
+          "grado": 1,
+          "descrizione": "nessun blocco: flette liberamente ginocchia e piedi",
+          "blocco_percent": 0
+        },
+        {
+          "grado": 2,
+          "descrizione": "riesce solo a flettere le ginocchia, piedi liberi",
+          "blocco_percent": 33
+        },
+        {
+          "grado": 3,
+          "descrizione": "non flette le ginocchia, muove solo i piedi",
+          "blocco_percent": 66
+        },
+        {
+          "grado": 4,
+          "descrizione": "blocco completo: non muove ginocchia ne piedi",
+          "blocco_percent": 100
+        }
+      ],
+      "interpretazione": "valuta il blocco motorio dopo anestesia neuroassiale",
+      "verificato": false,
+      "fonte": "riferimento standard (scala di Bromage)"
+    },
+    {
+      "id": "apgar",
+      "nome": "APGAR (neonato)",
+      "categoria": "neonatale",
+      "voci": [
+        {
+          "parametro": "FC",
+          "opzioni": [
+            {
+              "d": "assente",
+              "p": 0
+            },
+            {
+              "d": "<100",
+              "p": 1
+            },
+            {
+              "d": ">100",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "respiro",
+          "opzioni": [
+            {
+              "d": "assente",
+              "p": 0
+            },
+            {
+              "d": "irregolare/gasping",
+              "p": 1
+            },
+            {
+              "d": "pianto valido",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "tono",
+          "opzioni": [
+            {
+              "d": "flaccido",
+              "p": 0
+            },
+            {
+              "d": "flessione arti",
+              "p": 1
+            },
+            {
+              "d": "movimenti attivi",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "riflessi",
+          "opzioni": [
+            {
+              "d": "assenti",
+              "p": 0
+            },
+            {
+              "d": "smorfia",
+              "p": 1
+            },
+            {
+              "d": "pianto/tosse",
+              "p": 2
+            }
+          ]
+        },
+        {
+          "parametro": "colore",
+          "opzioni": [
+            {
+              "d": "cianotico/pallido",
+              "p": 0
+            },
+            {
+              "d": "acrocianosi",
+              "p": 1
+            },
+            {
+              "d": "roseo",
+              "p": 2
+            }
+          ]
+        }
+      ],
+      "range": "0-10",
+      "interpretazione": "valutare a 1 e 5 min; <7 richiede attenzione/rianimazione",
+      "verificato": false,
+      "fonte": "riferimento standard (APGAR)"
+    },
+    {
+      "id": "superficie_ustionata",
+      "nome": "Superficie ustionata (TBSA)",
+      "categoria": "ustioni",
+      "regola_dei_9_adulto": {
+        "testa_collo": 9,
+        "ogni_arto_superiore": 9,
+        "torace_anteriore": 18,
+        "dorso": 18,
+        "ogni_arto_inferiore": 18,
+        "genitali": 1
+      },
+      "bambino_differenze": "testa fino a 18% (neonato), ogni arto inferiore ~14%; per precisione usare la tabella di Lund-Browder",
+      "metodo_del_palmo": "il palmo (con dita) del paziente ~ 1% della TBSA",
+      "parkland": {
+        "formula": "fluidi_24h_ml = 4 * peso_kg * %TBSA (Ringer lattato); meta nelle prime 8 h dall'ustione, resto nelle 16 h successive",
+        "note": "titolare su diuresi 0.5-1 ml/kg/h (bambino 1-1.5)"
+      },
+      "verificato": false,
+      "fonte": "riferimento standard (rule of nines / Parkland)"
+    }
   ]
 }

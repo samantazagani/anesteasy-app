@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import punteggiData from '../../data/punteggi.json'
+import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import {
   calcolaStopBang,
   calcolaRCRI,
@@ -9,6 +10,13 @@ import {
   calcolaROX,
   calcolaAldrete,
   calcolaFour,
+  calcolaElGanzouri,
+  calcolaAriscat,
+  calcolaApgar,
+  calcolaSofa,
+  calcolaHacor,
+  calcolaMacocha,
+  calcolaParkland,
 } from '../lib/punteggiCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
@@ -18,6 +26,8 @@ const CATEGORIE = [
   { id: 'vie_aeree', label: 'Vie aeree' },
   { id: 'preop_perioperatorio', label: 'Preoperatorio / Perioperatorio' },
   { id: 'terapia_intensiva', label: 'Terapia intensiva' },
+  { id: 'neonatale', label: 'Neonatale' },
+  { id: 'ustioni', label: 'Ustioni' },
 ]
 
 function trova(id) {
@@ -59,13 +69,15 @@ function Punteggio({ titolo, children }) {
 }
 
 export function Punteggi() {
+  const { profile } = usePatientProfile()
   const [categoria, setCategoria] = useState('vie_aeree')
 
   return (
     <section id="punteggi">
       <h1>Punteggi</h1>
       <p className="sottotitolo">
-        Vie aeree, preoperatorio/perioperatorio e terapia intensiva (data/punteggi.json).
+        Vie aeree, preoperatorio/perioperatorio, terapia intensiva, neonatale e ustioni
+        (data/punteggi.json).
       </p>
 
       <nav className="categorie-p" role="tablist" aria-label="Categoria">
@@ -85,28 +97,37 @@ export function Punteggi() {
 
       <div hidden={categoria !== 'vie_aeree'}>
         <CalcClassificazione dati={trova('mallampati')} opzioni={trova('mallampati').classi} chiaveLabel="classe" chiaveDescrizione="descrizione" />
-        <CalcNonCalcolabile dati={trova('el-ganzouri')} />
+        <CalcElGanzouri dati={trova('el-ganzouri')} />
         <ChecklistPunteggio dati={trova('stop-bang')} calcola={calcolaStopBang} />
       </div>
 
       <div hidden={categoria !== 'preop_perioperatorio'}>
         <CalcClassificazione dati={trova('mrc-dispnea')} opzioni={trova('mrc-dispnea').gradi} chiaveLabel="grado" chiaveDescrizione="descrizione" />
         <ChecklistPunteggio dati={trova('rcri')} calcola={calcolaRCRI} />
-        <CalcNonCalcolabile dati={trova('ariscat')} />
+        <CalcAriscat dati={trova('ariscat')} />
         <CalcMets dati={trova('mets')} />
         <ChecklistPunteggio dati={trova('apfel')} calcola={calcolaApfel} />
         <CalcAldrete dati={trova('aldrete')} />
+        <CalcBromage dati={trova('bromage')} />
       </div>
 
       <div hidden={categoria !== 'terapia_intensiva'}>
         <CalcGCS dati={trova('gcs')} />
         <CalcRASS dati={trova('rass')} />
         <CalcCamIcu dati={trova('cam-icu')} />
-        <CalcNonCalcolabile dati={trova('sofa')} />
-        <CalcNonCalcolabile dati={trova('apache2')} />
+        <CalcSofa dati={trova('sofa')} />
         <CalcFour dati={trova('four')} />
-        <CalcNonCalcolabile dati={trova('hacor')} />
+        <CalcHacor dati={trova('hacor')} />
         <CalcROX dati={trova('rox')} />
+        <CalcMacocha dati={trova('macocha')} />
+      </div>
+
+      <div hidden={categoria !== 'neonatale'}>
+        <CalcApgar dati={trova('apgar')} />
+      </div>
+
+      <div hidden={categoria !== 'ustioni'}>
+        <CalcSuperficieUstionata dati={trova('superficie_ustionata')} pesoKg={profile.pesoKg} />
       </div>
     </section>
   )
@@ -141,8 +162,12 @@ function ChecklistPunteggio({ dati, calcola }) {
   )
 }
 
-/** Mallampati, MRC dispnea: selettore di classificazione, senza somma. */
-function CalcClassificazione({ dati, opzioni, chiaveLabel, chiaveDescrizione }) {
+/**
+ * Mallampati, MRC dispnea, Bromage: selettore di classificazione, senza somma. chiaveExtra
+ * (opzionale) mostra un campo numerico in piu' dell'opzione scelta (es. Bromage:
+ * blocco_percent), senza toccare gli altri usi che non lo passano.
+ */
+function CalcClassificazione({ dati, opzioni, chiaveLabel, chiaveDescrizione, chiaveExtra, extraLabel, extraUnita }) {
   const [indice, setIndice] = useState(0)
   const opzione = opzioni[indice]
 
@@ -160,31 +185,26 @@ function CalcClassificazione({ dati, opzioni, chiaveLabel, chiaveDescrizione }) 
       </label>
       <p className="risultato-primario">
         {opzione[chiaveLabel]}: {opzione[chiaveDescrizione]}
+        {chiaveExtra && opzione[chiaveExtra] !== undefined
+          ? ` (${extraLabel ?? chiaveExtra}: ${opzione[chiaveExtra]}${extraUnita ?? ''})`
+          : ''}
       </p>
       {dati.interpretazione && <p className="nota">{dati.interpretazione}</p>}
     </Punteggio>
   )
 }
 
-/** El-Ganzouri, ARISCAT, SOFA, APACHE II, HACOR: solo elenco voci, nessun punteggio inventato. */
-function CalcNonCalcolabile({ dati }) {
-  const voci = dati.voci ?? dati.componenti
-
+function CalcBromage({ dati }) {
   return (
-    <Punteggio titolo={dati.nome}>
-      <p className="avviso avviso-dati-mancanti">
-        Punteggio non calcolabile: soglie non ancora definite nel JSON.
-      </p>
-      {voci && (
-        <ul className="lista-riferimenti">
-          {voci.map((v) => (
-            <li key={v}>{v}</li>
-          ))}
-        </ul>
-      )}
-      {dati.interpretazione && <p className="nota">Interpretazione di riferimento: {dati.interpretazione}</p>}
-      {dati.nota && <p className="nota">{dati.nota}</p>}
-    </Punteggio>
+    <CalcClassificazione
+      dati={dati}
+      opzioni={dati.gradi}
+      chiaveLabel="grado"
+      chiaveDescrizione="descrizione"
+      chiaveExtra="blocco_percent"
+      extraLabel="blocco motorio"
+      extraUnita="%"
+    />
   )
 }
 
@@ -202,71 +222,6 @@ function CalcMets({ dati }) {
 }
 
 /** Aldrete, FOUR: il JSON da' solo il range per voce, non le descrizioni dei livelli. */
-function CalcManuale({ dati, voci, max, calcola, unitaMassima, interpretaEtichetta }) {
-  const [punteggi, setPunteggi] = useState(() => voci.map(() => 0))
-
-  function aggiorna(i, v) {
-    setPunteggi((prev) => prev.map((p, idx) => (idx === i ? v : p)))
-  }
-
-  let risultato = null
-  let errore = null
-  try {
-    risultato = calcola(punteggi)
-  } catch (e) {
-    errore = e.message
-  }
-
-  return (
-    <Punteggio titolo={dati.nome}>
-      <p className="avviso avviso-dati-mancanti">
-        Descrizioni dei livelli non ancora fornite nel JSON: inserisci il punteggio (0-{max})
-        per ciascuna voce in base al giudizio clinico.
-      </p>
-      <div className="griglia-campi-p">
-        {voci.map((voce, i) => (
-          <label key={voce} className="campo-numerico">
-            {voce} (0-{max})
-            <select value={punteggi[i]} onChange={(e) => aggiorna(i, Number(e.target.value))}>
-              {Array.from({ length: max + 1 }, (_, v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </label>
-        ))}
-      </div>
-      {errore && <p className="avviso avviso-errore">{errore}</p>}
-      {risultato && (
-        <p className="risultato-primario">
-          {risultato.punteggio}/{unitaMassima}
-          {interpretaEtichetta ? ` — ${interpretaEtichetta(risultato)}` : ''}
-        </p>
-      )}
-    </Punteggio>
-  )
-}
-
-function CalcAldrete({ dati }) {
-  return (
-    <CalcManuale
-      dati={dati}
-      voci={dati.voci}
-      max={2}
-      unitaMassima={dati.voci.length * 2}
-      calcola={calcolaAldrete}
-      interpretaEtichetta={(r) => (r.dimissibile ? 'dimissibile dalla recovery' : 'non ancora dimissibile')}
-    />
-  )
-}
-
-function CalcFour({ dati }) {
-  return <CalcManuale dati={dati} voci={dati.componenti} max={4} unitaMassima={dati.componenti.length * 4} calcola={calcolaFour} />
-}
-
-// --- Terapia intensiva: componenti dedicati ---------------------------------------------
-
 function SelectComponente({ etichetta, opzioni, indice, onChange }) {
   return (
     <label className="campo-numerico">
@@ -282,30 +237,210 @@ function SelectComponente({ etichetta, opzioni, indice, onChange }) {
   )
 }
 
-function CalcGCS({ dati }) {
-  const opz = dati.componenti
-  const [iOcchi, setIOcchi] = useState(0)
-  const [iVerbale, setIVerbale] = useState(0)
-  const [iMotoria, setIMotoria] = useState(0)
+/**
+ * El-Ganzouri, ARISCAT, Aldrete, APGAR: stessa forma { voci: [{ parametro, opzioni:[{d,p}]
+ * }] }, un select per voce con somma automatica. A differenza di STOP-BANG/RCRI/Apfel i pesi
+ * delle opzioni NON sono uniformi (variano voce per voce e opzione per opzione): il punto
+ * scelto va sempre letto dall'opzione, mai assunto "1 a voce".
+ */
+function CalcVociConOpzioni({ dati, calcola, formatRisultato }) {
+  const [indici, setIndici] = useState(() => dati.voci.map(() => 0))
 
-  const risultato = calcolaGCS({
-    aperturaOcchi: opz.apertura_occhi[iOcchi].p,
-    rispostaVerbale: opz.risposta_verbale[iVerbale].p,
-    rispostaMotoria: opz.risposta_motoria[iMotoria].p,
-  })
+  function aggiorna(i, v) {
+    setIndici((prev) => prev.map((idx, pos) => (pos === i ? v : idx)))
+  }
+
+  const punti = dati.voci.map((voce, i) => voce.opzioni[indici[i]].p)
+  const risultato = calcola(punti)
 
   return (
     <Punteggio titolo={dati.nome}>
       <div className="griglia-campi-p">
-        <SelectComponente etichetta="Apertura occhi" opzioni={opz.apertura_occhi} indice={iOcchi} onChange={setIOcchi} />
-        <SelectComponente etichetta="Risposta verbale" opzioni={opz.risposta_verbale} indice={iVerbale} onChange={setIVerbale} />
-        <SelectComponente etichetta="Risposta motoria" opzioni={opz.risposta_motoria} indice={iMotoria} onChange={setIMotoria} />
+        {dati.voci.map((voce, i) => (
+          <SelectComponente
+            key={voce.parametro}
+            etichetta={voce.parametro}
+            opzioni={voce.opzioni}
+            indice={indici[i]}
+            onChange={(v) => aggiorna(i, v)}
+          />
+        ))}
+      </div>
+      <p className="risultato-primario">{formatRisultato(risultato)}</p>
+      {dati.interpretazione && <p className="nota">{dati.interpretazione}</p>}
+    </Punteggio>
+  )
+}
+
+function CalcElGanzouri({ dati }) {
+  return (
+    <CalcVociConOpzioni
+      dati={dati}
+      calcola={calcolaElGanzouri}
+      formatRisultato={(r) => `${r.punteggio}/12${r.difficileProbabile ? ' — probabile intubazione difficile' : ''}`}
+    />
+  )
+}
+
+function CalcAriscat({ dati }) {
+  return <CalcVociConOpzioni dati={dati} calcola={calcolaAriscat} formatRisultato={(r) => `${r.punteggio} — rischio ${r.rischio}`} />
+}
+
+function CalcAldrete({ dati }) {
+  return (
+    <CalcVociConOpzioni
+      dati={dati}
+      calcola={calcolaAldrete}
+      formatRisultato={(r) => `${r.punteggio}/10${r.dimissibile ? ' — dimissibile dalla recovery' : ' — non ancora dimissibile'}`}
+    />
+  )
+}
+
+function CalcApgar({ dati }) {
+  return (
+    <CalcVociConOpzioni
+      dati={dati}
+      calcola={calcolaApgar}
+      formatRisultato={(r) => `${r.punteggio}/10${r.richiedeAttenzione ? ' — richiede attenzione/eventuale rianimazione' : ''}`}
+    />
+  )
+}
+
+/**
+ * STOP-BANG/RCRI/Apfel/MACOCHA hanno tutte una checklist, ma MACOCHA NON e' "1 punto a
+ * voce": ogni voce ha un peso fisso diverso (data/punteggi.json > macocha.voci[].p, es.
+ * Mallampati III/IV vale 5) mostrato accanto alla voce, cosi' il peso resta visibile prima
+ * ancora di selezionarla.
+ */
+function ChecklistPunteggioPesato({ dati, calcola }) {
+  const [selezionati, setSelezionati] = useState(() => dati.voci.map(() => false))
+
+  function toggle(i) {
+    setSelezionati((prev) => prev.map((v, idx) => (idx === i ? !v : v)))
+  }
+
+  const puntiPerVoce = dati.voci.map((v) => v.p)
+  const risultato = calcola(selezionati, puntiPerVoce)
+
+  return (
+    <Punteggio titolo={dati.nome}>
+      <div className="checklist-punteggio">
+        {dati.voci.map((voce, i) => (
+          <label key={voce.parametro} className={selezionati[i] ? 'voce-riga voce-attiva' : 'voce-riga'}>
+            <input type="checkbox" checked={selezionati[i]} onChange={() => toggle(i)} />
+            {voce.parametro}
+            <span className="chip">{voce.p} pt</span>
+          </label>
+        ))}
       </div>
       <p className="risultato-primario">
-        GCS {risultato.punteggio}/15{risultato.coma ? ' — coma' : ''}
+        {risultato.punteggio} (range {dati.range}){risultato.altoRischio ? ' — alto rischio' : ''}
       </p>
-      <p className="nota">{dati.interpretazione}</p>
+      {dati.interpretazione && <p className="nota">{dati.interpretazione}</p>}
     </Punteggio>
+  )
+}
+
+function CalcMacocha({ dati }) {
+  return <ChecklistPunteggioPesato dati={dati} calcola={calcolaMacocha} />
+}
+
+/**
+ * GCS, SOFA, FOUR, HACOR: stessa forma { componenti: { chiave: [{d,p}] } }, un select per
+ * componente con somma automatica (le chiavi del JSON sono etichette tecniche, es.
+ * "respiratorio_PF": l'elenco "componenti" qui sotto associa a ciascuna un'etichetta
+ * leggibile, sullo stesso principio delle soglie esplicitate in codice altrove).
+ */
+function CalcComponentiConSomma({ dati, componenti, calcola, formatRisultato }) {
+  const [indici, setIndici] = useState(() => componenti.map(() => 0))
+
+  function aggiorna(i, v) {
+    setIndici((prev) => prev.map((idx, pos) => (pos === i ? v : idx)))
+  }
+
+  const punti = componenti.map(({ chiave }, i) => dati.componenti[chiave][indici[i]].p)
+  const risultato = calcola(punti)
+
+  return (
+    <Punteggio titolo={dati.nome}>
+      <div className="griglia-campi-p">
+        {componenti.map(({ chiave, etichetta }, i) => (
+          <SelectComponente
+            key={chiave}
+            etichetta={etichetta}
+            opzioni={dati.componenti[chiave]}
+            indice={indici[i]}
+            onChange={(v) => aggiorna(i, v)}
+          />
+        ))}
+      </div>
+      <p className="risultato-primario">{formatRisultato(risultato)}</p>
+      {dati.interpretazione && <p className="nota">{dati.interpretazione}</p>}
+    </Punteggio>
+  )
+}
+
+const COMPONENTI_SOFA = [
+  { chiave: 'respiratorio_PF', etichetta: 'Respiratorio (PaO2/FiO2)' },
+  { chiave: 'coagulazione_piastrine_x10e3', etichetta: 'Coagulazione (piastrine ×10³/µl)' },
+  { chiave: 'fegato_bilirubina_mg_dl', etichetta: 'Fegato (bilirubina mg/dl)' },
+  { chiave: 'cardiovascolare', etichetta: 'Cardiovascolare' },
+  { chiave: 'snc_GCS', etichetta: 'SNC (GCS)' },
+  { chiave: 'rene_creatinina_mg_dl', etichetta: 'Rene (creatinina mg/dl)' },
+]
+
+function CalcSofa({ dati }) {
+  return (
+    <CalcComponentiConSomma dati={dati} componenti={COMPONENTI_SOFA} calcola={calcolaSofa} formatRisultato={(r) => `SOFA ${r.punteggio}/24`} />
+  )
+}
+
+const COMPONENTI_FOUR = [
+  { chiave: 'occhi', etichetta: 'Occhi' },
+  { chiave: 'motorio', etichetta: 'Motorio' },
+  { chiave: 'riflessi_tronco', etichetta: 'Riflessi del tronco' },
+  { chiave: 'respiro', etichetta: 'Respiro' },
+]
+
+function CalcFour({ dati }) {
+  return (
+    <CalcComponentiConSomma dati={dati} componenti={COMPONENTI_FOUR} calcola={calcolaFour} formatRisultato={(r) => `FOUR ${r.punteggio}/16`} />
+  )
+}
+
+const COMPONENTI_HACOR = [
+  { chiave: 'FC', etichetta: 'FC (bpm)' },
+  { chiave: 'acidosi_pH', etichetta: 'pH (acidosi)' },
+  { chiave: 'coscienza_GCS', etichetta: 'Coscienza (GCS)' },
+  { chiave: 'ossigenazione_PF', etichetta: 'Ossigenazione (PaO2/FiO2)' },
+  { chiave: 'FR', etichetta: 'FR (atti/min)' },
+]
+
+function CalcHacor({ dati }) {
+  return (
+    <CalcComponentiConSomma
+      dati={dati}
+      componenti={COMPONENTI_HACOR}
+      calcola={calcolaHacor}
+      formatRisultato={(r) => `HACOR ${r.punteggio}/27${r.altoRischio ? ' — alto rischio di fallimento NIV' : ''}`}
+    />
+  )
+}
+
+const COMPONENTI_GCS = [
+  { chiave: 'apertura_occhi', etichetta: 'Apertura occhi' },
+  { chiave: 'risposta_verbale', etichetta: 'Risposta verbale' },
+  { chiave: 'risposta_motoria', etichetta: 'Risposta motoria' },
+]
+
+function CalcGCS({ dati }) {
+  return (
+    <CalcComponentiConSomma
+      dati={dati}
+      componenti={COMPONENTI_GCS}
+      calcola={(punti) => calcolaGCS({ aperturaOcchi: punti[0], rispostaVerbale: punti[1], rispostaMotoria: punti[2] })}
+      formatRisultato={(r) => `GCS ${r.punteggio}/15${r.coma ? ' — coma' : ''}`}
+    />
   )
 }
 
@@ -401,6 +536,64 @@ function CalcROX({ dati }) {
         </>
       )}
       <p className="nota">{dati.interpretazione}</p>
+    </Punteggio>
+  )
+}
+
+// --- Ustioni ------------------------------------------------------------------------------
+
+function CalcSuperficieUstionata({ dati, pesoKg }) {
+  const [pesoInput, setPesoInput] = useState(pesoKg > 0 ? String(pesoKg) : '')
+  const [tbsaInput, setTbsaInput] = useState('')
+
+  useEffect(() => {
+    if (pesoKg > 0) setPesoInput(String(pesoKg))
+  }, [pesoKg])
+
+  const peso = numero(pesoInput)
+  const tbsa = numero(tbsaInput)
+
+  let risultato = null
+  let errore = null
+  if (peso !== null && tbsa !== null) {
+    try {
+      risultato = calcolaParkland({ pesoKg: peso, percentTBSA: tbsa })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  const regola9 = dati.regola_dei_9_adulto
+
+  return (
+    <Punteggio titolo={dati.nome}>
+      <p className="scheda-titolo-p">Regola del nove (adulto)</p>
+      <ul className="lista-riferimenti">
+        <li>Testa/collo: {regola9.testa_collo}%</li>
+        <li>Ogni arto superiore: {regola9.ogni_arto_superiore}%</li>
+        <li>Torace anteriore: {regola9.torace_anteriore}%</li>
+        <li>Dorso: {regola9.dorso}%</li>
+        <li>Ogni arto inferiore: {regola9.ogni_arto_inferiore}%</li>
+        <li>Genitali: {regola9.genitali}%</li>
+      </ul>
+      <p className="nota">Bambino: {dati.bambino_differenze}</p>
+      <p className="nota">Metodo del palmo: {dati.metodo_del_palmo}</p>
+
+      <p className="scheda-titolo-p">Parkland (fluidi nelle 24h)</p>
+      <div className="griglia-campi-p">
+        <Campo etichetta="Peso (kg)" valore={pesoInput} onChange={setPesoInput} />
+        <Campo etichetta="TBSA (%)" valore={tbsaInput} onChange={setTbsaInput} />
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.totale24hMl} ml/24h totali</p>
+          <p className="formula">{risultato.formula}</p>
+          <p className="risultato-primario">{risultato.prime8hMl} ml nelle prime 8h (dall'ustione)</p>
+          <p className="risultato-primario">{risultato.successive16hMl} ml nelle 16h successive</p>
+        </>
+      )}
+      <p className="nota">{dati.parkland.note}</p>
     </Punteggio>
   )
 }

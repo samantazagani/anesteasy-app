@@ -8,6 +8,13 @@ import {
   calcolaROX,
   calcolaAldrete,
   calcolaFour,
+  calcolaElGanzouri,
+  calcolaAriscat,
+  calcolaApgar,
+  calcolaSofa,
+  calcolaHacor,
+  calcolaMacocha,
+  calcolaParkland,
 } from './punteggiCalculator'
 
 describe('calcolaStopBang', () => {
@@ -187,5 +194,162 @@ describe('calcolaFour', () => {
 
   it('lancia un errore se un componente e\' fuori range 0-4', () => {
     expect(() => calcolaFour([4, 4, 4, 5])).toThrow(/0 e 4/)
+  })
+})
+
+describe('calcolaElGanzouri - caso reale con pesi NON uniformi tra le 7 voci', () => {
+  // Voci reali da data/punteggi.json > el-ganzouri: apertura bocca >=4cm (0), distanza
+  // tiromentoniera <6cm (2), Mallampati IV (2), mobilita collo <80gradi (2), prognatismo
+  // "si" (0), peso >110kg (2), storia intubazione difficile certa (2). Somma = 0+2+2+2+0+2+2
+  it('0+2+2+2+0+2+2 = 10 -> probabile intubazione difficile (>=4)', () => {
+    const r = calcolaElGanzouri([0, 2, 2, 2, 0, 2, 2])
+    expect(r.punteggio).toBe(10)
+    expect(r.difficileProbabile).toBe(true)
+  })
+
+  it('tutte le voci al minimo -> punteggio 0, non probabile', () => {
+    const r = calcolaElGanzouri([0, 0, 0, 0, 0, 0, 0])
+    expect(r.punteggio).toBe(0)
+    expect(r.difficileProbabile).toBe(false)
+  })
+
+  it('lancia un errore se non sono esattamente 7 voci', () => {
+    expect(() => calcolaElGanzouri([0, 1, 2])).toThrow(/7 voci/)
+  })
+})
+
+describe('calcolaAriscat - caso reale con pesi molto diversi (0/3/16 su eta, 0/8/24 su SpO2...)', () => {
+  // Voci reali da data/punteggi.json > ariscat: eta 51-80 (3), SpO2 91-95% (8), infezione
+  // respiratoria "no" (0), anemia "si" (11), sede "addome superiore" (15), durata "2-3h"
+  // (16), urgenza "no" (0). Somma = 3+8+0+11+15+16+0 = 53
+  it('3+8+0+11+15+16+0 = 53 -> rischio alto (>=45)', () => {
+    const r = calcolaAriscat([3, 8, 0, 11, 15, 16, 0])
+    expect(r.punteggio).toBe(53)
+    expect(r.rischio).toBe('alto')
+  })
+
+  it('punteggio 0 -> rischio basso', () => {
+    expect(calcolaAriscat([0, 0, 0, 0, 0, 0, 0]).rischio).toBe('basso')
+  })
+
+  it('punteggio 26 (soglia intermedio) -> rischio intermedio', () => {
+    // eta 51-80 (3) + SpO2 91-95% (8) + anemia si (11) + resto 0 = 22... regoliamo con sede
+    // "addome superiore" (15) al posto di anemia per arrivare esattamente a 26
+    expect(calcolaAriscat([3, 8, 0, 0, 15, 0, 0]).punteggio).toBe(26)
+    expect(calcolaAriscat([3, 8, 0, 0, 15, 0, 0]).rischio).toBe('intermedio')
+  })
+
+  it('soglia 44 vs 45: sotto e\' intermedio, alla soglia e\' alto', () => {
+    expect(calcolaAriscat([16, 8, 0, 0, 0, 20, 0]).punteggio).toBe(44)
+    expect(calcolaAriscat([16, 8, 0, 0, 0, 20, 0]).rischio).toBe('intermedio')
+    expect(calcolaAriscat([16, 8, 0, 0, 0, 21, 0]).punteggio).toBe(45)
+    expect(calcolaAriscat([16, 8, 0, 0, 0, 21, 0]).rischio).toBe('alto')
+  })
+
+  it('lancia un errore se non sono esattamente 7 voci', () => {
+    expect(() => calcolaAriscat([1, 2])).toThrow(/7 voci/)
+  })
+})
+
+describe('calcolaApgar', () => {
+  it('5 voci a 2 punti -> 10, non richiede attenzione', () => {
+    const r = calcolaApgar([2, 2, 2, 2, 2])
+    expect(r.punteggio).toBe(10)
+    expect(r.richiedeAttenzione).toBe(false)
+  })
+
+  it('punteggio 6 (<7) -> richiede attenzione', () => {
+    const r = calcolaApgar([1, 1, 1, 1, 2])
+    expect(r.punteggio).toBe(6)
+    expect(r.richiedeAttenzione).toBe(true)
+  })
+
+  it('lancia un errore se non sono esattamente 5 voci', () => {
+    expect(() => calcolaApgar([2, 2])).toThrow(/5 voci/)
+  })
+})
+
+describe('calcolaSofa - un caso per componente', () => {
+  // respiratorio_PF "<300" (2), coagulazione "<150" (1), fegato "<1.2" (0), cardiovascolare
+  // "MAP<70" (1), snc_GCS "13-14" (1), rene "1.2-1.9" (1). Somma = 2+1+0+1+1+1 = 6
+  it('2+1+0+1+1+1 = 6', () => {
+    const r = calcolaSofa([2, 1, 0, 1, 1, 1])
+    expect(r.punteggio).toBe(6)
+  })
+
+  it('lancia un errore se non sono esattamente 6 componenti', () => {
+    expect(() => calcolaSofa([1, 2, 3])).toThrow(/6 componenti/)
+  })
+})
+
+describe('calcolaHacor - un caso per componente', () => {
+  // FC >=120 (1), acidosi_pH 7.30-7.34 (2), coscienza_GCS 13-14 (2), ossigenazione_PF
+  // 151-175 (3), FR 36-40 (2). Somma = 1+2+2+3+2 = 10
+  it('1+2+2+3+2 = 10 -> alto rischio (>5)', () => {
+    const r = calcolaHacor([1, 2, 2, 3, 2])
+    expect(r.punteggio).toBe(10)
+    expect(r.altoRischio).toBe(true)
+  })
+
+  it('punteggio esattamente 5 -> NON alto rischio (soglia e\' >5, non >=5)', () => {
+    expect(calcolaHacor([1, 2, 2, 0, 0]).punteggio).toBe(5)
+    expect(calcolaHacor([1, 2, 2, 0, 0]).altoRischio).toBe(false)
+  })
+
+  it('lancia un errore se non sono esattamente 5 componenti', () => {
+    expect(() => calcolaHacor([1, 2])).toThrow(/5 componenti/)
+  })
+})
+
+describe('calcolaMacocha - checklist a pesi diversi, caso che supera la soglia >=3', () => {
+  // Voci reali da data/punteggi.json > macocha.voci (pesi): Mallampati III/IV=5, apnee=2,
+  // mobilita collo=1, apertura bocca<3cm=1, coma=1, ipossiemia=1, operatore non anestesista=1
+  const puntiPerVoce = [5, 2, 1, 1, 1, 1, 1]
+
+  it('selezionate apertura bocca + coma + ipossiemia (1+1+1=3) -> alto rischio (>=3)', () => {
+    const selezionati = [false, false, false, true, true, true, false]
+    const r = calcolaMacocha(selezionati, puntiPerVoce)
+    expect(r.punteggio).toBe(3)
+    expect(r.altoRischio).toBe(true)
+  })
+
+  it('punteggio 2 (sotto soglia) -> non alto rischio', () => {
+    const selezionati = [false, false, false, true, true, false, false]
+    const r = calcolaMacocha(selezionati, puntiPerVoce)
+    expect(r.punteggio).toBe(2)
+    expect(r.altoRischio).toBe(false)
+  })
+
+  it('solo Mallampati III/IV (peso 5) da solo supera la soglia', () => {
+    const selezionati = [true, false, false, false, false, false, false]
+    expect(calcolaMacocha(selezionati, puntiPerVoce).punteggio).toBe(5)
+  })
+
+  it('lancia un errore se le lunghezze non corrispondono', () => {
+    expect(() => calcolaMacocha([true, false], puntiPerVoce)).toThrow(/stessa lunghezza/)
+  })
+})
+
+describe('calcolaParkland - caso reale verificato a mano: 70 kg, 30% TBSA', () => {
+  // 4 x 70 x 30 = 8400 ml/24h; meta' (4200 ml) nelle prime 8h, meta' (4200 ml) nelle 16h
+  // successive.
+  it('70 kg, 30% TBSA -> 8400 ml/24h, 4200 ml nelle prime 8h', () => {
+    const r = calcolaParkland({ pesoKg: 70, percentTBSA: 30 })
+
+    expect(r.totale24hMl).toBe(8400)
+    expect(r.prime8hMl).toBe(4200)
+    expect(r.successive16hMl).toBe(4200)
+    expect(r.formula).toBe('4 × 70 kg × 30% = 8400 ml/24h')
+  })
+
+  it('le due quote sommate ricostruiscono sempre il totale', () => {
+    const r = calcolaParkland({ pesoKg: 82, percentTBSA: 45 })
+    expect(r.prime8hMl + r.successive16hMl).toBe(r.totale24hMl)
+  })
+
+  it('lancia un errore se manca il peso o la %TBSA non e\' valida', () => {
+    expect(() => calcolaParkland({ pesoKg: 0, percentTBSA: 30 })).toThrow(/peso/i)
+    expect(() => calcolaParkland({ pesoKg: 70, percentTBSA: 0 })).toThrow(/TBSA/)
+    expect(() => calcolaParkland({ pesoKg: 70, percentTBSA: 101 })).toThrow(/TBSA/)
   })
 })
