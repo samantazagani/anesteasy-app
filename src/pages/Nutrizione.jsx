@@ -4,6 +4,14 @@ import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import {
   calcolaHarrisBenedict,
+  selezionaRegimeCalorico,
+  selezionaRegimeProteico,
+  pesoDiRiferimento,
+  percentualeFaseDefault,
+  calcolaTargetCalorico,
+  calcolaCaloriePropofol,
+  calcolaTargetNetto,
+  calcolaProteineTarget,
   calcolaNPT,
   calcolaVolumeComponente,
   criterioBMIRefeeding,
@@ -12,26 +20,99 @@ import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Nutrizione.css'
 
-function media([min, max]) {
-  return (min + max) / 2
+const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)' }
+const LABEL_BRACKET_CALORICO = {
+  'non_obeso_BMI<30': 'BMI < 30',
+  'obeso_BMI_30-50': 'BMI 30-50',
+  'obeso_BMI>50': 'BMI > 50',
+}
+const LABEL_BRACKET_PROTEICO = {
+  non_obeso: 'BMI < 30',
+  'obeso_BMI_30-40': 'BMI 30-40',
+  'obeso_BMI>=40': 'BMI ≥ 40',
 }
 
 export function Nutrizione() {
-  const { profile, bmi } = usePatientProfile()
+  const { profile, bmi, ibw } = usePatientProfile()
   const pesoKg = profile.pesoKg
 
-  const { fabbisogno_calorico: fabbisognoCalorico, proteine, fabbisogno_idrico: fabbisognoIdrico } =
-    nutrizioneData
+  const {
+    fabbisogno_calorico: fabbisognoCalorico,
+    percentuale_fase: percentualeFaseData,
+    proteine,
+    propofol_calorie: propofolCalorie,
+    fabbisogno_idrico: fabbisognoIdrico,
+  } = nutrizioneData
 
-  // Condivisi tra "Fabbisogno calorico"/"Proteine" e il calcolatore NPT, cosi' la NPT
-  // riparte dai valori scelti sopra invece di richiederli una seconda volta.
-  const [targetKcalKg, setTargetKcalKg] = useState(media(fabbisognoCalorico.peso_based.kcal_kg))
-  const [faseProteineIndice, setFaseProteineIndice] = useState(0)
-  const [gKgAminoacidi, setGKgAminoacidi] = useState(media(proteine[0].g_kg))
+  // --- Passo 1: regime da BMI, calorico e proteico hanno soglie DIVERSE tra loro -------
+  const regimeCalorico = selezionaRegimeCalorico(fabbisognoCalorico.regime_per_bmi, bmi)
+  const pesoRifCalorico = pesoDiRiferimento(regimeCalorico, { pesoKg, ibw })
+  const regimeProteico = selezionaRegimeProteico(proteine.regime_per_bmi, bmi)
+  const pesoRifProteico = pesoDiRiferimento(regimeProteico, { pesoKg, ibw })
+
+  // --- Passo 3: fase clinica, percentuale precompilata dalla fase ma sempre modificabile
+  const [faseIndice, setFaseIndice] = useState(0)
+  const fase = percentualeFaseData.fasi[faseIndice]
+  const [percentualeInput, setPercentualeInput] = useState(
+    String(percentualeFaseDefault(fase.percentuale_target) ?? ''),
+  )
 
   function selezionaFase(i) {
-    setFaseProteineIndice(i)
-    setGKgAminoacidi(media(proteine[i].g_kg))
+    setFaseIndice(i)
+    setPercentualeInput(String(percentualeFaseDefault(percentualeFaseData.fasi[i].percentuale_target) ?? ''))
+  }
+
+  const percentualeFaseN = percentualeInput.trim() === '' ? null : Number(percentualeInput)
+
+  // --- Passo 2-3: target calorico (grezzo e di fase) ------------------------------------
+  let targetCalorico = null
+  let erroreTargetCalorico = null
+  if (regimeCalorico && pesoRifCalorico.valoreKg > 0 && percentualeFaseN > 0) {
+    try {
+      targetCalorico = calcolaTargetCalorico({
+        kcalKgRange: regimeCalorico.kcal_kg,
+        pesoRiferimentoKg: pesoRifCalorico.valoreKg,
+        percentualeFase: percentualeFaseN,
+      })
+    } catch (e) {
+      erroreTargetCalorico = e.message
+    }
+  }
+
+  // --- Passo 4: propofol in corso (opzionale) -------------------------------------------
+  const [mlHPropofoloInput, setMlHPropofoloInput] = useState('')
+  const mlHPropofolo = mlHPropofoloInput.trim() === '' ? null : Number(mlHPropofoloInput)
+  let caloriePropofol = null
+  let errorePropofol = null
+  if (mlHPropofolo > 0) {
+    try {
+      caloriePropofol = calcolaCaloriePropofol({
+        mlH: mlHPropofolo,
+        kcalPerMl: propofolCalorie.kcal_per_ml,
+        lipidiGPerMl: propofolCalorie.lipidi_g_per_ml,
+      })
+    } catch (e) {
+      errorePropofol = e.message
+    }
+  }
+
+  // --- Passo 5: target netto (di fase, meno il propofol) --------------------------------
+  const targetNetto = targetCalorico
+    ? calcolaTargetNetto({ kcalFase: targetCalorico.kcalFase, kcalPropofol: caloriePropofol?.kcalDie ?? 0 })
+    : null
+
+  // --- Passo 6: proteine, dal regime BMI, NON scalate dalla fase ------------------------
+  let proteineTarget = null
+  let erroreProteine = null
+  if (regimeProteico && pesoRifProteico.valoreKg > 0) {
+    try {
+      proteineTarget = calcolaProteineTarget({
+        gKg: regimeProteico.g_kg,
+        pesoRiferimentoKg: pesoRifProteico.valoreKg,
+      })
+    } catch (e) {
+      erroreProteine = e.message
+    }
   }
 
   return (
@@ -39,24 +120,41 @@ export function Nutrizione() {
       <h1>Nutrizione</h1>
       <div className="riga-meta">
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
+        <span className="chip">BMI: {bmi !== null && bmi !== undefined ? bmi : 'non disponibile'}</span>
         <BadgeVerifica verificato={false} />
       </div>
 
       <SezioneFabbisognoCalorico
-        dati={fabbisognoCalorico}
-        pesoKg={pesoKg}
+        fabbisognoCalorico={fabbisognoCalorico}
+        regimeCalorico={regimeCalorico}
+        pesoRifCalorico={pesoRifCalorico}
+        percentualeFaseData={percentualeFaseData}
+        faseIndice={faseIndice}
+        onFaseChange={selezionaFase}
+        percentualeInput={percentualeInput}
+        onPercentualeChange={setPercentualeInput}
+        targetCalorico={targetCalorico}
+        erroreTargetCalorico={erroreTargetCalorico}
         profile={profile}
-        targetKcalKg={targetKcalKg}
-        onTargetKcalKgChange={setTargetKcalKg}
+        pesoKg={pesoKg}
+      />
+
+      <SezionePropofol
+        propofolCalorie={propofolCalorie}
+        mlHInput={mlHPropofoloInput}
+        onMlHChange={setMlHPropofoloInput}
+        caloriePropofol={caloriePropofol}
+        errorePropofol={errorePropofol}
+        targetCalorico={targetCalorico}
+        targetNetto={targetNetto}
       />
 
       <SezioneProteine
-        lista={proteine}
-        pesoKg={pesoKg}
-        faseIndice={faseProteineIndice}
-        onFaseChange={selezionaFase}
-        gKgAminoacidi={gKgAminoacidi}
-        onGKgAminoacidiChange={setGKgAminoacidi}
+        proteine={proteine}
+        regimeProteico={regimeProteico}
+        pesoRifProteico={pesoRifProteico}
+        proteineTarget={proteineTarget}
+        erroreProteine={erroreProteine}
       />
 
       <SezioneFabbisognoIdrico dati={fabbisognoIdrico} pesoKg={pesoKg} />
@@ -66,17 +164,29 @@ export function Nutrizione() {
       <SezioneNPT
         dati={nutrizioneData.npt_calcolatore}
         pesoKg={pesoKg}
-        targetKcalKg={targetKcalKg}
-        gKgAminoacidi={gKgAminoacidi}
+        targetNetto={targetNetto}
+        proteineTarget={proteineTarget}
+        lipidiPropofolG={caloriePropofol?.lipidiGDie ?? 0}
       />
     </section>
   )
 }
 
-function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTargetKcalKgChange }) {
-  const { peso_based: pesoBased, harris_benedict: harrisBenedict } = dati
-  const doseRange = { min: pesoBased.kcal_kg[0], max: pesoBased.kcal_kg[1], unita: 'kcal/kg' }
-  const risultatoRange = pesoKg > 0 ? calcolaDose(doseRange, pesoKg) : null
+function SezioneFabbisognoCalorico({
+  fabbisognoCalorico,
+  regimeCalorico,
+  pesoRifCalorico,
+  percentualeFaseData,
+  faseIndice,
+  onFaseChange,
+  percentualeInput,
+  onPercentualeChange,
+  targetCalorico,
+  erroreTargetCalorico,
+  profile,
+  pesoKg,
+}) {
+  const harrisBenedict = fabbisognoCalorico.harris_benedict
 
   const [sesso, setSesso] = useState(profile.sesso ?? 'M')
   const [fattoreStressInput, setFattoreStressInput] = useState('')
@@ -96,32 +206,80 @@ function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTarg
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Fabbisogno calorico</h2>
-        <BadgeVerifica verificato={pesoBased.verificato} />
+        <BadgeVerifica verificato={fabbisognoCalorico.verificato} />
       </div>
 
       <div className="scheda">
-        <p className="scheda-titolo">Range su peso reale</p>
-        {risultatoRange ? (
+        <p className="scheda-titolo">Regime (automatico dal BMI)</p>
+        {regimeCalorico ? (
           <>
-            <p className="risultato-primario">{formatoRisultato(risultatoRange)}</p>
-            <p className="formula">{risultatoRange.formula}</p>
+            <div className="riga-meta">
+              <span className="chip chip-capitalizza">{regimeCalorico.regime}</span>
+              <span className="chip">{LABEL_BRACKET_CALORICO[regimeCalorico.chiave]}</span>
+              <span className="chip">
+                Peso di riferimento: {LABEL_PESO[pesoRifCalorico.chiave] ?? pesoRifCalorico.chiave}
+                {pesoRifCalorico.valoreKg > 0 ? ` (${pesoRifCalorico.valoreKg} kg)` : ''}
+              </span>
+            </div>
+            <p className="nota">
+              {regimeCalorico.kcal_kg[0]}-{regimeCalorico.kcal_kg[1]} kcal/kg
+              {regimeCalorico.fonte ? ` · fonte: ${regimeCalorico.fonte}` : ''}
+            </p>
+            {!(pesoRifCalorico.valoreKg > 0) && (
+              <p className="avviso avviso-errore">
+                Il regime richiede il peso {LABEL_PESO[pesoRifCalorico.chiave] ?? pesoRifCalorico.chiave}, non
+                disponibile: completa sesso/peso/altezza nel profilo paziente.
+              </p>
+            )}
           </>
         ) : (
-          <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
+          <p className="avviso">Imposta peso e altezza nel profilo paziente per determinare il BMI e il regime.</p>
         )}
-        <p className="nota">{pesoBased.note}</p>
+      </div>
+
+      <div className="scheda">
+        <p className="scheda-titolo">Fase clinica</p>
+        <div className="fasi-proteine" role="tablist" aria-label="Fase">
+          {percentualeFaseData.fasi.map((f, i) => (
+            <button
+              key={f.fase}
+              type="button"
+              role="tab"
+              aria-selected={i === faseIndice}
+              className={i === faseIndice ? 'fase-item selezionato' : 'fase-item'}
+              onClick={() => onFaseChange(i)}
+            >
+              {f.fase}
+            </button>
+          ))}
+        </div>
+        <p className="nota">
+          Target di riferimento: {percentualeFaseData.fasi[faseIndice].percentuale_target}
+          {percentualeFaseData.fasi[faseIndice].motivo ? ` — ${percentualeFaseData.fasi[faseIndice].motivo}` : ''}
+        </p>
 
         <label className="campo-numerico campo-target">
-          Target kcal/kg scelto (per la NPT più sotto)
+          Percentuale scelta (%)
           <input
             type="number"
             min="0"
+            max="200"
             step="any"
             inputMode="decimal"
-            value={targetKcalKg}
-            onChange={(e) => onTargetKcalKgChange(Number(e.target.value))}
+            value={percentualeInput}
+            onChange={(e) => onPercentualeChange(e.target.value)}
           />
         </label>
+
+        {erroreTargetCalorico && <p className="avviso avviso-errore">{erroreTargetCalorico}</p>}
+        {targetCalorico && (
+          <>
+            <p className="nota">Target pieno (100%): {targetCalorico.kcalTarget} kcal/die</p>
+            <p className="formula">{targetCalorico.formulaTarget}</p>
+            <p className="risultato-primario">{targetCalorico.kcalFase} kcal/die (target di fase)</p>
+            <p className="formula">{targetCalorico.formulaFase}</p>
+          </>
+        )}
       </div>
 
       <div className="scheda">
@@ -153,9 +311,7 @@ function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTarg
         </div>
 
         {!(pesoKg > 0 && profile.altezzaCm > 0 && profile.eta >= 0) && (
-          <p className="avviso">
-            Completa peso, altezza ed età nel profilo paziente per calcolare.
-          </p>
+          <p className="avviso">Completa peso, altezza ed età nel profilo paziente per calcolare.</p>
         )}
         {erroreHb && <p className="avviso avviso-errore">{erroreHb}</p>}
         {hb && (
@@ -175,53 +331,107 @@ function SezioneFabbisognoCalorico({ dati, pesoKg, profile, targetKcalKg, onTarg
   )
 }
 
-function SezioneProteine({ lista, pesoKg, faseIndice, onFaseChange, gKgAminoacidi, onGKgAminoacidiChange }) {
-  const fase = lista[faseIndice]
-  const doseRange = { min: fase.g_kg[0], max: fase.g_kg[1], unita: 'g/kg' }
-  const risultato = pesoKg > 0 ? calcolaDose(doseRange, pesoKg) : null
-
+function SezionePropofol({ propofolCalorie, mlHInput, onMlHChange, caloriePropofol, errorePropofol, targetCalorico, targetNetto }) {
   return (
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
-        <h2>Proteine</h2>
-        <BadgeVerifica verificato={fase.verificato} />
+        <h2>Propofol in corso</h2>
+        <BadgeVerifica verificato={propofolCalorie.verificato} />
       </div>
-
-      <div className="fasi-proteine" role="tablist" aria-label="Fase">
-        {lista.map((f, i) => (
-          <button
-            key={f.fase}
-            type="button"
-            role="tab"
-            aria-selected={i === faseIndice}
-            className={i === faseIndice ? 'fase-item selezionato' : 'fase-item'}
-            onClick={() => onFaseChange(i)}
-          >
-            {f.fase}
-          </button>
-        ))}
-      </div>
-
-      {risultato ? (
-        <>
-          <p className="risultato-primario">{formatoRisultato(risultato)}</p>
-          <p className="formula">{risultato.formula}</p>
-        </>
-      ) : (
-        <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
-      )}
+      <p className="nota">{propofolCalorie.descrizione}</p>
 
       <label className="campo-numerico campo-target">
-        g/kg scelto (per la NPT più sotto)
+        Velocità propofol (ml/h, lasciare vuoto se non in corso)
         <input
           type="number"
           min="0"
           step="any"
           inputMode="decimal"
-          value={gKgAminoacidi}
-          onChange={(e) => onGKgAminoacidiChange(Number(e.target.value))}
+          placeholder="es. 20"
+          value={mlHInput}
+          onChange={(e) => onMlHChange(e.target.value)}
         />
       </label>
+
+      {errorePropofol && <p className="avviso avviso-errore">{errorePropofol}</p>}
+
+      {caloriePropofol && (
+        <>
+          <p className="risultato-primario">{caloriePropofol.kcalDie} kcal/die dal propofol</p>
+          <p className="formula">{caloriePropofol.formulaKcal}</p>
+          <p className="risultato-primario">{caloriePropofol.lipidiGDie} g/die di lipidi dal propofol</p>
+          <p className="formula">{caloriePropofol.formulaLipidi}</p>
+        </>
+      )}
+
+      {targetCalorico && (
+        <div className="scheda scheda-sottrazione">
+          <p className="scheda-titolo">Target netto da nutrizione</p>
+          <p className="nota">Prima (target di fase): {targetCalorico.kcalFase} kcal/die</p>
+          <p className="nota">Meno propofol: {caloriePropofol ? `-${caloriePropofol.kcalDie}` : '0'} kcal/die</p>
+          {targetNetto && (
+            <>
+              <p className="risultato-primario">Dopo: {targetNetto.kcalNetto} kcal/die (target netto)</p>
+              <p className="formula">{targetNetto.formula}</p>
+              {targetNetto.copertoDaPropofol && (
+                <p className="avviso avviso-errore">
+                  Il propofol da solo copre o supera il target di fase: nessuna caloria aggiuntiva netta da
+                  nutrizione (verifica comunque proteine e lipidi totali sotto).
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SezioneProteine({ proteine, regimeProteico, pesoRifProteico, proteineTarget, erroreProteine }) {
+  return (
+    <div className="riquadro-nutrizione">
+      <div className="riga-meta">
+        <h2>Proteine</h2>
+        <BadgeVerifica verificato={proteine.verificato} />
+      </div>
+
+      {regimeProteico ? (
+        <>
+          <div className="riga-meta">
+            <span className="chip">{LABEL_BRACKET_PROTEICO[regimeProteico.chiave]}</span>
+            <span className="chip">
+              Peso di riferimento: {LABEL_PESO[pesoRifProteico.chiave] ?? pesoRifProteico.chiave}
+              {pesoRifProteico.valoreKg > 0 ? ` (${pesoRifProteico.valoreKg} kg)` : ''}
+            </span>
+          </div>
+          <p className="nota">
+            {regimeProteico.g_kg} g/kg
+            {regimeProteico.range ? ` (range ${regimeProteico.range[0]}-${regimeProteico.range[1]})` : ''}
+            {regimeProteico.fonte ? ` · fonte: ${regimeProteico.fonte}` : ''}
+          </p>
+          {regimeProteico.note && <p className="nota">{regimeProteico.note}</p>}
+          <p className="avviso">
+            Le proteine NON si riducono con la fase clinica come le calorie: questo target è sempre al 100% del
+            regime, indipendentemente dalla percentuale di fase scelta sopra.
+          </p>
+
+          {!(pesoRifProteico.valoreKg > 0) && (
+            <p className="avviso avviso-errore">
+              Il regime richiede il peso {LABEL_PESO[pesoRifProteico.chiave] ?? pesoRifProteico.chiave}, non
+              disponibile: completa sesso/peso/altezza nel profilo paziente.
+            </p>
+          )}
+          {erroreProteine && <p className="avviso avviso-errore">{erroreProteine}</p>}
+          {proteineTarget && (
+            <>
+              <p className="risultato-primario">{proteineTarget.grammiDie} g/die</p>
+              <p className="formula">{proteineTarget.formula}</p>
+            </>
+          )}
+        </>
+      ) : (
+        <p className="avviso">Imposta peso e altezza nel profilo paziente per determinare il BMI e il regime.</p>
+      )}
     </div>
   )
 }
@@ -268,7 +478,7 @@ function SezioneRefeeding({ dati, bmi }) {
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Refeeding syndrome</h2>
-        <BadgeVerifica verificato={dati.gestione.verificato} />
+        <BadgeVerifica verificato={dati.verificato} />
       </div>
 
       <div className="checklist-refeeding">
@@ -320,7 +530,11 @@ const COMPONENTI_NPT = [
   { chiave: 'lipidi', etichetta: 'Lipidi', placeholder: 'es. 20' },
 ]
 
-function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
+function media([min, max]) {
+  return (min + max) / 2
+}
+
+function SezioneNPT({ dati, pesoKg, targetNetto, proteineTarget, lipidiPropofolG }) {
   const [glucidiPercentInput, setGlucidiPercentInput] = useState(String(media(dati.ripartizione_tipica.glucidi_percent)))
   const [lipidiPercentInput, setLipidiPercentInput] = useState(String(media(dati.ripartizione_tipica.lipidi_percent)))
   const [concentrazioni, setConcentrazioni] = useState({})
@@ -330,16 +544,17 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
 
   let npt = null
   let errore = null
-  if (pesoKg > 0 && targetKcalKg > 0 && gKgAminoacidi > 0) {
+  if (pesoKg > 0 && targetNetto?.kcalNetto > 0 && proteineTarget?.grammiDie > 0) {
     try {
       npt = calcolaNPT({
         pesoKg,
-        targetKcalKg,
-        gKgAminoacidi,
+        kcalTotaliTarget: targetNetto.kcalNetto,
+        aminoacidiG: proteineTarget.grammiDie,
         glucidiPercent,
         lipidiPercent,
         densitaKcal: dati.densita_kcal,
         limiti: dati.limiti,
+        lipidiPropofolG,
       })
     } catch (e) {
       errore = e.message
@@ -357,19 +572,24 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
         <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">{dati.descrizione}</p>
+      <p className="nota">{dati.nota}</p>
 
       <div className="griglia-campi-piccola">
         <div className="campo-numerico">
-          Peso
-          <p className="formula formula-piccola">{pesoKg > 0 ? `${pesoKg} kg (dal profilo)` : 'non impostato'}</p>
+          Peso (limiti mg/kg/min, g/kg/die)
+          <p className="formula formula-piccola">{pesoKg > 0 ? `${pesoKg} kg (reale, dal profilo)` : 'non impostato'}</p>
         </div>
         <div className="campo-numerico">
-          Target kcal/kg
-          <p className="formula formula-piccola">{targetKcalKg} kcal/kg (da "Fabbisogno calorico")</p>
+          Target netto (kcal/die)
+          <p className="formula formula-piccola">
+            {targetNetto?.kcalNetto > 0 ? `${targetNetto.kcalNetto} kcal/die (da "Propofol in corso")` : 'non disponibile'}
+          </p>
         </div>
         <div className="campo-numerico">
           Aminoacidi
-          <p className="formula formula-piccola">{gKgAminoacidi} g/kg (da "Proteine")</p>
+          <p className="formula formula-piccola">
+            {proteineTarget?.grammiDie > 0 ? `${proteineTarget.grammiDie} g/die (da "Proteine")` : 'non disponibile'}
+          </p>
         </div>
       </div>
 
@@ -403,6 +623,14 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
       </div>
 
       {!(pesoKg > 0) && <p className="avviso">Imposta il peso nel profilo per calcolare.</p>}
+      {!(targetNetto?.kcalNetto > 0) && (
+        <p className="avviso">
+          Completa "Fabbisogno calorico" e "Propofol in corso" sopra per ottenere un target netto.
+        </p>
+      )}
+      {!(proteineTarget?.grammiDie > 0) && (
+        <p className="avviso">Completa "Proteine" sopra per ottenere i grammi di aminoacidi.</p>
+      )}
       {errore && <p className="avviso avviso-errore">{errore}</p>}
 
       {npt && (
@@ -436,6 +664,12 @@ function SezioneNPT({ dati, pesoKg, targetKcalKg, gKgAminoacidi }) {
                 {npt.lipidi.g} g ({npt.lipidi.kcal} kcal)
               </p>
               <p className="formula">{npt.lipidi.formula}</p>
+              {npt.lipidi.propofolG > 0 && (
+                <p className="nota">
+                  + {npt.lipidi.propofolG} g/die già dati dal propofol = {npt.lipidi.gTotaliConPropofol} g/die
+                  totali
+                </p>
+              )}
               <p className="nota">{npt.lipidi.gKgDie} g/kg/die (limite {dati.limiti.lipidi_max_g_kg_die})</p>
               {npt.lipidi.superaLimite && (
                 <p className="avviso avviso-errore">Supera il limite di {dati.limiti.lipidi_max_g_kg_die} g/kg/die.</p>

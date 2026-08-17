@@ -1,34 +1,87 @@
 {
-  "_stato": "BOZZA da verificare. Da linee guida ESPEN/pratica TI standard e scheda Nutrizione TI del medico (Nutrizione_Terapia_Intensiva_scheda.pdf). verificato=false.",
+  "_stato": "BOZZA da verificare. Valori da ESPEN 2023 (critico) e ASPEN 2016 (obeso). verificato=false.",
+  "_fonti": [
+    {"id": "espen-2023", "titolo": "ESPEN practical guideline: clinical nutrition in the ICU (2023)", "url": "https://www.clinicalnutritionjournal.com/article/S0261-5614(23)00230-3/fulltext"},
+    {"id": "aspen-2016", "titolo": "SCCM/ASPEN Guidelines for nutrition support in critically ill (obese)", "url": "https://derangedphysiology.com/main/required-reading/gastrointestinal-intensive-care/Chapter-518/nutritional-support-morbidly-obese-icu-patient"}
+  ],
+
   "fabbisogno_calorico": {
-    "peso_based": { "kcal_kg": [25, 30], "peso": "reale", "note": "fase acuta: partire piu bassi (permissive underfeeding)", "verificato": false, "fonte": "bozza" },
+    "_nota": "l'app sceglie il REGIME dal BMI (come il peso condizionale). Poi applica la percentuale di fase e sottrae le calorie del propofol.",
+    "regime_per_bmi": {
+      "non_obeso_BMI<30": {"kcal_kg": [25, 30], "peso": "reale", "regime": "normocalorico"},
+      "obeso_BMI_30-50": {"kcal_kg": [11, 14], "peso": "reale", "regime": "ipocalorico-iperproteico", "fonte": "aspen-2016"},
+      "obeso_BMI>50": {"kcal_kg": [22, 25], "peso": "IBW", "regime": "ipocalorico-iperproteico", "fonte": "aspen-2016"}
+    },
     "harris_benedict": {
       "formula_uomo": "66.5 + (13.75*peso_kg) + (5.003*altezza_cm) - (6.75*eta)",
       "formula_donna": "655.1 + (9.563*peso_kg) + (1.850*altezza_cm) - (4.676*eta)",
-      "fattore_stress": "moltiplicare per 1.2-1.5 secondo gravita",
-      "verificato": false, "fonte": "bozza"
-    }
+      "fattore_stress": "x1.2-1.5 secondo gravita"
+    },
+    "verificato": false, "fonte": "espen-2023"
   },
-  "proteine": [
-    { "fase": "critico standard", "g_kg": [1.2, 2.0], "peso": "reale", "verificato": false, "fonte": "bozza" },
-    { "fase": "CRRT / ustionato", "g_kg": [1.5, 2.5], "peso": "reale", "verificato": false, "fonte": "bozza" }
-  ],
-  "fabbisogno_idrico": { "ml_kg_die": [30, 35], "verificato": false, "fonte": "bozza" },
-  "micronutrienti": { "glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)", "note": "aggiungere vitamine e oligoelementi", "verificato": false, "fonte": "bozza" },
+
+  "percentuale_fase": {
+    "_nota": "nel critico si raggiunge il pieno regime in qualche giorno; la % si applica al target CALORICO e PROTEICO",
+    "fasi": [
+      {"fase": "acuta precoce (giorni 1-2)", "percentuale_target": "<=70%", "motivo": "evitare overfeeding/refeeding"},
+      {"fase": "acuta tardiva (>= giorno 3)", "percentuale_target": "80-100%"},
+      {"fase": "recupero", "percentuale_target": "100% (o piu se catabolismo)"}
+    ],
+    "campo_app": "percentuale_target selezionabile dall'utente (default suggerito per fase)",
+    "verificato": false, "fonte": "espen-2023"
+  },
+
+  "proteine": {
+    "regime_per_bmi": {
+      "non_obeso": {"g_kg": 1.3, "range": [1.2, 2.0], "peso": "reale", "note": "progressivo; CRRT/ustionato fino a 2.0-2.5"},
+      "obeso_BMI_30-40": {"g_kg": 2.0, "peso": "IBW", "fonte": "aspen-2016"},
+      "obeso_BMI>=40": {"g_kg": 2.5, "peso": "IBW", "fonte": "aspen-2016"}
+    },
+    "verificato": false, "fonte": "espen-2023"
+  },
+
+  "propofol_calorie": {
+    "descrizione": "il propofol e in emulsione lipidica 10%: apporta calorie e lipidi da SOTTRARRE dal fabbisogno da somministrare",
+    "kcal_per_ml": 1.1,
+    "lipidi_g_per_ml": 0.1,
+    "formula_kcal_die": "kcal_propofol = ml_h * 24 * 1.1",
+    "formula_lipidi_g_die": "lipidi_propofol_g = ml_h * 24 * 0.1",
+    "nota": "vale per propofol 1% e 2% (entrambi veicolo lipidico 10%)",
+    "verificato": false, "fonte": "bozza"
+  },
+
+  "calcolatore_target": {
+    "descrizione": "flusso completo del calcolo nutrizionale",
+    "passi": [
+      "1. BMI da peso/altezza -> scegli il regime (normocalorico vs obeso ipocalorico-iperproteico)",
+      "2. kcal_target = kcal_kg * peso_di_riferimento (reale o IBW secondo regime)",
+      "3. kcal_fase = kcal_target * percentuale_fase (es. 70%)",
+      "4. kcal_propofol = ml_h_propofol * 24 * 1.1",
+      "5. kcal_da_nutrizione = kcal_fase - kcal_propofol",
+      "6. proteine_target_g = g_kg(regime) * peso_di_riferimento  (le proteine NON si riducono con la fase quanto le calorie)"
+    ],
+    "verificato": false, "fonte": "espen-2023"
+  },
+
+  "fabbisogno_idrico": {"ml_kg_die": [30, 35], "verificato": false, "fonte": "bozza"},
+  "micronutrienti": {"glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)", "note": "aggiungere vitamine e oligoelementi", "verificato": false, "fonte": "bozza"},
+
   "refeeding_syndrome": {
     "rischio": ["BMI <16", "calo ponderale >15% in 3-6 mesi", "scarso apporto >10 gg", "ipoK/ipoPO4/ipoMg pre-esistenti"],
     "gestione": {
       "avvio_kcal": "10 kcal/kg/die, aumento graduale in 4-7 gg",
-      "correzione_elettroliti": { "fosfato": "monitorare e reintegrare", "potassio": "reintegrare", "magnesio": "reintegrare" },
-      "tiamina": "200-300 mg/die prima di iniziare",
-      "verificato": false, "fonte": "bozza"
-    }
+      "correzione_elettroliti": {"fosfato": "monitorare e reintegrare", "potassio": "reintegrare", "magnesio": "reintegrare"},
+      "tiamina": "200-300 mg/die prima di iniziare"
+    },
+    "verificato": false, "fonte": "bozza"
   },
+
   "npt_calcolatore": {
     "descrizione": "Input: peso, target kcal/kg, ripartizione macro, volume. Output: g/die e ml di ciascun componente.",
-    "densita_kcal": { "glucosio_g": 4, "lipidi_g": 9, "aminoacidi_g": 4 },
-    "ripartizione_tipica": { "glucidi_percent": [50, 60], "lipidi_percent": [25, 35], "aminoacidi_da_proteine": "vedi sopra" },
-    "limiti": { "glucosio_max_mg_kg_min": 4, "lipidi_max_g_kg_die": 1.5 },
+    "densita_kcal": {"glucosio_g": 4, "lipidi_g": 9, "aminoacidi_g": 4},
+    "ripartizione_tipica": {"glucidi_percent": [50, 60], "lipidi_percent": [25, 35]},
+    "limiti": {"glucosio_max_mg_kg_min": 4, "lipidi_max_g_kg_die": 1.5},
+    "nota": "scalare le calorie non proteiche per le kcal gia date dal propofol",
     "verificato": false, "fonte": "bozza"
   }
 }

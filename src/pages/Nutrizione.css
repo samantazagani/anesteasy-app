@@ -167,3 +167,15 @@
   border-radius: 10px;
   padding: 14px;
 }
+
+.chip-capitalizza {
+  text-transform: capitalize;
+}
+
+/* Propofol: box "prima/dopo" della sottrazione, distinto dalle altre schede per
+   richiamare l'attenzione sul fatto che il target netto e' quello da usare nella NPT. */
+.scheda-sottrazione {
+  background: var(--social-bg);
+  border-radius: 8px;
+  padding: 12px;
+}
