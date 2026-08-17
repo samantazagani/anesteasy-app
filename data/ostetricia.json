@@ -1,40 +1,150 @@
 {
-  "_stato": "BOZZA da verificare. Dosi da pratica/linee guida ostetriche standard (nessuna pagina Mapar/Manuale dedicata, salvo MgSO4 dalla scheda del medico). verificato=false.",
+  "_stato": "BOZZA da verificare. Sezione EMORRAGIA POST-PARTUM (diagnosi, prevenzione, bundle, trattamento, refrattaria, trasfusione massiva) riscritta su WHO/FIGO/ICM 2025 (file del medico). Il resto (parto-analgesia, TC, eclampsia, neonato) resta pratica standard. verificato=false.",
   "parto_analgesia": {
     "epidurale": {
       "soluzione": "ropivacaina 0.1-0.2% (o levobupivacaina 0.0625-0.125%) + oppioide",
       "oppioide": "sufentanil ~0.5 mcg/ml o fentanyl ~2 mcg/ml",
-      "bolo_iniziale_ml": [10, 15],
-      "pcea": { "bolo_ml": 5, "lockout_min": [10, 20], "infusione_basale_ml_h": [5, 10] },
-      "verificato": false, "fonte": "bozza"
+      "bolo_iniziale_ml": [
+        10,
+        15
+      ],
+      "pcea": {
+        "bolo_ml": 5,
+        "lockout_min": [
+          10,
+          20
+        ],
+        "infusione_basale_ml_h": [
+          5,
+          10
+        ]
+      },
+      "verificato": false,
+      "fonte": "bozza"
     },
     "combinata_spinale_epidurale": {
       "componente_spinale": "bupivacaina 2.5 mg + sufentanil 2.5-5 mcg",
-      "verificato": false, "fonte": "bozza"
+      "verificato": false,
+      "fonte": "bozza"
     }
   },
   "taglio_cesareo": {
-    "spinale": { "farmaco": "bupivacaina iperbarica 0.5%", "dose_mg": [10, 12], "oppioidi": "fentanyl 15-25 mcg + morfina 100 mcg", "verificato": false, "fonte": "bozza" },
-    "dose_test_peridurale": { "soluzione": "lidocaina 2% 3 ml (+/- adrenalina 15 mcg)", "verificato": false, "fonte": "bozza" }
+    "spinale": {
+      "farmaco": "bupivacaina iperbarica 0.5%",
+      "dose_mg": [
+        10,
+        12
+      ],
+      "oppioidi": "fentanyl 15-25 mcg + morfina 100 mcg",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    "dose_test_peridurale": {
+      "soluzione": "lidocaina 2% 3 ml (+/- adrenalina 15 mcg)",
+      "verificato": false,
+      "fonte": "bozza"
+    }
   },
-  "dose_max_peridurale": { "nota": "usare i tetti degli anestetici locali (vedi anestetici-locali.json)", "verificato": false, "fonte": "bozza" },
+  "dose_max_peridurale": {
+    "nota": "usare i tetti degli anestetici locali (vedi anestetici-locali.json)",
+    "verificato": false,
+    "fonte": "bozza"
+  },
   "oppioidi_neuroassiali": [
-    { "farmaco": "morfina", "via": "intratecale", "valore": 100, "unita": "mcg", "durata_h": [12, 24], "verificato": false, "fonte": "bozza" },
-    { "farmaco": "morfina", "via": "peridurale", "min": 2, "max": 4, "unita": "mg", "verificato": false, "fonte": "bozza" },
-    { "farmaco": "fentanyl", "via": "intratecale", "min": 15, "max": 25, "unita": "mcg", "verificato": false, "fonte": "bozza" },
-    { "farmaco": "sufentanil", "via": "intratecale", "min": 2.5, "max": 5, "unita": "mcg", "verificato": false, "fonte": "bozza" }
+    {
+      "farmaco": "morfina",
+      "via": "intratecale",
+      "valore": 100,
+      "unita": "mcg",
+      "durata_h": [
+        12,
+        24
+      ],
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "farmaco": "morfina",
+      "via": "peridurale",
+      "min": 2,
+      "max": 4,
+      "unita": "mg",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "farmaco": "fentanyl",
+      "via": "intratecale",
+      "min": 15,
+      "max": 25,
+      "unita": "mcg",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "farmaco": "sufentanil",
+      "via": "intratecale",
+      "min": 2.5,
+      "max": 5,
+      "unita": "mcg",
+      "verificato": false,
+      "fonte": "bozza"
+    }
   ],
   "profilassi_ipotensione_post_spinale": {
-    "farmaco": "fenilefrina", "schema": "infusione profilattica 25-50 mcg/min (o 0.1 mcg/kg/min), titolare su PA", "verificato": false, "fonte": "bozza"
+    "farmaco": "fenilefrina",
+    "schema": "infusione profilattica 25-50 mcg/min (o 0.1 mcg/kg/min), titolare su PA",
+    "verificato": false,
+    "fonte": "bozza"
   },
   "emorragia_postpartum": {
-    "uterotonici": [
-      { "ordine": 1, "farmaco": "ossitocina", "dose": "5 UI EV lenta + infusione 40 UI in 500 ml", "verificato": false, "fonte": "bozza" },
-      { "ordine": 2, "farmaco": "carbetocina", "dose": "100 mcg EV", "verificato": false, "fonte": "bozza" },
-      { "ordine": 3, "farmaco": "metilergometrina", "dose": "0.2 mg IM", "controindicazioni": "ipertensione/preeclampsia; NON EV", "verificato": false, "fonte": "bozza" },
-      { "ordine": 4, "farmaco": "sulprostone", "dose": "100-500 mcg/h EV (max 1500 mcg/24h)", "verificato": false, "fonte": "bozza" }
-    ],
-    "antifibrinolitico": { "farmaco": "acido tranexamico", "dose": "1 g EV", "verificato": false, "fonte": "bozza" }
+    "bundle_prima_risposta": {
+      "entro_minuti": 15,
+      "simultaneo": true,
+      "componenti": [
+        "1. massaggio uterino",
+        "2. ossitocina EV",
+        "3. acido tranexamico 1 g EV",
+        "4. cristalloidi isotonici EV",
+        "5. esame del tratto genitale (le 4T)",
+        "6. escalation della cura"
+      ]
+    },
+    "ossitocina": {
+      "iniziale": "10 UI EV lenta (bolo 1-2 min o in 5-10 min diluita)",
+      "mantenimento": "10-20 UI in cristalloidi nelle 4h successive, titolata sulla risposta",
+      "verificato": false,
+      "fonte": "who-2025"
+    },
+    "acido_tranexamico": {
+      "prima_dose": "1 g EV (100 mg/mL, 1 mL/min -> in 10 min)",
+      "seconda_dose": "1 g EV se sanguinamento continua dopo 30 min o riprende entro 24h",
+      "finestra": "entro 3h dalla nascita (oltre: nessun beneficio)",
+      "controindicazione": "evento tromboembolico noto in gravidanza",
+      "sicurezza": "stoccare SEPARATO dalla bupivacaina (rischio scambio intratecale, ampolle simili)",
+      "verificato": false,
+      "fonte": "who-2025"
+    },
+    "seconda_linea_uterotonici": {
+      "indicazione": "se ossitocina non disponibile o sanguinamento non responsivo",
+      "opzioni": [
+        "ergometrina EV",
+        "ossitocina+ergometrina (accettabile nel trattamento)",
+        "misoprostolo sublinguale 800 mcg"
+      ],
+      "note": [
+        "carbetocina NON raccomandata per il trattamento",
+        "misoprostolo aggiunto a ossitocina senza beneficio"
+      ],
+      "verificato": false,
+      "fonte": "who-2025"
+    },
+    "fluidi": {
+      "scelta": "cristalloidi isotonici (Ringer lattato o fisiologica), preferiti ai colloidi",
+      "attenzione": "evitare overload in preeclampsia/cardiopatia",
+      "verificato": false,
+      "fonte": "who-2025"
+    }
   },
   "preeclampsia_eclampsia": {
     "mgso4": {
@@ -43,18 +153,163 @@
       "monitoraggio": "riflessi osteotendinei, diuresi >30 ml/h, FR >12",
       "antidoto": "calcio gluconato 1 g EV (10 ml 10%)",
       "note": "vedi anche scheda MgSO4 (uso analgesico 30-50 mg/kg, diverso da questo)",
-      "verificato": false, "fonte": "bozza"
+      "verificato": false,
+      "fonte": "bozza"
     }
   },
   "rianimazione_neonatale": {
     "apgar": [
-      { "parametro": "FC", "0": "assente", "1": "<100", "2": ">100" },
-      { "parametro": "respiro", "0": "assente", "1": "irregolare/gasping", "2": "pianto valido" },
-      { "parametro": "tono", "0": "flaccido", "1": "flessione arti", "2": "movimenti attivi" },
-      { "parametro": "riflessi", "0": "assenti", "1": "smorfia", "2": "pianto/tosse" },
-      { "parametro": "colore", "0": "cianotico/pallido", "1": "acrocianosi", "2": "roseo" }
+      {
+        "parametro": "FC",
+        "0": "assente",
+        "1": "<100",
+        "2": ">100"
+      },
+      {
+        "parametro": "respiro",
+        "0": "assente",
+        "1": "irregolare/gasping",
+        "2": "pianto valido"
+      },
+      {
+        "parametro": "tono",
+        "0": "flaccido",
+        "1": "flessione arti",
+        "2": "movimenti attivi"
+      },
+      {
+        "parametro": "riflessi",
+        "0": "assenti",
+        "1": "smorfia",
+        "2": "pianto/tosse"
+      },
+      {
+        "parametro": "colore",
+        "0": "cianotico/pallido",
+        "1": "acrocianosi",
+        "2": "roseo"
+      }
     ],
     "algoritmo": "riscaldare-asciugare-stimolare -> se FC<100 o apnea: VPP -> se FC<60 dopo VPP efficace: compressioni 3:1 -> adrenalina",
-    "adrenalina": { "valore": "0.01-0.03 mg/kg EV (0.05-0.1 mg/kg ET)", "note": "vedi farmaci.json (adrenalina, neonato)", "verificato": false, "fonte": "bozza" }
+    "adrenalina": {
+      "valore": "0.01-0.03 mg/kg EV (0.05-0.1 mg/kg ET)",
+      "note": "vedi farmaci.json (adrenalina, neonato)",
+      "verificato": false,
+      "fonte": "bozza"
+    }
+  },
+  "_fonti": [
+    {
+      "id": "who-2025",
+      "titolo": "WHO/FIGO/ICM Consolidated guidelines for prevention, diagnosis and treatment of postpartum haemorrhage",
+      "anno": 2025
+    }
+  ],
+  "diagnosi_pph": {
+    "criteri": "perdita ematica misurata >=300 mL CON un segno emodinamico anomalo, OPPURE >=500 mL (quale si verifica prima, entro 24h; massima vigilanza nelle prime 2h)",
+    "segni_emodinamici": [
+      "FC >100 bpm",
+      "shock index >1 (FC/PAS)",
+      "PAS <100 mmHg",
+      "PAD <60 mmHg"
+    ],
+    "nota": "misurazione OBIETTIVA (drappeggio calibrato); la stima visiva sottostima",
+    "verificato": false,
+    "fonte": "who-2025"
+  },
+  "prevenzione_terzo_stadio": {
+    "principio": "UN SOLO uterotonico di prima scelta, entro 1 min dalla nascita; NON combinare in profilassi",
+    "uterotonici": [
+      {
+        "farmaco": "ossitocina",
+        "dose": "10 UI IM o EV lenta (1-2 min)",
+        "prima_scelta": true,
+        "note": "catena del freddo 2-8 C"
+      },
+      {
+        "farmaco": "carbetocina",
+        "dose": "100 mcg IM/EV",
+        "note": "termostabile se catena del freddo non garantita; solo profilassi"
+      },
+      {
+        "farmaco": "misoprostolo",
+        "dose": "400-600 mcg os",
+        "note": "se ossitocina/carbetocina non disponibili"
+      }
+    ],
+    "NON_raccomandati_in_profilassi": [
+      "ergometrina / metilergometrina (rischio ipertensione)",
+      "ossitocina+ergometrina (Syntometrine)",
+      "prostaglandine iniettabili (carboprost, sulprostone)",
+      "acido tranexamico"
+    ],
+    "verificato": false,
+    "fonte": "who-2025"
+  },
+  "pph_refrattaria": {
+    "misure_temporizzanti": [
+      "compressione bimanuale uterina",
+      "compressione aortica esterna",
+      "NASG (indumento anti-shock non pneumatico)",
+      "tamponamento con palloncino intrauterino (dopo aver escluso trauma e ritenzione placentare)"
+    ],
+    "NON_raccomandato": "packing uterino con garza",
+    "interventi_definitivi": [
+      "embolizzazione arterie uterine (se radiologia interventistica)",
+      "chirurgia sequenziale: suture compressive (B-Lynch/Hayman/Cho) -> devascolarizzazione stepwise (uterine -> utero-ovariche -> ipogastriche) -> isterectomia"
+    ],
+    "verificato": false,
+    "fonte": "who-2025"
+  },
+  "trasfusione_massiva": {
+    "definizione": "4 U GRC in 1h (con attesa di continuare); o 10 U in 24h; o perdita >50% volemia in 3h",
+    "target": {
+      "Hb": ">70 g/L",
+      "fibrinogeno": ">=2 g/L",
+      "PT_aPTT": "<1.5x",
+      "INR": "<=1.5",
+      "piastrine": ">50 x10^9/L se sanguinamento microvascolare"
+    },
+    "GRC": "crossmatchati se possibile; in emergenza O RhD negativo",
+    "PFC": "ratio empirico 1 U PFC : 2 U GRC se lab in ritardo",
+    "fibrinogeno": "se <2 g/L: crioprecipitato (~8-10 U = 3-4 g) o concentrato di fibrinogeno; prioritario sul PFC se coagulopatia",
+    "piastrine_dose": "5-10 mL/kg (peso-dipendente)",
+    "sequenza": [
+      "TXA 1 g EV in 10 min",
+      "fibrinogeno se coagulopatia",
+      "PFC per deficit documentato",
+      "piastrine se indicato"
+    ],
+    "verificato": false,
+    "fonte": "who-2025"
+  },
+  "calcolatore_peso_pph": {
+    "_nota": "nella PPH la maggior parte dei farmaci e a DOSE FISSA (non scalare col peso!). Qui solo le voci realmente peso-dipendenti.",
+    "dosi_fisse": {
+      "ossitocina": "10 UI",
+      "acido_tranexamico": "1 g",
+      "carbetocina (profilassi)": "100 mcg",
+      "misoprostolo (trattamento)": "800 mcg SL"
+    },
+    "peso_dipendenti": [
+      {
+        "id": "piastrine",
+        "nome": "Dose piastrine",
+        "min": 5,
+        "max": 10,
+        "unita": "ml/kg",
+        "formula_testo": "volume_ml = ml_kg * peso_kg ; ml_kg = 5-10"
+      },
+      {
+        "id": "volemia_gravida",
+        "nome": "Volemia stimata (gravida a termine)",
+        "valore": 100,
+        "unita": "ml/kg",
+        "formula_testo": "volemia_ml ~= 100 * peso_kg",
+        "note": "soglia trasfusione massiva: perdita >50% in 3h"
+      }
+    ],
+    "verificato": false,
+    "fonte": "who-2025"
   }
 }

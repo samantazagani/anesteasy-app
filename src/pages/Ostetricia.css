@@ -90,3 +90,97 @@
   padding: 10px 12px;
   margin-bottom: 16px;
 }
+
+.lista-riferimento {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.lista-riferimento li {
+  margin-bottom: 4px;
+}
+
+.lista-riferimento:last-child {
+  margin-bottom: 0;
+}
+
+/* Bundle prima risposta: badge di urgenza (stesso stile ambra usato per le emergenze in
+   Emergenze.jsx/SezioneLAST) e riquadro con bordo evidenziato, per segnalare che e' un
+   protocollo da eseguire subito, non una semplice lista di riferimento. */
+.badge-emergenza {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #d97706;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.riquadro-urgente {
+  border-color: #d97706;
+  border-width: 2px;
+}
+
+.lista-bundle {
+  font-weight: 500;
+}
+
+.tabella-uterotonici,
+.tabella-target-trasfusione {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.tabella-uterotonici th,
+.tabella-uterotonici td,
+.tabella-target-trasfusione td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.tabella-uterotonici th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tabella-uterotonici td,
+.tabella-target-trasfusione td {
+  color: var(--text-h);
+}
+
+.tabella-target-trasfusione td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Riga del uterotonico di prima scelta: evidenziata rispetto alle altre opzioni della
+   stessa tabella. */
+.riga-prima-scelta {
+  background: var(--accent-bg);
+}
+
+.chip-accento {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 2px 8px;
+}

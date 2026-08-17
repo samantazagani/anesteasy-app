@@ -52,7 +52,18 @@ export function Ostetricia() {
       <SezioneTaglioCesareo taglioCesareo={ostetriciaData.taglio_cesareo} doseMaxPeridurale={ostetriciaData.dose_max_peridurale} />
       <SezioneOppioidiNeuroassiali lista={ostetriciaData.oppioidi_neuroassiali} />
       <SezioneIpotensione dati={ostetriciaData.profilassi_ipotensione_post_spinale} />
-      <SezioneEmorragiaPostpartum dati={ostetriciaData.emorragia_postpartum} />
+      <SezioneDiagnosiPPH dati={ostetriciaData.diagnosi_pph} />
+      <SezioneBundlePrimaRisposta dati={ostetriciaData.emorragia_postpartum.bundle_prima_risposta} />
+      <SezioneOssitocinaTXA
+        ossitocina={ostetriciaData.emorragia_postpartum.ossitocina}
+        acidoTranexamico={ostetriciaData.emorragia_postpartum.acido_tranexamico}
+        secondaLinea={ostetriciaData.emorragia_postpartum.seconda_linea_uterotonici}
+        fluidi={ostetriciaData.emorragia_postpartum.fluidi}
+      />
+      <SezionePrevenzioneTerzoStadio dati={ostetriciaData.prevenzione_terzo_stadio} />
+      <SezionePPHRefrattaria dati={ostetriciaData.pph_refrattaria} />
+      <SezioneTrasfusioneMassiva dati={ostetriciaData.trasfusione_massiva} />
+      <SezioneCalcolatorePesoPPH dati={ostetriciaData.calcolatore_peso_pph} pesoKg={profile.pesoKg} />
       <SezionePreeclampsia dati={ostetriciaData.preeclampsia_eclampsia} />
       <SezioneRianimazioneNeonatale dati={ostetriciaData.rianimazione_neonatale} adrenalina={adrenalinaNeonato} />
     </section>
@@ -165,32 +176,258 @@ function SezioneIpotensione({ dati }) {
   )
 }
 
-function SezioneEmorragiaPostpartum({ dati }) {
+function SezioneDiagnosiPPH({ dati }) {
   return (
     <div className="riquadro-ostetricia">
-      <h2>Emorragia postpartum</h2>
-      <div className="lista-voci-ostetricia">
-        {dati.uterotonici.map((u) => (
-          <div key={u.ordine} className="voce-ostetricia">
-            <div className="riga-meta">
-              <span className="chip">{u.ordine}ª linea</span>
-              <span className="chip chip-capitalizza">{u.farmaco}</span>
-              <BadgeVerifica verificato={u.verificato} />
-            </div>
-            <p className="nota">{u.dose}</p>
-            {u.controindicazioni && (
-              <p className="avviso avviso-errore">Controindicazioni: {u.controindicazioni}</p>
-            )}
-          </div>
+      <div className="riga-meta">
+        <h2>Emorragia postpartum · Diagnosi</h2>
+        <BadgeVerifica verificato={dati.verificato} />
+      </div>
+      <p className="nota">{dati.criteri}</p>
+      <p className="scheda-titolo">Segni emodinamici (riferimento)</p>
+      <ul className="lista-riferimento">
+        {dati.segni_emodinamici.map((s) => (
+          <li key={s}>{s}</li>
         ))}
-        <div className="voce-ostetricia">
-          <div className="riga-meta">
-            <span className="chip">Antifibrinolitico</span>
-            <span className="chip chip-capitalizza">{dati.antifibrinolitico.farmaco}</span>
-            <BadgeVerifica verificato={dati.antifibrinolitico.verificato} />
-          </div>
-          <p className="nota">{dati.antifibrinolitico.dose}</p>
+      </ul>
+      <p className="avviso">{dati.nota}</p>
+    </div>
+  )
+}
+
+function SezioneBundlePrimaRisposta({ dati }) {
+  return (
+    <div className="riquadro-ostetricia riquadro-urgente">
+      <div className="riga-meta">
+        <span className="badge-emergenza">URGENTE · ENTRO {dati.entro_minuti} MIN</span>
+        <h2>Bundle prima risposta</h2>
+      </div>
+      <p className="avviso avviso-errore">
+        I componenti vanno eseguiti SIMULTANEAMENTE, non uno dopo l'altro: non sono passi in
+        sequenza, sono azioni in parallelo entro i primi {dati.entro_minuti} minuti.
+      </p>
+      <ul className="lista-riferimento lista-bundle">
+        {dati.componenti.map((c) => (
+          <li key={c}>{c}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function SezioneOssitocinaTXA({ ossitocina, acidoTranexamico, secondaLinea, fluidi }) {
+  return (
+    <div className="riquadro-ostetricia">
+      <h2>Ossitocina e acido tranexamico</h2>
+
+      <div className="scheda">
+        <div className="riga-meta">
+          <p className="scheda-titolo">Ossitocina</p>
+          <BadgeVerifica verificato={ossitocina.verificato} />
         </div>
+        <p className="nota">Iniziale: {ossitocina.iniziale}</p>
+        <p className="nota">Mantenimento: {ossitocina.mantenimento}</p>
+      </div>
+
+      <div className="scheda">
+        <div className="riga-meta">
+          <p className="scheda-titolo">Acido tranexamico</p>
+          <BadgeVerifica verificato={acidoTranexamico.verificato} />
+        </div>
+        <p className="avviso avviso-errore">⚠ Sicurezza: {acidoTranexamico.sicurezza}</p>
+        <p className="nota">Prima dose: {acidoTranexamico.prima_dose}</p>
+        <p className="nota">Seconda dose: {acidoTranexamico.seconda_dose}</p>
+        <p className="nota">Finestra: {acidoTranexamico.finestra}</p>
+        <p className="nota">Controindicazione: {acidoTranexamico.controindicazione}</p>
+      </div>
+
+      <div className="scheda">
+        <div className="riga-meta">
+          <p className="scheda-titolo">Seconda linea uterotonici</p>
+          <BadgeVerifica verificato={secondaLinea.verificato} />
+        </div>
+        <p className="nota">{secondaLinea.indicazione}</p>
+        <ul className="lista-riferimento">
+          {secondaLinea.opzioni.map((o) => (
+            <li key={o}>{o}</li>
+          ))}
+        </ul>
+        {secondaLinea.note.map((n) => (
+          <p key={n} className="avviso">
+            {n}
+          </p>
+        ))}
+      </div>
+
+      <div className="scheda">
+        <div className="riga-meta">
+          <p className="scheda-titolo">Fluidi</p>
+          <BadgeVerifica verificato={fluidi.verificato} />
+        </div>
+        <p className="nota">{fluidi.scelta}</p>
+        <p className="avviso">{fluidi.attenzione}</p>
+      </div>
+    </div>
+  )
+}
+
+function SezionePrevenzioneTerzoStadio({ dati }) {
+  return (
+    <div className="riquadro-ostetricia">
+      <div className="riga-meta">
+        <h2>Prevenzione terzo stadio</h2>
+        <BadgeVerifica verificato={dati.verificato} />
+      </div>
+      <p className="nota">{dati.principio}</p>
+
+      <div className="tabella-scroll">
+        <table className="tabella-uterotonici">
+          <thead>
+            <tr>
+              <th>Farmaco</th>
+              <th>Dose</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dati.uterotonici.map((u) => (
+              <tr key={u.farmaco} className={u.prima_scelta ? 'riga-prima-scelta' : undefined}>
+                <td className="chip-capitalizza">
+                  {u.farmaco}
+                  {u.prima_scelta && <span className="chip chip-accento">prima scelta</span>}
+                </td>
+                <td>{u.dose}</td>
+                <td>{u.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="avviso avviso-errore">
+        NON raccomandati in profilassi:
+        <ul className="lista-riferimento">
+          {dati.NON_raccomandati_in_profilassi.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function SezionePPHRefrattaria({ dati }) {
+  return (
+    <div className="riquadro-ostetricia">
+      <div className="riga-meta">
+        <h2>PPH refrattaria</h2>
+        <BadgeVerifica verificato={dati.verificato} />
+      </div>
+
+      <p className="scheda-titolo">Misure temporizzanti (riferimento)</p>
+      <ul className="lista-riferimento">
+        {dati.misure_temporizzanti.map((m) => (
+          <li key={m}>{m}</li>
+        ))}
+      </ul>
+      <p className="avviso avviso-errore">NON raccomandato: {dati.NON_raccomandato}</p>
+
+      <p className="scheda-titolo">Interventi definitivi (sequenziale)</p>
+      <ol className="lista-riferimento">
+        {dati.interventi_definitivi.map((i) => (
+          <li key={i}>{i}</li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+function SezioneTrasfusioneMassiva({ dati }) {
+  const targetRighe = Object.entries(dati.target)
+
+  return (
+    <div className="riquadro-ostetricia">
+      <div className="riga-meta">
+        <h2>Trasfusione massiva</h2>
+        <BadgeVerifica verificato={dati.verificato} />
+      </div>
+      <p className="nota">{dati.definizione}</p>
+
+      <p className="scheda-titolo">Target di laboratorio</p>
+      <div className="tabella-scroll">
+        <table className="tabella-target-trasfusione">
+          <tbody>
+            {targetRighe.map(([parametro, valore]) => (
+              <tr key={parametro}>
+                <td>{parametro}</td>
+                <td>{valore}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="nota">GRC: {dati.GRC}</p>
+      <p className="nota">PFC: {dati.PFC}</p>
+      <p className="nota">Fibrinogeno: {dati.fibrinogeno}</p>
+      <p className="nota">Piastrine: {dati.piastrine_dose}</p>
+
+      <p className="scheda-titolo">Sequenza di somministrazione</p>
+      <ol className="lista-riferimento">
+        {dati.sequenza.map((s) => (
+          <li key={s}>{s}</li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+function SezioneCalcolatorePesoPPH({ dati, pesoKg }) {
+  return (
+    <div className="riquadro-ostetricia">
+      <div className="riga-meta">
+        <h2>Calcolatore PPH</h2>
+        <BadgeVerifica verificato={dati.verificato} />
+      </div>
+      <p className="avviso">{dati._nota}</p>
+
+      <p className="scheda-titolo">Dosi fisse (riferimento, NON scalare per peso)</p>
+      <ul className="lista-riferimento">
+        {Object.entries(dati.dosi_fisse).map(([nome, valore]) => (
+          <li key={nome}>
+            <span className="chip-capitalizza">{nome.replace(/_/g, ' ')}</span>: {valore}
+          </li>
+        ))}
+      </ul>
+
+      <p className="scheda-titolo">Voci peso-dipendenti</p>
+      {!(pesoKg > 0) && <p className="avviso">Imposta il peso nel profilo per calcolare.</p>}
+      <div className="lista-voci-ostetricia">
+        {dati.peso_dipendenti.map((voce) => {
+          let risultato = null
+          let errore = null
+          if (pesoKg > 0) {
+            try {
+              risultato = calcolaDose(voce, pesoKg)
+            } catch (e) {
+              errore = e.message
+            }
+          }
+
+          return (
+            <div key={voce.id} className="voce-ostetricia">
+              <p className="scheda-titolo">{voce.nome}</p>
+              {errore && <p className="avviso avviso-errore">{errore}</p>}
+              {risultato && (
+                <>
+                  <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+                  <p className="formula">{risultato.formula}</p>
+                </>
+              )}
+              {voce.note && <p className="nota">{voce.note}</p>}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
