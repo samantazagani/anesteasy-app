@@ -8,6 +8,7 @@ import {
   mgMlDaPercento,
 } from '../lib/anestesiaLocaleCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
+import { InfoFonte } from '../components/InfoFonte.jsx'
 import { TossicitaAdditiva } from '../components/TossicitaAdditiva.jsx'
 import { SezioneLAST } from '../components/SezioneLAST.jsx'
 import '../styles/risultato.css'
@@ -192,12 +193,11 @@ export function AnestesiaLocale() {
                   </span>
                   <BadgeVerifica verificato={anestetico.verificato} />
                 </div>
-                <p className="risultato-primario">{volumeMassimo.volumeMaxMl} ml</p>
-                <p className="formula">{volumeMassimo.formula}</p>
-                <p className="fonte">
-                  Fonte: {anestetico.fonte}
-                  {anestetico.pagina ? `, p. ${anestetico.pagina}` : ''}
+                <p className="risultato-primario">
+                  {volumeMassimo.volumeMaxMl} ml
+                  <InfoFonte fonte={anestetico.fonte} pagina={anestetico.pagina} />
                 </p>
+                <p className="formula">{volumeMassimo.formula}</p>
               </div>
             )}
           </div>

@@ -5,6 +5,7 @@ import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
+import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreAntibiotici.css'
 
@@ -107,17 +108,14 @@ export function CalcolatoreAntibiotici() {
 
               {risultato && (
                 <div className="formula-a-vista">
-                  <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+                  <p className="risultato-primario">
+                    {formatoRisultato(risultato)}
+                    <InfoFonte fonte={antibiotico.fonte} revisione={antibiotico.revisione} />
+                  </p>
                   <p className="formula">{risultato.formula}</p>
                   {superaTetto && (
                     <p className="avviso avviso-errore">
                       Supera il tetto massimo di {doseMassima} mg: non superare questa dose.
-                    </p>
-                  )}
-                  {antibiotico.fonte && (
-                    <p className="fonte">
-                      Fonte: {antibiotico.fonte}
-                      {antibiotico.revisione ? ` · rev. ${antibiotico.revisione}` : ''}
                     </p>
                   )}
                 </div>

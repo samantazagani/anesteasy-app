@@ -10,6 +10,7 @@ import { calcolaConcentrazione, calcolaInfusione } from '../lib/infusionCalculat
 import { calcolaLAST } from '../lib/anestesiaLocaleCalculator'
 import { tipoPasso, risolviPassoFarmaco } from '../lib/emergenzaStepEngine'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
+import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './Emergenze.css'
 
@@ -201,15 +202,12 @@ function PassoBolo({ farmaco, doseScelta, fasciaUsata, fallback, passo, derivati
 
       {risultato && (
         <>
-          <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+          <p className="risultato-primario">
+            {formatoRisultato(risultato)}
+            <InfoFonte fonte={doseScelta.fonte} pagina={doseScelta.pagina} />
+          </p>
           <p className="formula">{risultato.formula}</p>
           {doseScelta.note && <p className="nota">{doseScelta.note}</p>}
-          {doseScelta.fonte && (
-            <p className="fonte">
-              Fonte: {doseScelta.fonte}
-              {doseScelta.pagina ? `, p. ${doseScelta.pagina}` : ''}
-            </p>
-          )}
         </>
       )}
     </div>

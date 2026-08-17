@@ -1,5 +1,6 @@
 import { calcolaLAST } from '../lib/anestesiaLocaleCalculator'
 import { BadgeVerifica } from './BadgeVerifica.jsx'
+import { InfoFonte } from './InfoFonte.jsx'
 import '../styles/risultato.css'
 import './SezioneLAST.css'
 
@@ -14,6 +15,9 @@ export function SezioneLAST({ lastData, pesoKg }) {
       <div className="riga-meta">
         <span className="badge-emergenza">EMERGENZA · LAST</span>
         <BadgeVerifica verificato={lastData.verificato} />
+        {/* Un'unica fonte per entrambi i risultati (bolo e infusione) sotto: sta
+            nell'intestazione della card, non ripetuta due volte. */}
+        <InfoFonte fonte={lastData.fonte} pagina={lastData.pagina} />
       </div>
 
       <h2>Local Anesthetic Systemic Toxicity</h2>
@@ -36,11 +40,6 @@ export function SezioneLAST({ lastData, pesoKg }) {
           <p className="nota">Ripetizione: {lastData.ripetizione}</p>
         </div>
       )}
-
-      <p className="fonte">
-        Fonte: {lastData.fonte}
-        {lastData.pagina ? `, p. ${lastData.pagina}` : ''}
-      </p>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { risolviPeso } from '../lib/pesoResolver'
 import { selezionaDose, etichettaVariante } from '../lib/selezioneDose'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
+import { InfoFonte } from '../components/InfoFonte.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreDoseBolo.css'
@@ -238,18 +239,14 @@ export function CalcolatoreDoseBolo() {
 
                 {risultato && (
                   <div className="formula-a-vista">
-                    <p className="risultato-primario">{formatoRisultato(risultato)}</p>
+                    <p className="risultato-primario">
+                      {formatoRisultato(risultato)}
+                      <InfoFonte fonte={doseScelta.fonte} pagina={doseScelta.pagina} revisione={doseScelta.revisione} />
+                    </p>
                     <p className="formula">{risultato.formula}</p>
                     {/* se la nota e' gia' mostrata come etichetta della variante (sugammadex ecc.), non ripeterla */}
                     {doseScelta.note && !(selezione.candidati.length > 1 && !doseScelta.via) && (
                       <p className="nota">{doseScelta.note}</p>
-                    )}
-                    {doseScelta.fonte && (
-                      <p className="fonte">
-                        Fonte: {doseScelta.fonte}
-                        {doseScelta.pagina ? `, p. ${doseScelta.pagina}` : ''}
-                        {doseScelta.revisione ? ` · rev. ${doseScelta.revisione}` : ''}
-                      </p>
                     )}
                   </div>
                 )}

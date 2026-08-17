@@ -18,13 +18,18 @@
 }
 
 .riquadro-last .formula,
-.riquadro-last .nota,
-.riquadro-last .fonte {
+.riquadro-last .nota {
   color: #78350f;
 }
 
 .riquadro-last .risultato-primario {
   color: #b45309;
+}
+
+.riquadro-last .info-fonte-bottone {
+  border-color: #d97706;
+  background: transparent;
+  color: #92400e;
 }
 
 .badge-emergenza {
@@ -64,12 +69,16 @@
   .riquadro-last .sottotitolo,
   .riquadro-last .formula,
   .riquadro-last .nota,
-  .riquadro-last .fonte,
   .etichetta-last {
     color: #fde68a;
   }
 
   .riquadro-last .risultato-primario {
     color: #fbbf24;
+  }
+
+  .riquadro-last .info-fonte-bottone {
+    border-color: #d97706;
+    color: #fde68a;
   }
 }
