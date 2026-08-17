@@ -151,6 +151,46 @@ export function calcolaClearanceCreatinina({ eta, pesoKg, creatinina, sesso }, {
   return { clcrMlMin: round(clcr, decimali), formula }
 }
 
+/**
+ * eGFR (CKD-EPI 2021, senza fattore razza): a differenza delle altre formule di questo
+ * modulo (lineari o con una sola radice), qui servono min/max tra (Scr/k) e 1 elevati a
+ * esponenti diversi per uomo/donna — non si presta al pattern "formula lineare + formatNumero"
+ * usato sopra, quindi resta una funzione dedicata.
+ * eGFR = 142 × min(Scr/k,1)^a × max(Scr/k,1)^-1.200 × 0.9938^eta × (1.012 se donna)
+ * k = 0.9 (uomo)/0.7 (donna); a = -0.302 (uomo)/-0.241 (donna).
+ * Diversa dalla Cockcroft-Gault (calcolaClearanceCreatinina): CKD-EPI stima la funzione
+ * renale generale (ml/min/1.73m²), Cockcroft-Gault resta il riferimento per il dosaggio
+ * farmaci (ml/min assoluti, non normalizzati per superficie corporea).
+ */
+export function calcolaEGFRCKDEPI({ eta, sesso, creatinina }, { decimali = 1 } = {}) {
+  if (!(eta >= 0)) {
+    throw new Error('calcolaEGFRCKDEPI: eta mancante o non valida')
+  }
+  if (sesso !== 'M' && sesso !== 'F') {
+    throw new Error('calcolaEGFRCKDEPI: sesso mancante o non valido (M/F)')
+  }
+  if (!(creatinina > 0)) {
+    throw new Error('calcolaEGFRCKDEPI: creatinina mancante o non valida')
+  }
+
+  const k = sesso === 'F' ? 0.7 : 0.9
+  const a = sesso === 'F' ? -0.241 : -0.302
+  const rapporto = creatinina / k
+  const terminemin = Math.pow(Math.min(rapporto, 1), a)
+  const terminemax = Math.pow(Math.max(rapporto, 1), -1.2)
+  const fattoreEta = Math.pow(0.9938, eta)
+
+  let egfr = 142 * terminemin * terminemax * fattoreEta
+  if (sesso === 'F') egfr *= 1.012
+
+  const formula =
+    `142 × min(${formatNumero(creatinina, 2)}/${k}, 1)^${a} × max(${formatNumero(creatinina, 2)}/${k}, 1)^-1.200 × 0.9938^${formatNumero(eta, 0)}` +
+    (sesso === 'F' ? ' × 1.012' : '') +
+    ` = ${formatNumero(egfr, decimali)} ml/min/1.73m²`
+
+  return { egfrMlMin173: round(egfr, decimali), formula }
+}
+
 /** Calcio corretto per albumina: Ca_corretto = Ca_misurato + 0.8×(4.0 - albumina). */
 export function calcolaCalcioCorretto({ ca, albumina }, { decimali = 1 } = {}) {
   if (!(ca > 0)) {
@@ -234,4 +274,19 @@ export function calcolaShockIndex({ fc, pas }, { decimali = 2 } = {}) {
   const formula = `${formatNumero(fc, 0)} ÷ ${formatNumero(pas, 0)} = ${formatNumero(si, decimali)}`
 
   return { si: round(si, decimali), formula }
+}
+
+/** Pressione di perfusione cerebrale: CPP = MAP - ICP. */
+export function calcolaCPP({ map, icp }, { decimali = 1 } = {}) {
+  if (!(map > 0)) {
+    throw new Error('calcolaCPP: MAP mancante o non valida')
+  }
+  if (!(icp >= 0)) {
+    throw new Error('calcolaCPP: ICP mancante o non valida')
+  }
+
+  const cpp = map - icp
+  const formula = `${formatNumero(map, decimali)} - ${formatNumero(icp, decimali)} = ${formatNumero(cpp, decimali)} mmHg`
+
+  return { cpp: round(cpp, decimali), formula }
 }

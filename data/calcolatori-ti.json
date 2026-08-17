@@ -1,20 +1,139 @@
 {
   "_stato": "Calcolatori TI: formule standard (basso rischio). Verificare le formule prima dell'uso; verificato=false.",
   "calcolatori": [
-    { "id": "gamma", "nome": "Gamma <-> ml/h", "formula": "ml/h = (dose_mcg_kg_min * peso_kg * 60) / concentrazione_mcg_ml ; inverso: mcg_kg_min = (ml_h * concentrazione_mcg_ml) / (peso_kg * 60)", "input": ["dose_mcg_kg_min", "peso_kg", "concentrazione_mcg_ml"] },
-    { "id": "infusione_da_dose_oraria", "nome": "ml/h da dose oraria e diluizione", "formula": "concentrazione = quantita_farmaco / volume_totale_ml ; ml_h = dose_oraria_desiderata / concentrazione  (equivalente: ml_h = dose_oraria_desiderata * volume_totale_ml / quantita_farmaco)", "input": ["quantita_farmaco", "volume_totale_ml", "dose_oraria_desiderata"], "output": "ml/h", "note": "quantita_farmaco e dose_oraria devono usare la stessa unita di massa (mg con mg/h, g convertito in mg, ecc). Esempio: 1 g (=1000 mg) in 50 ml, 125 mg/h -> 20 mg/ml -> 6.25 ml/h" },
-    { "id": "correzione_sodio", "nome": "Sodio corretto per glicemia", "formula": "Na_corretto = Na_misurato + 0.016 * (glicemia_mg_dl - 100)", "note": "alcuni usano 0.024 per glicemie molto alte" },
-    { "id": "deficit_sodio", "nome": "Deficit di sodio", "formula": "deficit_mmol = (Na_target - Na_attuale) * acqua_corporea_totale ; ACT = peso * 0.6 (uomo) / 0.5 (donna)", "note": "correggere max 8-10 mmol/L per 24h" },
-    { "id": "correzione_potassio", "nome": "Deficit di potassio (stima)", "formula": "stima: ogni 0.1 mmol/L sotto 4.0 ~ deficit 100-200 mmol totali", "note": "stima grossolana, guidare con emogas seriati" },
-    { "id": "anion_gap", "nome": "Anion gap", "formula": "AG = Na - (Cl + HCO3) ; corretto per albumina: AG + 2.5*(4.0 - albumina_g_dl)", "note": "normale 8-12" },
-    { "id": "gap_osmolare", "nome": "Gap osmolare", "formula": "osm_calcolata = 2*Na + glicemia/18 + BUN/2.8 ; gap = osm_misurata - osm_calcolata", "note": "normale <10" },
-    { "id": "deficit_idrico", "nome": "Deficit idrico (ipernatriemia)", "formula": "deficit_L = ACT * ((Na_attuale/140) - 1) ; ACT = peso * 0.6/0.5", "input": ["peso", "sesso", "Na_attuale"] },
-    { "id": "clearance_creatinina", "nome": "Clearance creatinina (Cockcroft-Gault)", "formula": "ClCr = ((140 - eta) * peso_kg) / (72 * creatinina_mg_dl) ; * 0.85 se donna", "input": ["eta", "peso_kg", "creatinina_mg_dl", "sesso"] },
-    { "id": "calcio_corretto", "nome": "Calcio corretto per albumina", "formula": "Ca_corretto = Ca_misurato + 0.8 * (4.0 - albumina_g_dl)" },
-    { "id": "winter", "nome": "Compenso respiratorio atteso (Winter)", "formula": "PaCO2_atteso = 1.5 * HCO3 + 8 (+/- 2)", "note": "acidosi metabolica" },
-    { "id": "qtc", "nome": "QTc (Bazett)", "formula": "QTc = QT_ms / sqrt(RR_s) ; RR_s = 60/FC", "note": "prolungato >450 (uomo) / >470 (donna)" },
-    { "id": "aa_gradient", "nome": "Gradiente Alveolo-arterioso", "formula": "A-a = (FiO2*(Patm - 47) - PaCO2/0.8) - PaO2 ; a aria ambiente ~ 150 - PaCO2/0.8 - PaO2", "note": "normale ~ eta/4 + 4" },
-    { "id": "map", "nome": "Pressione arteriosa media", "formula": "MAP = (PAS + 2*PAD) / 3" },
-    { "id": "shock_index", "nome": "Shock index", "formula": "SI = FC / PAS", "note": "normale 0.5-0.7; >0.9 allarme" }
+    {
+      "id": "gamma",
+      "nome": "Gamma <-> ml/h",
+      "formula": "ml/h = (dose_mcg_kg_min * peso_kg * 60) / concentrazione_mcg_ml ; inverso: mcg_kg_min = (ml_h * concentrazione_mcg_ml) / (peso_kg * 60)",
+      "input": [
+        "dose_mcg_kg_min",
+        "peso_kg",
+        "concentrazione_mcg_ml"
+      ]
+    },
+    {
+      "id": "infusione_da_dose_oraria",
+      "nome": "ml/h da dose oraria e diluizione",
+      "formula": "concentrazione = quantita_farmaco / volume_totale_ml ; ml_h = dose_oraria_desiderata / concentrazione  (equivalente: ml_h = dose_oraria_desiderata * volume_totale_ml / quantita_farmaco)",
+      "input": [
+        "quantita_farmaco",
+        "volume_totale_ml",
+        "dose_oraria_desiderata"
+      ],
+      "output": "ml/h",
+      "note": "quantita_farmaco e dose_oraria devono usare la stessa unita di massa (mg con mg/h, g convertito in mg, ecc). Esempio: 1 g (=1000 mg) in 50 ml, 125 mg/h -> 20 mg/ml -> 6.25 ml/h"
+    },
+    {
+      "id": "correzione_sodio",
+      "nome": "Sodio corretto per glicemia",
+      "formula": "Na_corretto = Na_misurato + 0.016 * (glicemia_mg_dl - 100)",
+      "note": "alcuni usano 0.024 per glicemie molto alte"
+    },
+    {
+      "id": "deficit_sodio",
+      "nome": "Deficit di sodio",
+      "formula": "deficit_mmol = (Na_target - Na_attuale) * acqua_corporea_totale ; ACT = peso * 0.6 (uomo) / 0.5 (donna)",
+      "note": "correggere max 8-10 mmol/L per 24h"
+    },
+    {
+      "id": "correzione_potassio",
+      "nome": "Deficit di potassio (stima)",
+      "formula": "stima: ogni 0.1 mmol/L sotto 4.0 ~ deficit 100-200 mmol totali",
+      "note": "stima grossolana, guidare con emogas seriati"
+    },
+    {
+      "id": "anion_gap",
+      "nome": "Anion gap",
+      "formula": "AG = Na - (Cl + HCO3) ; corretto per albumina: AG + 2.5*(4.0 - albumina_g_dl)",
+      "note": "normale 8-12"
+    },
+    {
+      "id": "gap_osmolare",
+      "nome": "Gap osmolare",
+      "formula": "osm_calcolata = 2*Na + glicemia/18 + BUN/2.8 ; gap = osm_misurata - osm_calcolata",
+      "note": "normale <10"
+    },
+    {
+      "id": "deficit_idrico",
+      "nome": "Deficit idrico (ipernatriemia)",
+      "formula": "deficit_L = ACT * ((Na_attuale/140) - 1) ; ACT = peso * 0.6/0.5",
+      "input": [
+        "peso",
+        "sesso",
+        "Na_attuale"
+      ]
+    },
+    {
+      "id": "clearance_creatinina",
+      "nome": "Clearance creatinina (Cockcroft-Gault)",
+      "formula": "ClCr = ((140 - eta) * peso_kg) / (72 * creatinina_mg_dl) ; * 0.85 se donna",
+      "input": [
+        "eta",
+        "peso_kg",
+        "creatinina_mg_dl",
+        "sesso"
+      ]
+    },
+    {
+      "id": "egfr_ckdepi",
+      "nome": "eGFR (CKD-EPI 2021, race-free)",
+      "formula": "eGFR = 142 * min(Scr/k,1)^a * max(Scr/k,1)^(-1.200) * 0.9938^eta * (1.012 se donna) ; k = 0.7 (donna)/0.9 (uomo); a = -0.241 (donna)/-0.302 (uomo); Scr = creatinina in mg/dl",
+      "input": [
+        "eta",
+        "sesso",
+        "creatinina_mg_dl"
+      ],
+      "output": "ml/min/1.73m2",
+      "note": "equazione senza fattore razza (2021); diversa dalla Cockcroft-Gault (che stima la clearance in ml/min per il dosaggio farmaci)",
+      "verificato": false,
+      "fonte": "CKD-EPI 2021 (Inker NEJM 2021)"
+    },
+    {
+      "id": "calcio_corretto",
+      "nome": "Calcio corretto per albumina",
+      "formula": "Ca_corretto = Ca_misurato + 0.8 * (4.0 - albumina_g_dl)"
+    },
+    {
+      "id": "winter",
+      "nome": "Compenso respiratorio atteso (Winter)",
+      "formula": "PaCO2_atteso = 1.5 * HCO3 + 8 (+/- 2)",
+      "note": "acidosi metabolica"
+    },
+    {
+      "id": "qtc",
+      "nome": "QTc (Bazett)",
+      "formula": "QTc = QT_ms / sqrt(RR_s) ; RR_s = 60/FC",
+      "note": "prolungato >450 (uomo) / >470 (donna)"
+    },
+    {
+      "id": "aa_gradient",
+      "nome": "Gradiente Alveolo-arterioso",
+      "formula": "A-a = (FiO2*(Patm - 47) - PaCO2/0.8) - PaO2 ; a aria ambiente ~ 150 - PaCO2/0.8 - PaO2",
+      "note": "normale ~ eta/4 + 4"
+    },
+    {
+      "id": "map",
+      "nome": "Pressione arteriosa media",
+      "formula": "MAP = (PAS + 2*PAD) / 3"
+    },
+    {
+      "id": "shock_index",
+      "nome": "Shock index",
+      "formula": "SI = FC / PAS",
+      "note": "normale 0.5-0.7; >0.9 allarme"
+    },
+    {
+      "id": "cpp",
+      "nome": "Pressione di perfusione cerebrale (CPP)",
+      "formula": "CPP = MAP - ICP",
+      "input": [
+        "MAP",
+        "ICP"
+      ],
+      "output": "mmHg",
+      "note": "target tipico 60-70 mmHg; MAP misurata a livello del trago",
+      "verificato": false,
+      "fonte": "riferimento standard"
+    }
   ]
 }

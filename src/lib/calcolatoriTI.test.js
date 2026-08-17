@@ -8,12 +8,14 @@ import {
   calcolaGapOsmolare,
   calcolaDeficitIdrico,
   calcolaClearanceCreatinina,
+  calcolaEGFRCKDEPI,
   calcolaCalcioCorretto,
   calcolaWinter,
   calcolaQTc,
   calcolaAaGradient,
   calcolaMAP,
   calcolaShockIndex,
+  calcolaCPP,
 } from './calcolatoriTI'
 
 // "gamma" e "infusione_da_dose_oraria" (i 2 calcolatori restanti dei 15 di
@@ -110,6 +112,32 @@ describe('calcolaClearanceCreatinina (Cockcroft-Gault)', () => {
   })
 })
 
+describe('calcolaEGFRCKDEPI (CKD-EPI 2021)', () => {
+  // Caso verificato indipendentemente (calcolo passo-passo con Node, non solo atteso a
+  // mano): uomo 60 anni, creatinina 1.2 mg/dL -> Scr/k = 1.2/0.9 = 1.3333 (>1, quindi il
+  // termine min usa esponente 1 -> 1; il termine max usa 1.3333^-1.200 = 0.708066;
+  // 0.9938^60 = 0.688556; 142 × 0.708066 × 0.688556 = 69.231 -> 69.2
+  it('60 anni, creatinina 1.2, uomo -> 69.2 ml/min/1.73m2', () => {
+    const r = calcolaEGFRCKDEPI({ eta: 60, sesso: 'M', creatinina: 1.2 })
+    expect(r.egfrMlMin173).toBe(69.2)
+  })
+
+  // Stesso caso, donna: k=0.7, a=-0.241, ×1.012 finale -> 51.8 (verificato con lo stesso
+  // script Node)
+  it('stesso caso, donna -> 51.8 ml/min/1.73m2', () => {
+    const r = calcolaEGFRCKDEPI({ eta: 60, sesso: 'F', creatinina: 1.2 })
+    expect(r.egfrMlMin173).toBe(51.8)
+  })
+
+  it('lancia un errore se manca la creatinina', () => {
+    expect(() => calcolaEGFRCKDEPI({ eta: 60, sesso: 'M', creatinina: 0 })).toThrow(/creatinina/i)
+  })
+
+  it('lancia un errore se il sesso non e\' M/F', () => {
+    expect(() => calcolaEGFRCKDEPI({ eta: 60, sesso: '', creatinina: 1.2 })).toThrow(/sesso/i)
+  })
+})
+
 describe('calcolaCalcioCorretto', () => {
   it('Ca 7.5, albumina 2.0 -> 9.1 mg/dL', () => {
     const r = calcolaCalcioCorretto({ ca: 7.5, albumina: 2.0 })
@@ -158,5 +186,18 @@ describe('calcolaShockIndex', () => {
   it('FC 110, PAS 100 -> 1.1', () => {
     const r = calcolaShockIndex({ fc: 110, pas: 100 })
     expect(r.si).toBe(1.1)
+  })
+})
+
+describe('calcolaCPP', () => {
+  // Caso verificato: MAP 80 - ICP 15 = 65
+  it('MAP 80, ICP 15 -> 65 mmHg', () => {
+    const r = calcolaCPP({ map: 80, icp: 15 })
+    expect(r.cpp).toBe(65)
+    expect(r.formula).toBe('80 - 15 = 65 mmHg')
+  })
+
+  it('lancia un errore se manca la MAP', () => {
+    expect(() => calcolaCPP({ map: 0, icp: 15 })).toThrow(/MAP/)
   })
 })

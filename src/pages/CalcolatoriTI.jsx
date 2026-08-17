@@ -9,12 +9,14 @@ import {
   calcolaGapOsmolare,
   calcolaDeficitIdrico,
   calcolaClearanceCreatinina,
+  calcolaEGFRCKDEPI,
   calcolaCalcioCorretto,
   calcolaWinter,
   calcolaQTc,
   calcolaAaGradient,
   calcolaMAP,
   calcolaShockIndex,
+  calcolaCPP,
 } from '../lib/calcolatoriTI'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
@@ -78,12 +80,16 @@ function Calcolatore({ titolo, children }) {
 export function CalcolatoriTI() {
   const { profile } = usePatientProfile()
   const [categoria, setCategoria] = useState('elettroliti')
+  // Permette a CalcCPP di precompilare il campo MAP con l'ultimo valore calcolato in
+  // CalcMAP (stessa sezione Emodinamica): i calcolatori restano indipendenti, questo e'
+  // solo un suggerimento di comodita', il campo resta modificabile.
+  const [ultimoMap, setUltimoMap] = useState(null)
 
   return (
     <section id="calcolatori-ti">
       <h1>Calcolatori TI</h1>
       <p className="sottotitolo">
-        15 calcolatori indipendenti (data/calcolatori-ti.json): valori di laboratorio da
+        17 calcolatori indipendenti (data/calcolatori-ti.json): valori di laboratorio da
         inserire manualmente ogni volta, tranne peso/età/sesso già noti dal profilo.
       </p>
 
@@ -118,12 +124,14 @@ export function CalcolatoriTI() {
       </div>
 
       <div hidden={categoria !== 'emodinamica'}>
-        <CalcMAP />
+        <CalcMAP onMapCalcolato={setUltimoMap} />
         <CalcShockIndex />
+        <CalcCPP mapPrecompilata={ultimoMap} />
       </div>
 
       <div hidden={categoria !== 'renale'}>
         <CalcClearanceCreatinina profile={profile} />
+        <CalcEGFR profile={profile} />
       </div>
 
       <div hidden={categoria !== 'cardio'}>
@@ -487,7 +495,7 @@ function CalcWinter() {
 
 // --- Emodinamica ---------------------------------------------------------------------------
 
-function CalcMAP() {
+function CalcMAP({ onMapCalcolato }) {
   const [pas, setPas] = useState('')
   const [pad, setPad] = useState('')
 
@@ -502,6 +510,11 @@ function CalcMAP() {
       errore = e.message
     }
   }
+
+  useEffect(() => {
+    if (risultato) onMapCalcolato?.(risultato.map)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [risultato?.map])
 
   return (
     <Calcolatore titolo="Pressione arteriosa media (MAP)">
@@ -554,6 +567,51 @@ function CalcShockIndex() {
   )
 }
 
+function CalcCPP({ mapPrecompilata }) {
+  const [map, setMap] = useState('')
+  const [icp, setIcp] = useState('')
+
+  // Precompila con l'ultimo MAP calcolato in CalcMAP (stessa categoria Emodinamica), ma
+  // solo se il campo e' ancora vuoto: un valore digitato a mano qui non viene sovrascritto
+  // da un nuovo calcolo di MAP fatto sopra.
+  useEffect(() => {
+    if (mapPrecompilata > 0 && map.trim() === '') setMap(String(mapPrecompilata))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapPrecompilata])
+
+  let risultato = null
+  let errore = null
+  const mapN = numero(map)
+  const icpN = numero(icp)
+  if (mapN !== null && icpN !== null) {
+    try {
+      risultato = calcolaCPP({ map: mapN, icp: icpN })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <Calcolatore titolo="Pressione di perfusione cerebrale (CPP)">
+      <div className="griglia-campi-ti">
+        <Campo etichetta="MAP (mmHg)" valore={map} onChange={setMap} />
+        <Campo etichetta="ICP (mmHg)" valore={icp} onChange={setIcp} />
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">CPP {risultato.cpp} mmHg</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
+      <p className="nota">
+        Target tipico 60-70 mmHg. MAP misurata a livello del trago.
+        {mapPrecompilata > 0 && ' MAP precompilata dal calcolo MAP sopra: modificabile.'}
+      </p>
+    </Calcolatore>
+  )
+}
+
 // --- Renale ----------------------------------------------------------------------------
 
 function CalcClearanceCreatinina({ profile }) {
@@ -600,6 +658,53 @@ function CalcClearanceCreatinina({ profile }) {
           <p className="formula">{risultato.formula}</p>
         </>
       )}
+    </Calcolatore>
+  )
+}
+
+function CalcEGFR({ profile }) {
+  const [eta, setEta] = useState('')
+  const [sesso, setSesso] = useState('M')
+  const [creatinina, setCreatinina] = useState('')
+
+  useEffect(() => {
+    if (profile.eta >= 0) setEta(String(profile.eta))
+  }, [profile.eta])
+  useEffect(() => {
+    if (profile.sesso) setSesso(profile.sesso)
+  }, [profile.sesso])
+
+  let risultato = null
+  let errore = null
+  const etaN = numero(eta)
+  const creatN = numero(creatinina)
+  if (etaN !== null && creatN !== null) {
+    try {
+      risultato = calcolaEGFRCKDEPI({ eta: etaN, sesso, creatinina: creatN })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <Calcolatore titolo="eGFR (CKD-EPI 2021)">
+      <div className="griglia-campi-ti">
+        <Campo etichetta="Età (anni)" valore={eta} onChange={setEta} />
+        <CampoSesso etichetta="Sesso" valore={sesso} onChange={setSesso} />
+        <Campo etichetta="Creatinina (mg/dL)" valore={creatinina} onChange={setCreatinina} />
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.egfrMlMin173} ml/min/1.73m²</p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
+      <p className="nota">
+        Non intercambiabile con la Cockcroft-Gault sopra: CKD-EPI stima la funzione renale
+        generale (normalizzata per superficie corporea), Cockcroft-Gault resta il riferimento
+        per il dosaggio dei farmaci.
+      </p>
     </Calcolatore>
   )
 }
