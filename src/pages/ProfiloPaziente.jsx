@@ -1,30 +1,43 @@
 import { useState } from 'react'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
-import { mesiAdAnni, anniAMesi } from '../lib/etaConversione'
+import { calcolaEtaDecimale } from '../lib/etaConversione'
 import '../App.css'
 
 export function ProfiloPaziente() {
   const { profile, setProfile, resetProfile, bmi, ibw, lbw } = usePatientProfile()
 
-  // Il profilo lavora sempre in anni decimali (profile.eta): l'unita' scelta qui riguarda
-  // solo come il numero viene digitato/mostrato, utile sotto i 3 anni dove "anni decimali"
-  // (es. 0.6666...) e' poco leggibile e poco pratico da inserire.
-  const [unitaEta, setUnitaEta] = useState('anni')
+  // Il profilo lavora sempre in anni decimali (profile.eta): anni e mesi qui sono due
+  // campi sempre disponibili e sommati (mesi vuoto conta come 0), utile per un'eta sotto
+  // i 3 anni dove "anni decimali" (es. 0.6666...) e' poco leggibile e poco pratico da
+  // inserire. Stato locale (non derivato da profile.eta) per non far "saltare" i campi
+  // mentre si digita; resta comunque l'unico punto che scrive profile.eta.
+  const [anniInput, setAnniInput] = useState('')
+  const [mesiInput, setMesiInput] = useState('')
 
-  const etaInputValue =
-    profile.eta === null || profile.eta === undefined
-      ? ''
-      : unitaEta === 'mesi'
-        ? String(Math.round(anniAMesi(profile.eta)))
-        : String(profile.eta)
-
-  function handleEtaChange(testo) {
-    if (testo.trim() === '') {
+  function ricalcolaEta(anniTesto, mesiTesto) {
+    if (anniTesto.trim() === '' && mesiTesto.trim() === '') {
       setProfile({ eta: null })
       return
     }
-    const numero = Number(testo)
-    setProfile({ eta: unitaEta === 'mesi' ? mesiAdAnni(numero) : numero })
+    const anni = anniTesto.trim() === '' ? 0 : Number(anniTesto)
+    const mesi = mesiTesto.trim() === '' ? 0 : Number(mesiTesto)
+    setProfile({ eta: calcolaEtaDecimale(anni, mesi) })
+  }
+
+  function handleAnniChange(testo) {
+    setAnniInput(testo)
+    ricalcolaEta(testo, mesiInput)
+  }
+
+  function handleMesiChange(testo) {
+    setMesiInput(testo)
+    ricalcolaEta(anniInput, testo)
+  }
+
+  function handleReset() {
+    resetProfile()
+    setAnniInput('')
+    setMesiInput('')
   }
 
   return (
@@ -49,38 +62,29 @@ export function ProfiloPaziente() {
           </select>
         </label>
 
-        <label>
-          Età
-          <div className="eta-input">
+        <div className="eta-input">
+          <label className="eta-campo">
+            Anni
             <input
               type="number"
               min="0"
-              step="any"
-              value={etaInputValue}
-              onChange={(e) => handleEtaChange(e.target.value)}
+              step="1"
+              value={anniInput}
+              onChange={(e) => handleAnniChange(e.target.value)}
             />
-            <div className="unita-eta" role="tablist" aria-label="Unità età">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={unitaEta === 'anni'}
-                className={unitaEta === 'anni' ? 'unita-eta-item selezionato' : 'unita-eta-item'}
-                onClick={() => setUnitaEta('anni')}
-              >
-                anni
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={unitaEta === 'mesi'}
-                className={unitaEta === 'mesi' ? 'unita-eta-item selezionato' : 'unita-eta-item'}
-                onClick={() => setUnitaEta('mesi')}
-              >
-                mesi
-              </button>
-            </div>
-          </div>
-        </label>
+          </label>
+          <label className="eta-campo">
+            Mesi
+            <input
+              type="number"
+              min="0"
+              max="11"
+              step="1"
+              value={mesiInput}
+              onChange={(e) => handleMesiChange(e.target.value)}
+            />
+          </label>
+        </div>
 
         <label>
           Peso (kg)
@@ -104,7 +108,7 @@ export function ProfiloPaziente() {
           />
         </label>
 
-        <button type="button" onClick={resetProfile}>
+        <button type="button" onClick={handleReset}>
           Azzera profilo
         </button>
       </form>
