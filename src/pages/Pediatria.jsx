@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import pediatriaData from '../../data/pediatria-presidi.json'
 import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
@@ -10,6 +10,8 @@ import { selezionaDose } from '../lib/selezioneDose'
 import {
   trovaFasciaTuboIOT,
   calcolaTuboIOTFormula,
+  calcolaDiametriDisponibili,
+  calcolaProfonditaDaDiametro,
   trovaParametriVitali,
   trovaFasciaPerPeso,
   trovaLamaLaringoscopio,
@@ -20,6 +22,8 @@ import {
   calcolaVolemia,
   calcolaPerditaEmaticaMax,
   calcolaMantenimento421,
+  calcolaVtPediatrico,
+  calcolaIBWPediatricoTraubJohnson,
   doseDaIntervallo,
 } from '../lib/pediatriaCalculator'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
@@ -68,7 +72,14 @@ export function Pediatria() {
       <SezioneParametriVitali parametriVitali={pediatriaData.parametri_vitali} etaAnni={etaAnni} />
       <SezioneStime stime={pediatriaData.stime} etaAnni={etaAnni} pesoKg={pesoKg} />
       <SezioneFluidi fluidi={pediatriaData.fluidi} pesoKg={pesoKg} />
-      <SezionePremedicazione lista={pediatriaData.premedicazione_analgesia} derivati={derivati} />
+      <SezioneVentilazionePediatrica pesoKg={pesoKg} />
+      <SezioneIBWPediatrico calcoloPesi={pediatriaData.calcolo_pesi} altezzaCmProfilo={profile.altezzaCm} />
+      <SezionePremedicazione
+        titolo="Premedicazione e analgesia pediatrica"
+        lista={pediatriaData.premedicazione_analgesia}
+        derivati={derivati}
+      />
+      <SezionePremedicazione titolo="Altri farmaci" lista={pediatriaData.altri_farmaci} derivati={derivati} />
       <SezioneEmergenzePediatriche
         lista={pediatriaData.emergenze_pediatriche}
         farmaci={farmaciData.farmaci}
@@ -94,10 +105,7 @@ function PresidioRiga({ titolo, riga, render, avviso }) {
 }
 
 function SezionePresidi({ presidi, etaAnni, pesoKg }) {
-  const { tubo_iot, lama_laringoscopio, lma_per_peso, cvc, catetere_vescicale } = presidi
-
-  const rigaTabella = trovaFasciaTuboIOT(tubo_iot.tabella_eta, etaAnni)
-  const formulaTubo = rigaTabella ? null : calcolaTuboIOTFormula(etaAnni)
+  const { tubo_iot, sng_of, lama_laringoscopio, lma_per_peso, cvc, catetere_vescicale, defibrillazione } = presidi
 
   const lama = trovaLamaLaringoscopio(lama_laringoscopio, etaAnni)
   const lma = pesoKg > 0 ? trovaFasciaPerPeso(lma_per_peso, pesoKg) : null
@@ -111,29 +119,7 @@ function SezionePresidi({ presidi, etaAnni, pesoKg }) {
         <BadgeVerifica verificato={tubo_iot.verificato} />
       </div>
 
-      <div className="presidio">
-        <p className="presidio-titolo">Tubo IOT</p>
-        {rigaTabella ? (
-          <>
-            <p className="nota">Tabella per età: {rigaTabella.fascia}</p>
-            <p className="risultato-primario">
-              Diametro {rigaTabella.diametro_mm} mm · profondità {rigaTabella.profondita_cm} cm al
-              labbro
-            </p>
-          </>
-        ) : (
-          <>
-            <p className="nota">Formula (&gt;2 anni)</p>
-            <p className="risultato-primario">{formulaTubo.diametroNonCuffiatoMm} mm (non cuffiato)</p>
-            <p className="formula">{formulaTubo.formulaNonCuffiato}</p>
-            <p className="risultato-primario">{formulaTubo.diametroCuffiatoMm} mm (cuffiato)</p>
-            <p className="formula">{formulaTubo.formulaCuffiato}</p>
-            <p className="risultato-primario">{formulaTubo.profonditaLabbroCm} cm (profondità al labbro)</p>
-            <p className="formula">{formulaTubo.formulaProfondita}</p>
-          </>
-        )}
-        <p className="nota">{tubo_iot.note}</p>
-      </div>
+      <SezioneTuboIOT tuboIot={tubo_iot} sngOf={sng_of} etaAnni={etaAnni} />
 
       <div className="griglia-presidi">
         <PresidioRiga
@@ -154,8 +140,154 @@ function SezionePresidi({ presidi, etaAnni, pesoKg }) {
         />
         <PresidioRiga titolo="Catetere vescicale" riga={catetere} render={(r) => `${r.french} Fr`} />
       </div>
+
+      <SezioneDefibrillazione defibrillazione={defibrillazione} pesoKg={pesoKg} />
     </div>
   )
+}
+
+/**
+ * Tubo IOT: sotto i 2 anni resta il lookup diretto in tabella (misure gia' discrete, non
+ * serve arrotondare). Sopra i 2 anni le formule danno un diametro grezzo continuo: si
+ * mostrano i due diametri commerciali che lo racchiudono (incrementi di 0.5mm) e si lascia
+ * scegliere, poi la profondita' e il SNG/OG si ricalcolano dal diametro EFFETTIVAMENTE
+ * scelto (piu' accurato della sola stima per eta).
+ */
+function SezioneTuboIOT({ tuboIot, sngOf, etaAnni }) {
+  const rigaTabella = trovaFasciaTuboIOT(tuboIot.tabella_eta, etaAnni)
+  const formulaTubo = rigaTabella ? null : calcolaTuboIOTFormula(etaAnni)
+
+  return (
+    <div className="presidio">
+      <p className="presidio-titolo">Tubo IOT</p>
+      {rigaTabella ? (
+        <>
+          <p className="nota">Tabella per età: {rigaTabella.fascia}</p>
+          <p className="risultato-primario">
+            Diametro {rigaTabella.diametro_mm} mm · profondità {rigaTabella.profondita_cm} cm al
+            labbro
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="nota">Formula (&gt;2 anni) · stima iniziale per età</p>
+          <p className="formula">Profondità orale: {formulaTubo.formulaProfondita}</p>
+          <p className="formula">Profondità nasale (alternativa): {formulaTubo.formulaProfonditaNasale}</p>
+
+          <div className="griglia-scelta-tubo">
+            <ScegliDiametroTubo
+              etichetta="Non cuffiato"
+              diametroGrezzoMm={formulaTubo.diametroNonCuffiatoGrezzo}
+              formulaGrezzo={formulaTubo.formulaNonCuffiato}
+              cuffiato={false}
+              incrementoMm={tuboIot.arrotondamento.incremento_mm}
+              incrementoFrench={sngOf.arrotondamento.incremento_french}
+              etaAnni={etaAnni}
+            />
+            <ScegliDiametroTubo
+              etichetta="Cuffiato"
+              diametroGrezzoMm={formulaTubo.diametroCuffiatoGrezzo}
+              formulaGrezzo={formulaTubo.formulaCuffiato}
+              cuffiato={true}
+              incrementoMm={tuboIot.arrotondamento.incremento_mm}
+              incrementoFrench={sngOf.arrotondamento.incremento_french}
+              etaAnni={etaAnni}
+            />
+          </div>
+        </>
+      )}
+      <p className="nota">{tuboIot.note}</p>
+    </div>
+  )
+}
+
+function ScegliDiametroTubo({
+  etichetta,
+  diametroGrezzoMm,
+  formulaGrezzo,
+  cuffiato,
+  incrementoMm,
+  incrementoFrench,
+  etaAnni,
+}) {
+  const [sceltoMm, setSceltoMm] = useState(null)
+
+  // Nuovo calcolo (cambio eta): la scelta precedente non e' piu' valida, si riparte dal
+  // consigliato del nuovo bracket.
+  useEffect(() => {
+    setSceltoMm(null)
+  }, [etaAnni])
+
+  const disponibili = calcolaDiametriDisponibili(diametroGrezzoMm, { incremento: incrementoMm, cuffiato })
+  const diametroFinale = sceltoMm ?? disponibili.consigliato
+  const profondita = calcolaProfonditaDaDiametro(diametroFinale)
+  const sngDisponibili = calcolaDiametriDisponibili(2 * diametroFinale, { incremento: incrementoFrench })
+
+  return (
+    <div className="scelta-tubo">
+      <p className="presidio-titolo">{etichetta}</p>
+      <p className="risultato-primario">{disponibili.grezzo} mm (calcolato)</p>
+      <p className="formula">{formulaGrezzo}</p>
+
+      <div className="chip-scelte">
+        {[disponibili.inferiore, disponibili.superiore].map((mm) => (
+          <button
+            key={mm}
+            type="button"
+            className={mm === diametroFinale ? 'chip chip-bottone selezionato' : 'chip chip-bottone'}
+            onClick={() => setSceltoMm(mm)}
+          >
+            {mm} mm{mm === disponibili.consigliato ? ' · consigliato' : ''}
+          </button>
+        ))}
+      </div>
+      <p className="nota">{disponibili.motivoConsigliato}</p>
+
+      <p className="risultato-primario">{profondita.profonditaCm} cm (profondità, dal diametro scelto)</p>
+      <p className="formula">{profondita.formula}</p>
+
+      <p className="nota">
+        SNG/OG stimato: {sngDisponibili.inferiore}-{sngDisponibili.superiore} Fr (consigliato{' '}
+        {sngDisponibili.consigliato} Fr) — circa 2 × diametro scelto, stesso principio di
+        arrotondamento del tubo.
+      </p>
+    </div>
+  )
+}
+
+function SezioneDefibrillazione({ defibrillazione, pesoKg }) {
+  const jDefibrillazione = pesoKg > 0 ? defibrillazione.defibrillazione_J_kg * pesoKg : null
+  const jDefibrillazioneArrotondato = jDefibrillazione !== null ? Math.round(jDefibrillazione) : null
+
+  return (
+    <div className="presidio">
+      <div className="riga-meta">
+        <p className="presidio-titolo">Defibrillazione / cardioversione</p>
+        <BadgeVerifica verificato={defibrillazione.verificato} />
+      </div>
+      {!(pesoKg > 0) ? (
+        <p className="avviso">Imposta il peso nel profilo per calcolare i Joule.</p>
+      ) : (
+        <>
+          <p className="risultato-primario">
+            Defibrillazione: {jDefibrillazioneArrotondato} J (arrotondato)
+          </p>
+          <p className="formula">
+            {defibrillazione.defibrillazione_J_kg} J/kg × {pesoKg} kg = {formatoNumeroSemplice(jDefibrillazione)} J
+            → {jDefibrillazioneArrotondato} J
+          </p>
+          <p className="nota">
+            Cardioversione: {defibrillazione.cardioversione_J_kg} J/kg (primo tentativo poi secondo)
+          </p>
+        </>
+      )}
+      <p className="nota">{defibrillazione.arrotondamento}</p>
+    </div>
+  )
+}
+
+function formatoNumeroSemplice(valore) {
+  return String(Math.round(valore * 10) / 10)
 }
 
 function SezioneParametriVitali({ parametriVitali, etaAnni }) {
@@ -368,10 +500,119 @@ function SezioneFluidi({ fluidi, pesoKg }) {
   )
 }
 
-function SezionePremedicazione({ lista, derivati }) {
+function SezioneVentilazionePediatrica({ pesoKg }) {
+  const [mlKg, setMlKg] = useState('7')
+
+  const mlKgN = mlKg.trim() === '' ? null : Number(mlKg)
+
+  let risultato = null
+  let errore = null
+  if (pesoKg > 0 && mlKgN !== null) {
+    try {
+      risultato = calcolaVtPediatrico({ pesoKg, mlKg: mlKgN })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
   return (
     <div className="riquadro-pediatria">
-      <h2>Premedicazione e analgesia pediatrica</h2>
+      <h2>Ventilazione</h2>
+      <div className="presidio">
+        <p className="presidio-titolo">Volume corrente (Vt)</p>
+        {!(pesoKg > 0) && <p className="avviso">Imposta il peso reale nel profilo per calcolare.</p>}
+        <label className="campo-numerico">
+          ml/kg (tipico 6-8)
+          <input
+            type="number"
+            min="0"
+            step="any"
+            inputMode="decimal"
+            value={mlKg}
+            onChange={(e) => setMlKg(e.target.value)}
+          />
+        </label>
+        {errore && <p className="avviso avviso-errore">{errore}</p>}
+        {risultato && (
+          <>
+            <p className="risultato-primario">{risultato.vtMl} ml</p>
+            <p className="formula">{risultato.formula}</p>
+          </>
+        )}
+        <p className="nota">6-8 ml/kg; in ARDS 5-6 ml/kg.</p>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * IBW pediatrico (Traub-Johnson): strumento ECCEZIONALE, separato dal flusso normale.
+ * risolviPeso/pesoResolver in pediatria usa SEMPRE il peso reale (guardia di sicurezza gia'
+ * in vigore, vedi memoria di progetto): questo calcolatore non alimenta nessun altro modulo,
+ * e' solo una consultazione manuale per i rari casi di bambino obeso in cui puo' servire una
+ * stima del peso ideale.
+ */
+function SezioneIBWPediatrico({ calcoloPesi, altezzaCmProfilo }) {
+  const [altezzaCm, setAltezzaCm] = useState('')
+
+  useEffect(() => {
+    if (altezzaCmProfilo > 0) setAltezzaCm(String(altezzaCmProfilo))
+  }, [altezzaCmProfilo])
+
+  const altezzaN = altezzaCm.trim() === '' ? null : Number(altezzaCm)
+
+  let risultato = null
+  let errore = null
+  if (altezzaN !== null) {
+    try {
+      risultato = calcolaIBWPediatricoTraubJohnson(altezzaN)
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <div className="riquadro-pediatria">
+      <div className="riga-meta">
+        <h2>IBW pediatrico (Traub-Johnson)</h2>
+        <BadgeVerifica verificato={calcoloPesi.ibw_pediatrico.verificato} />
+      </div>
+      <p className="avviso avviso-pediatrico">
+        Strumento eccezionale: da usare solo in casi selezionati di bambino obeso, non come
+        default. {calcoloPesi._nota_importante} Il peso di riferimento per il dosaggio dei
+        farmaci in questo modulo resta sempre il peso reale ({calcoloPesi.peso_di_riferimento_default}
+        ): questo calcolatore non sostituisce automaticamente nulla, è solo una consultazione
+        manuale.
+      </p>
+      <div className="presidio">
+        <label className="campo-numerico">
+          Altezza (cm)
+          <input
+            type="number"
+            min="0"
+            step="any"
+            inputMode="decimal"
+            value={altezzaCm}
+            onChange={(e) => setAltezzaCm(e.target.value)}
+          />
+        </label>
+        {errore && <p className="avviso avviso-errore">{errore}</p>}
+        {risultato && (
+          <>
+            <p className="risultato-primario">{risultato.ibwKg} kg</p>
+            <p className="formula">{risultato.formula}</p>
+          </>
+        )}
+        <p className="nota">{calcoloPesi.ibw_pediatrico.nota}</p>
+      </div>
+    </div>
+  )
+}
+
+function SezionePremedicazione({ titolo, lista, derivati }) {
+  return (
+    <div className="riquadro-pediatria">
+      <h2>{titolo}</h2>
       <div className="lista-voci-pediatria">
         {lista.map((farmaco) => {
           const peso = risolviPeso(farmaco.peso, derivati)

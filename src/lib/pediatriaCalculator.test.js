@@ -2,11 +2,15 @@ import { describe, expect, it } from 'vitest'
 import {
   trovaFasciaTuboIOT,
   calcolaTuboIOTFormula,
+  calcolaDiametriDisponibili,
+  calcolaProfonditaDaDiametro,
   trovaParametriVitali,
   trovaFasciaPerPeso,
   trovaCvc,
   calcolaMantenimento421,
   doseDaIntervallo,
+  calcolaVtPediatrico,
+  calcolaIBWPediatricoTraubJohnson,
 } from './pediatriaCalculator'
 import { calcolaDose } from './doseCalculator'
 
@@ -66,12 +70,89 @@ describe('tubo IOT - tabella vs formula in base all\'eta', () => {
     expect(r.diametroNonCuffiatoMm).toBe(5.5) // 6/4 + 4
     expect(r.diametroCuffiatoMm).toBe(5) // 6/4 + 3.5
     expect(r.profonditaLabbroCm).toBe(15) // 6/2 + 12
+    expect(r.profonditaNasaleCm).toBe(18) // 6/2 + 15
     expect(r.formulaNonCuffiato).toBe('6/4 + 4 = 5.5 mm')
+    expect(r.formulaProfonditaNasale).toBe('6/2 + 15 = 18 cm')
   })
 
   it('lancia un errore se l\'eta manca o non e\' valida', () => {
     expect(() => calcolaTuboIOTFormula(0)).toThrow(/eta/i)
     expect(() => calcolaTuboIOTFormula(null)).toThrow(/eta/i)
+  })
+})
+
+describe('calcolaDiametriDisponibili - bracket di due diametri commerciali', () => {
+  // Caso verificato indipendentemente: 4.8mm / incremento 0.5 -> 4.5 e 5.0 (esempio del
+  // JSON), consigliato 5.0 (dist 0.2) piu' vicino di 4.5 (dist 0.3).
+  it('4.8 mm -> bracket 4.5-5.0, consigliato il piu\' vicino (5.0)', () => {
+    const r = calcolaDiametriDisponibili(4.8, { incremento: 0.5 })
+    expect(r.inferiore).toBe(4.5)
+    expect(r.superiore).toBe(5)
+    expect(r.consigliato).toBe(5)
+  })
+
+  // Caso verificato: tubo cuffiato a 5 anni -> 5/4 + 3.5 = 4.75mm, esattamente a meta' tra
+  // 4.5 e 5.0 (dist 0.25 da entrambi): per il cuffiato si preferisce il difetto (4.5).
+  it('pareggio esatto (4.75mm) su tubo cuffiato -> preferisce il difetto (4.5)', () => {
+    const r = calcolaDiametriDisponibili(4.75, { incremento: 0.5, cuffiato: true })
+    expect(r.consigliato).toBe(4.5)
+    expect(r.motivoConsigliato).toMatch(/difetto/i)
+  })
+
+  // Stesso pareggio esatto, tubo NON cuffiato: nessuna indicazione clinica contraria nel
+  // JSON, si mantiene comunque il difetto come default deterministico.
+  it('pareggio esatto (4.75mm) su tubo non cuffiato -> difetto di default (4.5)', () => {
+    const r = calcolaDiametriDisponibili(4.75, { incremento: 0.5, cuffiato: false })
+    expect(r.consigliato).toBe(4.5)
+  })
+
+  it('valore esattamente su un incremento disponibile (4.5mm) -> consigliato se stesso', () => {
+    const r = calcolaDiametriDisponibili(4.5, { incremento: 0.5 })
+    expect(r.inferiore).toBe(4.5)
+    expect(r.superiore).toBe(5)
+    expect(r.consigliato).toBe(4.5)
+  })
+
+  it('lancia un errore se il valore grezzo manca o non e\' valido', () => {
+    expect(() => calcolaDiametriDisponibili(0)).toThrow(/valore grezzo/i)
+  })
+})
+
+describe('calcolaProfonditaDaDiametro - ricalcolo dal diametro scelto', () => {
+  // Caso verificato: profondita_cm = 3 x diametro_interno -> 3 x 4.5 = 13.5
+  it('diametro scelto 4.5mm -> profondita 13.5 cm', () => {
+    const r = calcolaProfonditaDaDiametro(4.5)
+    expect(r.profonditaCm).toBe(13.5)
+    expect(r.formula).toBe('3 × 4.5 mm = 13.5 cm')
+  })
+
+  it('lancia un errore se il diametro manca o non e\' valido', () => {
+    expect(() => calcolaProfonditaDaDiametro(0)).toThrow(/diametro/i)
+  })
+})
+
+describe('calcolaVtPediatrico', () => {
+  it('peso 20 kg, 7 ml/kg -> 140 ml', () => {
+    const r = calcolaVtPediatrico({ pesoKg: 20, mlKg: 7 })
+    expect(r.vtMl).toBe(140)
+  })
+
+  it('lancia un errore se il peso manca', () => {
+    expect(() => calcolaVtPediatrico({ pesoKg: 0, mlKg: 7 })).toThrow(/peso/i)
+  })
+})
+
+describe('calcolaIBWPediatricoTraubJohnson', () => {
+  // Caso verificato indipendentemente con Node (non solo atteso a mano): altezza 110 cm ->
+  // 2.396 * e^(0.01863*110) = 18.598... -> 18.6 kg (plausibile per un bambino di quella
+  // statura, ~4-5 anni)
+  it('altezza 110 cm -> 18.6 kg', () => {
+    const r = calcolaIBWPediatricoTraubJohnson(110)
+    expect(r.ibwKg).toBe(18.6)
+  })
+
+  it('lancia un errore se l\'altezza manca o non e\' valida', () => {
+    expect(() => calcolaIBWPediatricoTraubJohnson(0)).toThrow(/altezza/i)
   })
 })
 

@@ -36,6 +36,10 @@ export function trovaFasciaTuboIOT(tabellaEta, etaAnni) {
 
 /**
  * Formule tubo IOT (valide >2 anni, per PROGETTO/dati "formule valide >1-2 anni").
+ * La profondita' orale/nasale qui e' la stima INIZIALE dall'eta (prima di scegliere un
+ * diametro commerciale): una volta scelto il diametro tra i due proposti da
+ * calcolaDiametriDisponibili, va ricalcolata con calcolaProfonditaDaDiametro (piu'
+ * accurata, dipende dal tubo realmente usato).
  * @param {number} etaAnni
  */
 export function calcolaTuboIOTFormula(etaAnni, { decimali = 1 } = {}) {
@@ -46,16 +50,87 @@ export function calcolaTuboIOTFormula(etaAnni, { decimali = 1 } = {}) {
   const nonCuffiato = etaAnni / 4 + 4
   const cuffiato = etaAnni / 4 + 3.5
   const profondita = etaAnni / 2 + 12
+  const profonditaNasale = etaAnni / 2 + 15
   const etaTesto = formatNumero(etaAnni, 2)
 
   return {
     diametroNonCuffiatoMm: round(nonCuffiato, decimali),
     diametroCuffiatoMm: round(cuffiato, decimali),
+    // Valori NON arrotondati per il display: da passare a calcolaDiametriDisponibili, che
+    // deve lavorare sul valore grezzo esatto (arrotondare qui prima avrebbe potuto far
+    // sparire un pareggio esatto tra i due diametri commerciali, es. eta 5 anni cuffiato:
+    // 5/4+3.5 = 4.75mm esatto, arrotondato a 1 decimale diventerebbe 4.8mm e perderebbe il
+    // pareggio che attiva la preferenza per difetto).
+    diametroNonCuffiatoGrezzo: nonCuffiato,
+    diametroCuffiatoGrezzo: cuffiato,
     profonditaLabbroCm: round(profondita, decimali),
+    profonditaNasaleCm: round(profonditaNasale, decimali),
     formulaNonCuffiato: `${etaTesto}/4 + 4 = ${formatNumero(nonCuffiato, decimali)} mm`,
     formulaCuffiato: `${etaTesto}/4 + 3.5 = ${formatNumero(cuffiato, decimali)} mm`,
     formulaProfondita: `${etaTesto}/2 + 12 = ${formatNumero(profondita, decimali)} cm`,
+    formulaProfonditaNasale: `${etaTesto}/2 + 15 = ${formatNumero(profonditaNasale, decimali)} cm`,
   }
+}
+
+/**
+ * Dati due diametri commerciali che racchiudono un valore grezzo calcolato (incrementi
+ * fissi, es. 0.5mm per i tubi IOT), indica quale dei due e' consigliato: il piu' vicino al
+ * valore grezzo, tranne nel caso di pareggio esatto (valore a meta' tra i due) per un tubo
+ * cuffiato, dove si preferisce il diametro inferiore (il cuff sigilla comunque la via
+ * aerea, quindi conviene accettare un minimo di gioco piuttosto che sovradimensionare: meno
+ * trauma della mucosa subglottica).
+ */
+export function calcolaDiametriDisponibili(valoreGrezzo, { incremento = 0.5, cuffiato = false } = {}) {
+  if (!(valoreGrezzo > 0)) {
+    throw new Error('calcolaDiametriDisponibili: valore grezzo mancante o non valido')
+  }
+  if (!(incremento > 0)) {
+    throw new Error('calcolaDiametriDisponibili: incremento mancante o non valido')
+  }
+
+  const passi = valoreGrezzo / incremento
+  const inferiore = round(Math.floor(passi + 1e-9) * incremento, 4)
+  let superiore = round(Math.ceil(passi - 1e-9) * incremento, 4)
+  if (superiore <= inferiore) superiore = round(inferiore + incremento, 4)
+
+  const distInferiore = round(valoreGrezzo - inferiore, 6)
+  const distSuperiore = round(superiore - valoreGrezzo, 6)
+
+  let consigliato
+  let motivoConsigliato
+  if (distInferiore < distSuperiore) {
+    consigliato = inferiore
+    motivoConsigliato = 'più vicino al valore calcolato'
+  } else if (distSuperiore < distInferiore) {
+    consigliato = superiore
+    motivoConsigliato = 'più vicino al valore calcolato'
+  } else {
+    consigliato = inferiore
+    motivoConsigliato = cuffiato
+      ? "a metà tra i due: per il cuffiato si preferisce il difetto (il cuff sigilla comunque, minor trauma mucosa)"
+      : 'a metà tra i due: per difetto'
+  }
+
+  return {
+    grezzo: round(valoreGrezzo, 2),
+    inferiore,
+    superiore,
+    consigliato,
+    motivoConsigliato,
+  }
+}
+
+/** Profondita' del tubo IOT ricalcolata dal diametro EFFETTIVAMENTE scelto (piu' accurata
+ * della sola stima per eta): profondita_cm ~= 3 x diametro_interno_mm. */
+export function calcolaProfonditaDaDiametro(diametroMm, { decimali = 1 } = {}) {
+  if (!(diametroMm > 0)) {
+    throw new Error('calcolaProfonditaDaDiametro: diametro mancante o non valido')
+  }
+
+  const profondita = 3 * diametroMm
+  const formula = `3 × ${formatNumero(diametroMm, 2)} mm = ${formatNumero(profondita, decimali)} cm`
+
+  return { profonditaCm: round(profondita, decimali), formula }
 }
 
 // --- Lookup per fascia (eta o peso) -----------------------------------------------------
@@ -243,4 +318,42 @@ export function calcolaMantenimento421(pesoKg, { decimali = 1 } = {}) {
     mlH: round(mlH, decimali),
     formula: `${parti.join(' + ')} = ${formatNumero(mlH, decimali)} ml/h`,
   }
+}
+
+// --- Ventilazione --------------------------------------------------------------------------
+
+/** Volume corrente pediatrico: Vt_ml = ml_kg x peso_kg (tipico 6-8 ml/kg; 5-6 ml/kg in ARDS). */
+export function calcolaVtPediatrico({ pesoKg, mlKg }, { decimali = 0 } = {}) {
+  if (!(pesoKg > 0)) {
+    throw new Error('calcolaVtPediatrico: peso mancante o non valido')
+  }
+  if (!(mlKg > 0)) {
+    throw new Error('calcolaVtPediatrico: ml/kg mancante o non valido')
+  }
+
+  const vt = mlKg * pesoKg
+  const formula = `${formatNumero(mlKg, 1)} ml/kg × ${formatNumero(pesoKg, 1)} kg = ${formatNumero(vt, decimali)} ml`
+
+  return { vtMl: round(vt, decimali), formula }
+}
+
+// --- Peso: IBW pediatrico (eccezione, non nel flusso normale) ------------------------------
+
+/**
+ * IBW pediatrico (Traub-Johnson): IBW_kg = 2.396 * e^(0.01863 * altezza_cm), valida per
+ * bambini ~1-17 anni. STRUMENTO ECCEZIONALE, non collegato a risolviPeso/pesoResolver: in
+ * pediatria il peso di riferimento per il dosaggio farmaci resta SEMPRE il peso reale (vedi
+ * data/pediatria-presidi.json -> calcolo_pesi, e la guardia pediatrica in pesoResolver.js).
+ * Da consultare solo in casi selezionati (es. bambino obeso), mai come sostituto
+ * automatico del peso reale.
+ */
+export function calcolaIBWPediatricoTraubJohnson(altezzaCm, { decimali = 1 } = {}) {
+  if (!(altezzaCm > 0)) {
+    throw new Error('calcolaIBWPediatricoTraubJohnson: altezza mancante o non valida')
+  }
+
+  const ibw = 2.396 * Math.exp(0.01863 * altezzaCm)
+  const formula = `2.396 × e^(0.01863 × ${formatNumero(altezzaCm, 0)}) = ${formatNumero(ibw, decimali)} kg`
+
+  return { ibwKg: round(ibw, decimali), formula }
 }

@@ -127,3 +127,34 @@
 .chip-capitalizza {
   text-transform: capitalize;
 }
+
+.griglia-scelta-tubo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.scelta-tubo {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.chip-scelte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+
+.chip-bottone {
+  font: inherit;
+  cursor: pointer;
+}
+
+.chip-bottone.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
