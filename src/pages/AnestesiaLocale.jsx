@@ -28,6 +28,7 @@ export function AnestesiaLocale() {
   const [anesteticoId, setAnesteticoId] = useState(anestetici[0].id)
   const [conAdrenalina, setConAdrenalina] = useState(false)
   const [concentrazioneInput, setConcentrazioneInput] = useState('')
+  const [giaSomministratoInput, setGiaSomministratoInput] = useState('')
 
   // --- Diluizione da fiala ---
   const [concFiala, setConcFiala] = useState('')
@@ -49,6 +50,7 @@ export function AnestesiaLocale() {
   // (se c'e'), cosi' i calcolatori sotto sono precompilati con valori plausibili.
   useEffect(() => {
     setConcentrazioneInput(forme[0] ? String(forme[0].conc_percento) : '')
+    setGiaSomministratoInput('')
     setConcFiala(forme[0] ? String(forme[0].mg_ml) : '')
     setVolumeFialaDil(forme[0]?.volumi_ml?.[0] ? String(forme[0].volumi_ml[0]) : '')
     setMgPerFiala(forme[0] ? String(forme[0].mg_ml * forme[0].volumi_ml[0]) : '')
@@ -57,12 +59,13 @@ export function AnestesiaLocale() {
   }, [anesteticoId])
 
   const concentrazionePercento = concentrazioneInput.trim() === '' ? null : Number(concentrazioneInput)
+  const giaSomministratoMg = giaSomministratoInput.trim() === '' ? undefined : Number(giaSomministratoInput)
 
   let volumeMassimo = null
   let erroreVolumeMassimo = null
   if (anestetico && concentrazionePercento > 0 && pesoKg > 0) {
     try {
-      volumeMassimo = calcolaVolumeMassimo(anestetico, { conAdrenalina, pesoKg, concentrazionePercento })
+      volumeMassimo = calcolaVolumeMassimo(anestetico, { conAdrenalina, pesoKg, concentrazionePercento, giaSomministratoMg })
     } catch (e) {
       erroreVolumeMassimo = e.message
     }
@@ -179,6 +182,19 @@ export function AnestesiaLocale() {
               </div>
             )}
 
+            <label className="campo-numerico">
+              Già somministrato (mg, opzionale)
+              <input
+                type="number"
+                min="0"
+                step="any"
+                inputMode="decimal"
+                placeholder="es. 100"
+                value={giaSomministratoInput}
+                onChange={(e) => setGiaSomministratoInput(e.target.value)}
+              />
+            </label>
+
             {erroreVolumeMassimo && <p className="avviso avviso-errore">{erroreVolumeMassimo}</p>}
 
             {volumeMassimo && (
@@ -198,6 +214,20 @@ export function AnestesiaLocale() {
                   <InfoFonte fonte={anestetico.fonte} pagina={anestetico.pagina} />
                 </p>
                 <p className="formula">{volumeMassimo.formula}</p>
+
+                {volumeMassimo.residuoMl !== null && (
+                  <>
+                    <p className={volumeMassimo.superaTetto ? 'risultato-primario risultato-errore' : 'risultato-primario'}>
+                      {volumeMassimo.residuoMl} ml residui
+                    </p>
+                    <p className="formula">{volumeMassimo.formulaResiduo}</p>
+                    {volumeMassimo.superaTetto && (
+                      <p className="avviso avviso-errore">
+                        Il tetto massimo è già stato superato: non somministrare altro anestetico locale.
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </div>

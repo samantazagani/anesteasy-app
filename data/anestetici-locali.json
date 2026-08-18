@@ -143,7 +143,11 @@
     }
   ],
   "tossicita_additiva": {
-    "regola": "con AL misti la tossicita si somma come % della dose max di ciascuno (es. 50% max lido + 50% max ropi = 100% = tetto)",
+    "regola": "con AL misti la tossicita si somma come % della dose max di ciascuno (es. 50% max lido + 50% max ropi = 100%)",
+    "percentuale_usata": "somma( dose_data_i / dose_max_i )  per ogni AL usato",
+    "margine_percentuale": "1 - percentuale_usata",
+    "margine_ml": "per l'AL scelto a concentrazione C: margine_ml = (margine_percentuale * dose_max_AL_scelto) / conc_mg_ml",
+    "esempio": "usato 60% del tetto; scelgo ropivacaina 0.2% (2 mg/ml), dose_max ropi 200 mg -> margine = 0.4*200/2 = 40 ml ancora somministrabili",
     "verificato": false,
     "fonte": "bozza"
   },
@@ -151,14 +155,19 @@
     {
       "id": "volume_max",
       "nome": "Volume massimo iniettabile",
-      "formula": "dose_max_mg = min(mg_kg * peso, tetto_assoluto_mg); volume_max_ml = dose_max_mg / concentrazione_mg_ml",
+      "formula": "dose_max_mg = min(mg_kg*peso, tetto_assoluto_mg); volume_max_ml = dose_max_mg / conc_mg_ml; residuo_mg = dose_max_mg - gia_somministrato_mg; residuo_ml = residuo_mg / conc_mg_ml",
       "input": [
         "anestetico",
         "con_adrenalina",
         "peso",
-        "concentrazione_percento"
+        "concentrazione_percento",
+        "gia_somministrato_mg (opzionale)"
       ],
-      "note": "concentrazione %: usare conversione_concentrazione (1% = 10 mg/ml)"
+      "note": "concentrazione %: usare conversione_concentrazione (1% = 10 mg/ml)",
+      "output": [
+        "volume_max_ml",
+        "residuo_ml (margine ancora somministrabile)"
+      ]
     },
     {
       "id": "diluizione",
@@ -541,6 +550,167 @@
             ],
             "tipo": "fiala"
           }
+        ]
+      }
+    ],
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "blocchi_per_regione": {
+    "_uso": "mappa regione anatomica -> blocchi -> chirurgie tipiche. Struttura pensata per una figura (omino) cliccabile, vista anteriore e posteriore.",
+    "regioni": [
+      {
+        "regione": "spalla",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "interscalenico"
+        ],
+        "chirurgie": [
+          "chirurgia della spalla",
+          "clavicola"
+        ]
+      },
+      {
+        "regione": "braccio/omero",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "interscalenico",
+          "sovraclaveare"
+        ],
+        "chirurgie": [
+          "omero"
+        ]
+      },
+      {
+        "regione": "gomito e avambraccio",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "sovraclaveare",
+          "infraclaveare",
+          "ascellare"
+        ],
+        "chirurgie": [
+          "gomito",
+          "avambraccio"
+        ]
+      },
+      {
+        "regione": "mano e polso",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "ascellare",
+          "blocchi distali (radiale/ulnare/mediano)"
+        ],
+        "chirurgie": [
+          "mano",
+          "polso",
+          "tunnel carpale"
+        ]
+      },
+      {
+        "regione": "parete toracica/mammella",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "paravertebrale",
+          "ESP",
+          "PECS I-II",
+          "serrato anteriore"
+        ],
+        "chirurgie": [
+          "mammella",
+          "toracotomia",
+          "fratture costali"
+        ]
+      },
+      {
+        "regione": "parete addominale",
+        "vista": [
+          "anteriore"
+        ],
+        "blocchi": [
+          "TAP",
+          "quadrato dei lombi",
+          "guaina retto",
+          "ESP"
+        ],
+        "chirurgie": [
+          "laparotomia",
+          "ernia",
+          "cesareo (TAP)"
+        ]
+      },
+      {
+        "regione": "anca",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "PENG",
+          "fascia iliaca",
+          "femorale"
+        ],
+        "chirurgie": [
+          "frattura femore prossimale",
+          "protesi anca"
+        ]
+      },
+      {
+        "regione": "coscia anteriore e ginocchio",
+        "vista": [
+          "anteriore"
+        ],
+        "blocchi": [
+          "femorale",
+          "canale degli adduttori (safeno)"
+        ],
+        "chirurgie": [
+          "protesi ginocchio",
+          "femore"
+        ]
+      },
+      {
+        "regione": "ginocchio posteriore",
+        "vista": [
+          "posteriore"
+        ],
+        "blocchi": [
+          "IPACK",
+          "sciatico"
+        ],
+        "chirurgie": [
+          "protesi ginocchio (analgesia posteriore)"
+        ]
+      },
+      {
+        "regione": "gamba, caviglia e piede",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "popliteo (sciatico)",
+          "safeno",
+          "blocco alla caviglia"
+        ],
+        "chirurgie": [
+          "caviglia",
+          "piede"
         ]
       }
     ],

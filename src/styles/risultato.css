@@ -43,6 +43,13 @@
   color: #dc2626;
 }
 
+/* Variante di .risultato-primario per un valore che segnala il superamento di un limite
+   (es. residuo negativo, margine di tossicita' esaurito): stesso peso visivo, colore
+   d'allarme invece del contrasto neutro. */
+.risultato-errore {
+  color: #dc2626;
+}
+
 .formula-a-vista {
   margin-top: 8px;
 }

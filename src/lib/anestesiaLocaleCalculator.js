@@ -24,12 +24,17 @@ export function percentoDaMgMl(mgMl) {
  * poi volume_max_ml = dose_max_mg / concentrazione_mg_ml. I due tetti (per kg e
  * assoluto) sono indipendenti: va sempre preso il piu' basso dei due, non solo il primo.
  *
+ * giaSomministratoMg (opzionale): se fornito, calcola anche il residuo ancora
+ * somministrabile (residuo_mg = dose_max_mg - gia_somministrato_mg, poi convertito in ml
+ * alla stessa concentrazione). Puo' risultare negativo se il tetto e' gia' stato superato:
+ * non viene troncato a zero, va segnalato (superaTetto), non nascosto.
+ *
  * @param {object} anestetico voce da data/anestetici-locali.json > anestetici
- * @param {{ conAdrenalina: boolean, pesoKg: number, concentrazionePercento: number }} input
+ * @param {{ conAdrenalina: boolean, pesoKg: number, concentrazionePercento: number, giaSomministratoMg?: number }} input
  */
 export function calcolaVolumeMassimo(
   anestetico,
-  { conAdrenalina, pesoKg, concentrazionePercento },
+  { conAdrenalina, pesoKg, concentrazionePercento, giaSomministratoMg },
   { decimali = 2 } = {},
 ) {
   if (!anestetico) {
@@ -56,6 +61,19 @@ export function calcolaVolumeMassimo(
     `; tetto assoluto ${formatNumero(tettoAssolutoMg, decimali)} mg) = ${formatNumero(doseMaxMg, decimali)} mg` +
     ` → ${formatNumero(doseMaxMg, decimali)} mg ÷ ${formatNumero(concentrazioneMgMl, decimali)} mg/ml = ${formatNumero(volumeMaxMl, decimali)} ml`
 
+  let residuoMg = null
+  let residuoMl = null
+  let formulaResiduo = null
+  let superaTetto = false
+  if (giaSomministratoMg >= 0) {
+    residuoMg = doseMaxMg - giaSomministratoMg
+    residuoMl = residuoMg / concentrazioneMgMl
+    superaTetto = residuoMg < 0
+    formulaResiduo =
+      `${formatNumero(doseMaxMg, decimali)} mg - ${formatNumero(giaSomministratoMg, decimali)} mg (già somministrato)` +
+      ` = ${formatNumero(residuoMg, decimali)} mg → ${formatNumero(residuoMg, decimali)} mg ÷ ${formatNumero(concentrazioneMgMl, decimali)} mg/ml = ${formatNumero(residuoMl, decimali)} ml`
+  }
+
   return {
     doseMgKg,
     tettoAssolutoMg,
@@ -65,6 +83,10 @@ export function calcolaVolumeMassimo(
     concentrazioneMgMl: round(concentrazioneMgMl, decimali),
     volumeMaxMl: round(volumeMaxMl, decimali),
     formula,
+    residuoMg: residuoMg === null ? null : round(residuoMg, decimali),
+    residuoMl: residuoMl === null ? null : round(residuoMl, decimali),
+    superaTetto,
+    formulaResiduo,
   }
 }
 
@@ -186,6 +208,46 @@ export function calcolaTossicitaAdditiva(voci, { decimali = 1 } = {}) {
   )
 
   return { righe, percentualeTotale, supera: percentualeTotale > 100 }
+}
+
+/**
+ * Margine residuo di tossicita' additiva, in ml, per un AL scelto tra quelli in uso
+ * (data/anestetici-locali.json > tossicita_additiva): margine_percentuale = 1 -
+ * percentuale_usata (percentualeUsataTotale qui e' in scala 0-100, come restituito da
+ * calcolaTossicitaAdditiva); margine_ml = (margine_percentuale * dose_max_mg dell'AL
+ * scelto) / concentrazione_mg_ml scelta. Non troncato a zero se gia' superato il tetto
+ * (percentualeUsataTotale > 100): il margine negativo va segnalato, non nascosto.
+ *
+ * @param {{ percentualeUsataTotale: number, doseMaxMgAlScelto: number, concentrazioneMgMlAlScelto: number }} input
+ */
+export function calcolaMargineResiduo(
+  { percentualeUsataTotale, doseMaxMgAlScelto, concentrazioneMgMlAlScelto },
+  { decimali = 1 } = {},
+) {
+  if (!(percentualeUsataTotale >= 0)) {
+    throw new Error('calcolaMargineResiduo: percentuale usata mancante o non valida')
+  }
+  if (!(doseMaxMgAlScelto > 0)) {
+    throw new Error('calcolaMargineResiduo: dose massima dell\'AL scelto mancante o non valida')
+  }
+  if (!(concentrazioneMgMlAlScelto > 0)) {
+    throw new Error('calcolaMargineResiduo: concentrazione dell\'AL scelto mancante o non valida')
+  }
+
+  const margineFrazione = 1 - percentualeUsataTotale / 100
+  const margineMg = margineFrazione * doseMaxMgAlScelto
+  const margineMl = margineMg / concentrazioneMgMlAlScelto
+
+  const formula =
+    `(1 - ${formatNumero(percentualeUsataTotale, 1)}%) × ${formatNumero(doseMaxMgAlScelto, decimali)} mg` +
+    ` ÷ ${formatNumero(concentrazioneMgMlAlScelto, decimali)} mg/ml = ${formatNumero(margineMl, decimali)} ml`
+
+  return {
+    margineMl: round(margineMl, decimali),
+    margineMg: round(margineMg, decimali),
+    superaTetto: margineMg < 0,
+    formula,
+  }
 }
 
 /**

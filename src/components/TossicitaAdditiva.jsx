@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import anesteticiData from '../../data/anestetici-locali.json'
-import { calcolaTossicitaAdditiva } from '../lib/anestesiaLocaleCalculator'
+import { calcolaTossicitaAdditiva, calcolaMargineResiduo, mgMlDaPercento } from '../lib/anestesiaLocaleCalculator'
 import { BadgeVerifica } from './BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './TossicitaAdditiva.css'
@@ -9,6 +9,8 @@ import './TossicitaAdditiva.css'
 // massima assoluta di un solo farmaco), come da data/anestetici-locali.json > tossicita_additiva.
 export function TossicitaAdditiva({ anestetici, pesoKg }) {
   const [selezionati, setSelezionati] = useState({})
+  const [alMargineId, setAlMargineId] = useState(null)
+  const [concMargineInput, setConcMargineInput] = useState('')
 
   function toggleAnestetico(id) {
     setSelezionati((prev) => {
@@ -37,6 +39,35 @@ export function TossicitaAdditiva({ anestetici, pesoKg }) {
 
   const risultato =
     vociValide.length > 0 && pesoKg > 0 ? calcolaTossicitaAdditiva(vociValide) : null
+
+  // L'AL scelto per il margine deve restare tra quelli attualmente in uso: se viene
+  // deselezionato dalla lista sopra, si ripiega sul primo disponibile (o nessuno).
+  useEffect(() => {
+    if (!risultato) {
+      setAlMargineId(null)
+      return
+    }
+    if (!risultato.righe.some((r) => r.id === alMargineId)) {
+      setAlMargineId(risultato.righe[0]?.id ?? null)
+    }
+  }, [risultato, alMargineId])
+
+  const rigaMargine = risultato?.righe.find((r) => r.id === alMargineId) ?? null
+  const concMarginePercento = concMargineInput.trim() === '' ? null : Number(concMargineInput)
+
+  let margine = null
+  let erroreMargine = null
+  if (rigaMargine && concMarginePercento > 0) {
+    try {
+      margine = calcolaMargineResiduo({
+        percentualeUsataTotale: risultato.percentualeTotale,
+        doseMaxMgAlScelto: rigaMargine.tettoMg,
+        concentrazioneMgMlAlScelto: mgMlDaPercento(concMarginePercento),
+      })
+    } catch (e) {
+      erroreMargine = e.message
+    }
+  }
 
   return (
     <div className="riquadro-calcolatore" id="tossicita-additiva">
@@ -134,6 +165,48 @@ export function TossicitaAdditiva({ anestetici, pesoKg }) {
               La somma delle percentuali supera il 100%: rischio di tossicita' sistemica additiva.
             </p>
           )}
+
+          <div className="scheda-margine">
+            <p className="scheda-titolo-margine">Margine residuo per un AL scelto</p>
+            <div className="griglia-margine">
+              <label className="campo-numerico">
+                Anestetico
+                <select value={alMargineId ?? ''} onChange={(e) => setAlMargineId(e.target.value)}>
+                  {risultato.righe.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.nome}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="campo-numerico">
+                Concentrazione (%)
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="es. 0.2"
+                  value={concMargineInput}
+                  onChange={(e) => setConcMargineInput(e.target.value)}
+                />
+              </label>
+            </div>
+            {erroreMargine && <p className="avviso avviso-errore">{erroreMargine}</p>}
+            {margine && (
+              <>
+                <p className={margine.superaTetto ? 'risultato-primario risultato-errore' : 'risultato-primario'}>
+                  {margine.margineMl} ml residui
+                </p>
+                <p className="formula">{margine.formula}</p>
+                {margine.superaTetto && (
+                  <p className="avviso avviso-errore">
+                    Il tetto combinato è già superato: non somministrare altro anestetico locale.
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

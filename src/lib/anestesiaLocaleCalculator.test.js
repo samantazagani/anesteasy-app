@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { calcolaVolumeMassimo } from './anestesiaLocaleCalculator'
+import { calcolaVolumeMassimo, calcolaMargineResiduo } from './anestesiaLocaleCalculator'
 
 // Voci reali da data/anestetici-locali.json (dose_max_mg_kg / tetto_assoluto_mg).
 const bupivacaina = {
@@ -73,6 +73,80 @@ describe('calcolaVolumeMassimo - conversione concentrazione', () => {
 
     expect(risultato.concentrazioneMgMl).toBe(20)
     expect(risultato.volumeMaxMl).toBe(10.5)
+  })
+})
+
+describe('calcolaVolumeMassimo - residuo (gia\' somministrato opzionale)', () => {
+  it('residuo positivo: dose massima 175 mg, gia\' dati 100 mg -> 75 mg residui = 15 ml a 5 mg/ml', () => {
+    const r = calcolaVolumeMassimo(
+      bupivacaina,
+      { conAdrenalina: false, pesoKg: 100, concentrazionePercento: 0.5, giaSomministratoMg: 100 },
+    )
+
+    expect(r.doseMaxMg).toBe(175)
+    expect(r.residuoMg).toBe(75)
+    expect(r.residuoMl).toBe(15)
+    expect(r.superaTetto).toBe(false)
+    expect(r.formulaResiduo).toBe(
+      '175 mg - 100 mg (già somministrato) = 75 mg → 75 mg ÷ 5 mg/ml = 15 ml',
+    )
+  })
+
+  it('gia\' somministrato supera il tetto: residuo negativo, segnalato (non troncato a zero)', () => {
+    const r = calcolaVolumeMassimo(
+      bupivacaina,
+      { conAdrenalina: false, pesoKg: 100, concentrazionePercento: 0.5, giaSomministratoMg: 200 },
+    )
+
+    expect(r.doseMaxMg).toBe(175)
+    expect(r.residuoMg).toBe(-25)
+    expect(r.residuoMl).toBe(-5)
+    expect(r.superaTetto).toBe(true)
+  })
+
+  it('senza giaSomministratoMg: residuo resta null (campo opzionale)', () => {
+    const r = calcolaVolumeMassimo(lidocaina, { conAdrenalina: false, pesoKg: 70, concentrazionePercento: 1 })
+    expect(r.residuoMg).toBeNull()
+    expect(r.residuoMl).toBeNull()
+    expect(r.formulaResiduo).toBeNull()
+  })
+})
+
+describe('calcolaMargineResiduo - caso di esempio dal JSON', () => {
+  // Esempio da data/anestetici-locali.json > tossicita_additiva.esempio: usato 60% del
+  // tetto; scelgo ropivacaina 0.2% (2 mg/ml), dose_max ropi 200 mg -> margine = 0.4*200/2
+  // = 40 ml. Verificato indipendentemente con Node prima di fissarlo qui.
+  it('60% usato, ropivacaina 0.2% (2 mg/ml), dose_max 200 mg -> 40 ml', () => {
+    const r = calcolaMargineResiduo({
+      percentualeUsataTotale: 60,
+      doseMaxMgAlScelto: 200,
+      concentrazioneMgMlAlScelto: 2,
+    })
+
+    expect(r.margineMl).toBe(40)
+    expect(r.margineMg).toBe(80)
+    expect(r.superaTetto).toBe(false)
+  })
+
+  it('tetto gia\' superato (percentuale usata > 100): margine negativo, segnalato', () => {
+    const r = calcolaMargineResiduo({
+      percentualeUsataTotale: 120,
+      doseMaxMgAlScelto: 200,
+      concentrazioneMgMlAlScelto: 2,
+    })
+
+    expect(r.margineMg).toBe(-40)
+    expect(r.margineMl).toBe(-20)
+    expect(r.superaTetto).toBe(true)
+  })
+
+  it('lancia un errore se manca la dose massima o la concentrazione dell\'AL scelto', () => {
+    expect(() =>
+      calcolaMargineResiduo({ percentualeUsataTotale: 60, doseMaxMgAlScelto: 0, concentrazioneMgMlAlScelto: 2 }),
+    ).toThrow(/dose massima/i)
+    expect(() =>
+      calcolaMargineResiduo({ percentualeUsataTotale: 60, doseMaxMgAlScelto: 200, concentrazioneMgMlAlScelto: 0 }),
+    ).toThrow(/concentrazione/i)
   })
 })
 
