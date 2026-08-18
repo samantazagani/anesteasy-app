@@ -151,6 +151,22 @@ describe('calcolaIBWPediatricoTraubJohnson', () => {
     expect(r.ibwKg).toBe(18.6)
   })
 
+  // 3 esempi di riferimento confermati dal nuovo data/pediatria-presidi.json, ciascuno
+  // verificato indipendentemente con Node prima di fissarlo qui (stesso approccio del caso
+  // 110cm sopra): 2.396*e^(0.01863*100)=15.4375->15.4; 2.396*e^(0.01863*120)=22.4076->22.4;
+  // 2.396*e^(0.01863*150)=39.1853->39.2
+  it('altezza 100 cm -> 15.4 kg', () => {
+    expect(calcolaIBWPediatricoTraubJohnson(100).ibwKg).toBe(15.4)
+  })
+
+  it('altezza 120 cm -> 22.4 kg', () => {
+    expect(calcolaIBWPediatricoTraubJohnson(120).ibwKg).toBe(22.4)
+  })
+
+  it('altezza 150 cm -> 39.2 kg', () => {
+    expect(calcolaIBWPediatricoTraubJohnson(150).ibwKg).toBe(39.2)
+  })
+
   it('lancia un errore se l\'altezza manca o non e\' valida', () => {
     expect(() => calcolaIBWPediatricoTraubJohnson(0)).toThrow(/altezza/i)
   })

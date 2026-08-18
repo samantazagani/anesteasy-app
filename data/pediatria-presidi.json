@@ -2,8 +2,9 @@
   "_stato": "BOZZA da verificare. Valori da standard pediatrici (APLS/PALS/ESAIC) - nessuna pagina Mapar/Manuale dedicata alla pediatria. verificato=false: controllare 1-a-1 e assegnare la fonte.",
   "presidi": {
     "tubo_iot": {
-      "formula_diametro_non_cuffiato": "eta_anni/4 + 4",
       "formula_diametro_cuffiato": "eta_anni/4 + 3.5",
+      "formula_diametro_non_cuffiato": "eta_anni/4 + 4",
+      "_ordine": "cuffiato = piu usato (mostrare per primo/in evidenza); non cuffiato in genere <1-2 anni",
       "formula_profondita_cm_labbro": "eta_anni/2 + 12",
       "note": "formule valide >1-2 anni; sotto usare la tabella per età",
       "tabella_eta": [
@@ -107,11 +108,7 @@
     "sng_of": {
       "formula_french": "circa 2 x diametro tubo IOT",
       "note": "es. tubo 4.0 -> SNG 8 Fr",
-      "arrotondamento": {
-        "incremento_french": 2,
-        "regola": "mostrare i due French disponibili che racchiudono il valore calcolato (incrementi di 2 Fr), segnalando il piu' vicino come consigliato, stesso principio del tubo IOT",
-        "nota_approssimazione": "i cataloghi reali non sono sempre a incrementi regolari di 2 Fr (specie sotto i 6 Fr): verificare la disponibilita' effettiva prima dell'uso"
-      }
+      "arrotondamento": "arrotondare al French disponibile piu vicino"
     },
     "cvc": [
       {
@@ -162,7 +159,7 @@
       "cardioversione_J_kg": "0.5-1 poi 2",
       "verificato": false,
       "fonte": "bozza",
-      "arrotondamento": "i preset in Joule variano da defibrillatore a defibrillatore (nessun incremento universale come per i tubi IOT): qui si mostra il valore calcolato arrotondato all'intero piu' vicino, da verificare contro gli step effettivamente selezionabili sul dispositivo in uso"
+      "arrotondamento": "arrotondare all'energia (J) selezionabile sul defibrillatore in uso"
     }
   },
   "parametri_vitali": [
@@ -413,19 +410,30 @@
     }
   ],
   "calcolo_pesi": {
-    "_nota_importante": "Il calcolo pesi ADULTO non e valido in pediatria: NON usare la formula di Devine (IBW adulto, richiede altezza >152 cm) ne la soglia BMI>=30 -> IBW. In pediatria queste danno risultati errati.",
-    "peso_di_riferimento_default": "reale (TBW) per tutti i farmaci",
-    "bmi": {
-      "formula": "peso_kg / (altezza_m ^ 2)",
-      "interpretazione": "per PERCENTILE eta/sesso (curve di crescita), NON con i cutoff adulto (25/30)"
-    },
-    "ibw_pediatrico": {
-      "nota": "raramente necessario; se serve (bambino obeso) usare Traub-Johnson o il metodo BMI 50 percentile per eta",
-      "traub_johnson": "IBW_kg = 2.396 * e^(0.01863 * altezza_cm)  (bambini ~1-17 anni)",
-      "verificato": false,
-      "fonte": "bozza"
-    },
-    "peso_stimato_se_ignoto": "usare le formule APLS (vedi sezione 'stime')"
+    "_bug_noto": "Se l'app mostra ancora IBW/BMI errati in pediatria, il fix e nel CODICE: applicare questo algoritmo quando la categoria e pediatrica.",
+    "algoritmo": [
+      "1. categoria pediatrica se eta < ~15 anni (o sotto la soglia adulto configurata)",
+      "2. BMI = peso_kg / (altezza_m)^2  (STESSA formula dell'adulto; ma NON usare i cutoff 25/30: in pediatria si interpreta per percentile)",
+      "3. peso ideale (IBW) pediatrico: NON usare la formula di Devine (adulto, richiede altezza >152 cm). Usare Traub-Johnson: IBW_kg = 2.396 * exp(0.01863 * altezza_cm)",
+      "4. peso di riferimento per i farmaci = peso REALE (TBW) di default",
+      "5. NON applicare la regola adulto 'BMI>=30 -> IBW'"
+    ],
+    "esempi_IBW_traub": [
+      {
+        "altezza_cm": 100,
+        "IBW_kg_circa": 15.4
+      },
+      {
+        "altezza_cm": 120,
+        "IBW_kg_circa": 22.4
+      },
+      {
+        "altezza_cm": 150,
+        "IBW_kg_circa": 39.2
+      }
+    ],
+    "verificato": false,
+    "fonte": "bozza (Traub-Johnson)"
   },
   "calcolatori": [
     {
@@ -438,6 +446,18 @@
       ],
       "output": "ml",
       "note": "6-8 ml/kg; in ARDS 5-6 ml/kg",
+      "verificato": false,
+      "fonte": "bozza"
+    },
+    {
+      "id": "liquidi_mantenimento_ml_h",
+      "nome": "Liquidi di mantenimento (ml/h) - Holliday-Segar 4-2-1",
+      "formula": "ml_h = 4*min(peso,10) + 2*min(max(peso-10,0),10) + 1*max(peso-20,0)",
+      "input": [
+        "peso_kg"
+      ],
+      "output": "ml/h",
+      "esempio": "peso 25 kg -> 4*10 + 2*10 + 1*5 = 65 ml/h",
       "verificato": false,
       "fonte": "bozza"
     }

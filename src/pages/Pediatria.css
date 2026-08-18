@@ -141,6 +141,44 @@
   padding: 12px;
 }
 
+/* Cuffiato e' il piu' usato in pratica (presidi.tubo_iot._ordine nel JSON): evidenziato
+   rispetto al non cuffiato, che resta secondario. */
+.scelta-tubo-principale {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.scelta-tubo .presidio-titolo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lista-riferimento {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.lista-riferimento li {
+  margin-bottom: 4px;
+}
+
+.lista-riferimento:last-child {
+  margin-bottom: 0;
+}
+
+.chip-accento {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
 .chip-scelte {
   display: flex;
   flex-wrap: wrap;

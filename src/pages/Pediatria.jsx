@@ -175,20 +175,25 @@ function SezioneTuboIOT({ tuboIot, sngOf, etaAnni }) {
           <p className="formula">Profondità nasale (alternativa): {formulaTubo.formulaProfonditaNasale}</p>
 
           <div className="griglia-scelta-tubo">
-            <ScegliDiametroTubo
-              etichetta="Non cuffiato"
-              diametroGrezzoMm={formulaTubo.diametroNonCuffiatoGrezzo}
-              formulaGrezzo={formulaTubo.formulaNonCuffiato}
-              cuffiato={false}
-              incrementoMm={tuboIot.arrotondamento.incremento_mm}
-              incrementoFrench={sngOf.arrotondamento.incremento_french}
-              etaAnni={etaAnni}
-            />
+            {/* Cuffiato per primo/in evidenza: e' il piu' usato in pratica (vedi
+                presidi.tubo_iot._ordine nel JSON); non cuffiato resta secondario, in
+                genere per i <1-2 anni. */}
             <ScegliDiametroTubo
               etichetta="Cuffiato"
               diametroGrezzoMm={formulaTubo.diametroCuffiatoGrezzo}
               formulaGrezzo={formulaTubo.formulaCuffiato}
               cuffiato={true}
+              principale={true}
+              incrementoMm={tuboIot.arrotondamento.incremento_mm}
+              incrementoFrench={sngOf.arrotondamento.incremento_french}
+              etaAnni={etaAnni}
+            />
+            <ScegliDiametroTubo
+              etichetta="Non cuffiato"
+              diametroGrezzoMm={formulaTubo.diametroNonCuffiatoGrezzo}
+              formulaGrezzo={formulaTubo.formulaNonCuffiato}
+              cuffiato={false}
+              principale={false}
               incrementoMm={tuboIot.arrotondamento.incremento_mm}
               incrementoFrench={sngOf.arrotondamento.incremento_french}
               etaAnni={etaAnni}
@@ -206,6 +211,7 @@ function ScegliDiametroTubo({
   diametroGrezzoMm,
   formulaGrezzo,
   cuffiato,
+  principale,
   incrementoMm,
   incrementoFrench,
   etaAnni,
@@ -224,8 +230,11 @@ function ScegliDiametroTubo({
   const sngDisponibili = calcolaDiametriDisponibili(2 * diametroFinale, { incremento: incrementoFrench })
 
   return (
-    <div className="scelta-tubo">
-      <p className="presidio-titolo">{etichetta}</p>
+    <div className={principale ? 'scelta-tubo scelta-tubo-principale' : 'scelta-tubo'}>
+      <p className="presidio-titolo">
+        {etichetta}
+        {principale && <span className="chip chip-accento">più usato</span>}
+      </p>
       <p className="risultato-primario">{disponibili.grezzo} mm (calcolato)</p>
       <p className="formula">{formulaGrezzo}</p>
 
@@ -575,15 +584,19 @@ function SezioneIBWPediatrico({ calcoloPesi, altezzaCmProfilo }) {
     <div className="riquadro-pediatria">
       <div className="riga-meta">
         <h2>IBW pediatrico (Traub-Johnson)</h2>
-        <BadgeVerifica verificato={calcoloPesi.ibw_pediatrico.verificato} />
+        <BadgeVerifica verificato={calcoloPesi.verificato} />
       </div>
       <p className="avviso avviso-pediatrico">
         Strumento eccezionale: da usare solo in casi selezionati di bambino obeso, non come
-        default. {calcoloPesi._nota_importante} Il peso di riferimento per il dosaggio dei
-        farmaci in questo modulo resta sempre il peso reale ({calcoloPesi.peso_di_riferimento_default}
-        ): questo calcolatore non sostituisce automaticamente nulla, è solo una consultazione
-        manuale.
+        default. Il peso di riferimento per il dosaggio dei farmaci in questo modulo resta
+        sempre il peso reale (TBW): questo calcolatore non sostituisce automaticamente
+        nulla, è solo una consultazione manuale.
       </p>
+      <ul className="lista-riferimento">
+        {calcoloPesi.algoritmo.map((passo) => (
+          <li key={passo}>{passo}</li>
+        ))}
+      </ul>
       <div className="presidio">
         <label className="campo-numerico">
           Altezza (cm)
@@ -603,7 +616,10 @@ function SezioneIBWPediatrico({ calcoloPesi, altezzaCmProfilo }) {
             <p className="formula">{risultato.formula}</p>
           </>
         )}
-        <p className="nota">{calcoloPesi.ibw_pediatrico.nota}</p>
+        <p className="nota">
+          Esempi di riferimento:{' '}
+          {calcoloPesi.esempi_IBW_traub.map((e) => `${e.altezza_cm}cm → ${e.IBW_kg_circa}kg`).join(' · ')}
+        </p>
       </div>
     </div>
   )
