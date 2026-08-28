@@ -2,11 +2,11 @@
   "_stato": "IN REVISIONE. verificato=true = controllato dal medico su Mapar/Manuale. Ipnotici/oppioidi/curari/reversal: verificati. Vasoattivi-emergenza + antagonisti: BOZZA da verificare (naloxone da Mapar p.207).",
   "_schema_dose": {
     "contesto": "induzione | sedazione | mantenimento | premedicazione | analgesia | neuroassiale | tci_induzione | tci_mantenimento | carico | infusione | bolo | intubazione | rsi | reversal | arresto | anafilassi | bradicardia | crisi_ipertensiva | antiaritmico | infusione_continua | tampone | ipertermia_maligna | antagonista",
-    "fascia_eta": "pediatrico | adulto (default se assente) | anziano â l'app sceglie dall'eta del paziente; se manca la variante specifica usa 'adulto' (applicando 'aggiustamento_anziano' se presente) e lo ESPLICITA",
+    "fascia_eta": "pediatrico | adulto (default se assente) | anziano — l'app sceglie dall'eta del paziente; se manca la variante specifica usa 'adulto' (applicando 'aggiustamento_anziano' se presente) e lo ESPLICITA",
     "aggiustamento_anziano": "modificatore da applicare all'anziano quando NON esiste una voce dedicata, es. '-20..-50%' o testo",
     "valore/min/max": "per range usare min+max; il calcolatore mostra min*peso - max*peso",
     "unita": "mg/kg | mcg/kg | mg/kg/h | mcg/kg/min | mg | mcg | mcg/ml | ng/ml",
-    "peso": "stringa ('reale'(=TBW) | IBW | LBW | corretto) OPPURE oggetto condizionale { tipo:'condizionale', default:'reale', eccezione:{ condizione:'BMI>=30', usa:'IBW' } } â in tal caso l'app sceglie in automatico dal BMI e ESPLICITA il peso usato",
+    "peso": "stringa ('reale'(=TBW) | IBW | LBW | corretto) OPPURE oggetto condizionale { tipo:'condizionale', default:'reale', eccezione:{ condizione:'BMI>=30', usa:'IBW' } } — in tal caso l'app sceglie in automatico dal BMI e ESPLICITA il peso usato",
     "via": "IV | IM | os | peridurale | intratecale (default IV se assente)",
     "modello": "solo TCI",
     "verificato": "false finche non controllato",
@@ -35,11 +35,21 @@
             },
             "display": "esplicitare il peso usato (es. 'IBW' per obeso)"
           },
-          "note": "bambini: dose pediatrica 2.5-3 mg/kg",
           "verificato": true,
           "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "35, 41, 78"
+        },
+        {
+          "contesto": "induzione",
+          "fascia_eta": "pediatrico",
+          "min": 2.5,
+          "max": 3,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "verificato": false,
+          "fonte": "manuale-giovane-anestesista",
+          "pagina": "78"
         },
         {
           "contesto": "induzione",
@@ -185,7 +195,7 @@
           "max": 0.1,
           "unita": "mg/kg",
           "via": "IM",
-          "note": "os pediatrico 0.5 mg/kg -> pediatria",
+          "note": "premedicazione IM",
           "verificato": true,
           "fonte": "revisione-medico",
           "revisione": "2026-07",
@@ -390,7 +400,20 @@
           "verificato": true,
           "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
-          "pagina": "58"
+          "pagina": "58",
+          "fascia_eta": "adulto"
+        },
+        {
+          "contesto": "mantenimento",
+          "fascia_eta": "pediatrico",
+          "min": 0.1,
+          "max": 1,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "note": "il bambino richiede rate piu alti (clearance rapida); avvio tipico ~0.25; range fino a 1.3",
+          "verificato": false,
+          "fonte": "FDA Ultiva / Drugs.com",
+          "pagina": ""
         },
         {
           "contesto": "tci_induzione",
@@ -1059,6 +1082,15 @@
           "note": "carico in 20-60 min",
           "verificato": false,
           "fonte": "bozza"
+        },
+        {
+          "contesto": "infusione",
+          "valore": 900,
+          "unita": "mg/24h",
+          "note": "mantenimento dopo la dose di carico (300 mg)",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
         }
       ]
     },
@@ -1239,6 +1271,133 @@
           "note": "2.5 mg/kg ripetibile fino a 10 mg/kg totali",
           "verificato": false,
           "fonte": "bozza"
+        }
+      ]
+    },
+    {
+      "id": "verapamil",
+      "nome": "Verapamil",
+      "classe": "antiaritmico / calcio-antagonista",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "min": 0.075,
+          "max": 0.15,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "media 5-10 mg in 2 min; tachi regolare QRS stretto; evitare se instabile o FE<40%",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "diltiazem",
+      "nome": "Diltiazem",
+      "classe": "antiaritmico / calcio-antagonista",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "valore": 0.25,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "media ~20 mg in 2 min; evitare se instabile o FE<40%",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "esmololo",
+      "nome": "Esmololo",
+      "classe": "beta-bloccante",
+      "dosi": [
+        {
+          "contesto": "bolo",
+          "valore": 500,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "note": "in 1 min (opzionale)",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        },
+        {
+          "contesto": "infusione",
+          "min": 50,
+          "max": 300,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "note": "controllo FC (TSV, FA/flutter); beta-1 selettivo, emivita ~9 min",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "landiololo",
+      "nome": "Landiololo",
+      "classe": "beta-bloccante",
+      "dosi": [
+        {
+          "contesto": "carico",
+          "valore": 100,
+          "unita": "mcg/kg",
+          "peso": "reale",
+          "note": "in 1 min (opzionale)",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        },
+        {
+          "contesto": "infusione",
+          "min": 10,
+          "max": 40,
+          "unita": "mcg/kg/min",
+          "peso": "reale",
+          "note": "1-10 mcg/kg/min se funzione VS ridotta; emivita ~4 min",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "metoprololo",
+      "nome": "Metoprololo",
+      "classe": "beta-bloccante",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "min": 2.5,
+          "max": 15,
+          "unita": "mg",
+          "note": "boli da 2.5 mg EV; se esmololo/landiololo non disponibili",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "procainamide",
+      "nome": "Procainamide",
+      "classe": "antiaritmico",
+      "dosi": [
+        {
+          "contesto": "antiaritmico",
+          "min": 10,
+          "max": 15,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "max_assoluto_mg": 1000,
+          "note": "in 20 min; tachi QRS largo",
+          "verificato": false,
+          "fonte": "erc-2025",
+          "pagina": "65"
         }
       ]
     }

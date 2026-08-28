@@ -1,0 +1,51 @@
+{
+  "_descrizione": "Fonti citate. Ogni dose nei file dati punta a un 'id' qui tramite il campo 'fonte' (+ eventuale 'pagina').",
+  "fonti": [
+    {
+      "id": "manuale-giovane-anestesista",
+      "titolo": "Manuale di sopravvivenza del giovane anestesista",
+      "tipo": "manuale",
+      "note": "PDF con testo cercabile; usato per il primo cross-check dei dosaggi",
+      "anno": null,
+      "url": ""
+    },
+    {
+      "id": "mapar",
+      "titolo": "Mapar - Protocolli di Anestesia",
+      "tipo": "manuale",
+      "note": "PDF scansionato (solo immagini, 767 pagine): non cercabile a testo, consultazione per pagina",
+      "anno": null,
+      "url": ""
+    },
+    {
+      "id": "revisione-medico",
+      "titolo": "Verifica del medico su Mapar + Manuale del giovane anestesista",
+      "tipo": "revisione-clinica",
+      "note": "voce confermata dal medico contro entrambi i manuali; numero di pagina da precisare",
+      "anno": 2026,
+      "url": ""
+    },
+    {
+      "id": "siaarti",
+      "titolo": "Linee guida SIAARTI",
+      "tipo": "linee-guida",
+      "anno": null,
+      "url": ""
+    },
+    {
+      "id": "rcp",
+      "titolo": "Riassunto Caratteristiche del Prodotto (scheda tecnica)",
+      "tipo": "scheda-tecnica",
+      "note": "usare per singolo farmaco in caso di dubbio",
+      "anno": null,
+      "url": ""
+    },
+    {
+      "id": "erc-2025",
+      "titolo": "Linee guida ERC/IRC 2025 - ALS cap. 5 (Tabella 6, aritmie peri-arresto)",
+      "tipo": "linee-guida",
+      "anno": 2025,
+      "url": ""
+    }
+  ]
+}
