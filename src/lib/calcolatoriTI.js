@@ -290,3 +290,116 @@ export function calcolaCPP({ map, icp }, { decimali = 1 } = {}) {
 
   return { cpp: round(cpp, decimali), formula }
 }
+
+/** Soglia anziano, stessa costante di categoriaEta.js (SOGLIA_ANZIANO = 65). */
+const SOGLIA_ANZIANO_ACT = 65
+
+/**
+ * Coefficiente ACT per Adrogue-Madias: 3 fasce (non le 2 di calcolaACT sopra), come da
+ * data/calcolatori-ti.json > correzione_sodio_adrogue.coeff_ACT — uomo giovane 0.6,
+ * donna giovane O uomo anziano 0.5, donna anziana 0.45.
+ */
+export function coeffACTAdrogue(sesso, eta) {
+  if (sesso !== 'M' && sesso !== 'F') {
+    throw new Error('coeffACTAdrogue: sesso mancante o non valido (M/F)')
+  }
+  if (!(eta >= 0)) {
+    throw new Error('coeffACTAdrogue: eta mancante o non valida')
+  }
+  const anziano = eta >= SOGLIA_ANZIANO_ACT
+  if (sesso === 'F' && anziano) return { chiave: 'donna_anziana', valore: 0.45 }
+  if (sesso === 'M' && !anziano) return { chiave: 'uomo', valore: 0.6 }
+  return { chiave: 'donna_o_uomo_anziano', valore: 0.5 }
+}
+
+const NA_SOLUZIONI_ADROGUE = { 'ipertonica_3%': 513, 'fisiologica_0.9%': 154 }
+
+/**
+ * Correzione Na sicura (Adrogue-Madias): stima la velocita' di infusione per un target
+ * di rialzo del sodio in 24h. ATTENZIONE: la formula sottostima il rialzo reale (ignora
+ * perdite di acqua libera in corso) — e' solo una stima iniziale, va ricontrollata sul
+ * sodio ogni 2-4h (vedi "sicurezza" in data/calcolatori-ti.json e nell'UI).
+ */
+export function calcolaCorrezioneSodioAdrogue(
+  { naPaziente, pesoKg, sesso, eta, soluzione, targetDeltaNa24h },
+  { decimali = 1 } = {},
+) {
+  if (!(naPaziente > 0)) {
+    throw new Error('calcolaCorrezioneSodioAdrogue: sodio del paziente mancante o non valido')
+  }
+  if (!(pesoKg > 0)) {
+    throw new Error('calcolaCorrezioneSodioAdrogue: peso mancante o non valido')
+  }
+  if (!(targetDeltaNa24h > 0)) {
+    throw new Error('calcolaCorrezioneSodioAdrogue: target di correzione in 24h mancante o non valido')
+  }
+  const naSoluzione = NA_SOLUZIONI_ADROGUE[soluzione]
+  if (!(naSoluzione > 0)) {
+    throw new Error('calcolaCorrezioneSodioAdrogue: soluzione non riconosciuta')
+  }
+
+  const { chiave: coeffChiave, valore: coeff } = coeffACTAdrogue(sesso, eta)
+  const act = pesoKg * coeff
+  const deltaNaPerLitro = (naSoluzione - naPaziente) / (act + 1)
+  if (deltaNaPerLitro === 0) {
+    throw new Error(
+      'calcolaCorrezioneSodioAdrogue: la soluzione scelta ha lo stesso Na del paziente, nessuna correzione stimabile',
+    )
+  }
+  const volumeL24h = targetDeltaNa24h / deltaNaPerLitro
+  const volumeMl24h = volumeL24h * 1000
+  const velocitaMlH = volumeMl24h / 24
+
+  const formula =
+    `ACT = ${formatNumero(pesoKg, decimali)} × ${coeff} = ${formatNumero(act, decimali)} L; ` +
+    `ΔNa/L = (${naSoluzione} - ${formatNumero(naPaziente, decimali)}) ÷ (${formatNumero(act, decimali)} + 1) = ${formatNumero(deltaNaPerLitro, 2)} mEq/L; ` +
+    `${formatNumero(targetDeltaNa24h, decimali)} ÷ ${formatNumero(deltaNaPerLitro, 2)} = ${formatNumero(volumeL24h, 2)} L/24h = ${formatNumero(velocitaMlH, decimali)} ml/h`
+
+  return {
+    coeffChiave,
+    coeff,
+    actL: round(act, decimali),
+    deltaNaPerLitro: round(deltaNaPerLitro, 2),
+    volumeL24h: round(volumeL24h, 2),
+    volumeMl24h: round(volumeMl24h, 0),
+    velocitaMlH: round(velocitaMlH, decimali),
+    superaLimiteAssoluto: targetDeltaNa24h > 8,
+    superaLimiteAltoRischio: targetDeltaNa24h > 6,
+    formula,
+  }
+}
+
+/**
+ * PIA (pressione intra-addominale): conversione cmH2O <-> mmHg + fascia clinica di
+ * riferimento (sempre calcolata in mmHg, standard clinico per la PIA).
+ * Normale 5-7 mmHg; ipertensione intra-addominale >12; sindrome compartimentale >20.
+ */
+export function calcolaPIAConversione({ valore, unitaDiPartenza }, { decimali = 1 } = {}) {
+  if (!(valore >= 0)) {
+    throw new Error('calcolaPIAConversione: valore mancante o non valido')
+  }
+  if (unitaDiPartenza !== 'cmH2O' && unitaDiPartenza !== 'mmHg') {
+    throw new Error('calcolaPIAConversione: unita di partenza non valida (cmH2O o mmHg)')
+  }
+
+  const daCmH2O = unitaDiPartenza === 'cmH2O'
+  const convertito = daCmH2O ? valore / 1.36 : valore * 1.36
+  const unitaConvertita = daCmH2O ? 'mmHg' : 'cmH2O'
+  const valoreMmHg = daCmH2O ? convertito : valore
+  const formula = daCmH2O
+    ? `${formatNumero(valore, decimali)} ÷ 1.36 = ${formatNumero(convertito, decimali)} mmHg`
+    : `${formatNumero(valore, decimali)} × 1.36 = ${formatNumero(convertito, decimali)} cmH2O`
+
+  let livello = 'normale'
+  if (valoreMmHg > 20) livello = 'sindrome_compartimentale'
+  else if (valoreMmHg > 12) livello = 'ipertensione_intra_addominale'
+  else if (valoreMmHg > 7) livello = 'elevato'
+
+  return {
+    convertito: round(convertito, decimali),
+    unitaConvertita,
+    valoreMmHg: round(valoreMmHg, decimali),
+    livello,
+    formula,
+  }
+}

@@ -2,6 +2,99 @@
   "_stato": "Calcolatori TI: formule standard (basso rischio). Verificare le formule prima dell'uso; verificato=false.",
   "calcolatori": [
     {
+      "id": "correzione_sodio",
+      "nome": "Sodio corretto per glicemia",
+      "formula": "Na_corretto = Na_misurato + 0.016 * (glicemia_mg_dl - 100)",
+      "note": "alcuni usano 0.024 per glicemie molto alte",
+      "categoria": "elettroliti",
+      "ordine": 1
+    },
+    {
+      "id": "gap_osmolare",
+      "nome": "Gap osmolare",
+      "formula": "osm_calcolata = 2*Na + glicemia/18 + BUN/2.8 ; gap = osm_misurata - osm_calcolata",
+      "note": "normale <10",
+      "categoria": "elettroliti",
+      "ordine": 2
+    },
+    {
+      "id": "deficit_sodio",
+      "nome": "Deficit di sodio",
+      "formula": "deficit_mmol = (Na_target - Na_attuale) * acqua_corporea_totale ; ACT = peso * 0.6 (uomo) / 0.5 (donna)",
+      "note": "IPOnatriemia: correggere max 6-8 mmol/L in 24h (<=6 se high-risk: Na<115, etilismo, malnutrizione, ipoK, epatopatia). Vedi calcolatore Adrogue-Madias.",
+      "categoria": "elettroliti",
+      "ordine": 3
+    },
+    {
+      "id": "correzione_sodio_adrogue",
+      "nome": "Correzione Na sicura (Adrogue-Madias)",
+      "categoria": "elettroliti",
+      "formula": "ACT = peso * coeff; deltaNa_per_litro = (Na_soluzione - Na_paziente) / (ACT + 1); volume_L_24h = target_deltaNa_24h / deltaNa_per_litro; velocita_ml_h = volume_L_24h * 1000 / 24",
+      "coeff_ACT": {
+        "uomo": 0.6,
+        "donna_o_uomo_anziano": 0.5,
+        "donna_anziana": 0.45
+      },
+      "soluzioni_Na_mEq_L": {
+        "ipertonica_3%": 513,
+        "fisiologica_0.9%": 154
+      },
+      "input": [
+        "Na_paziente",
+        "peso",
+        "sesso_eta",
+        "soluzione",
+        "target_deltaNa_24h"
+      ],
+      "output": [
+        "deltaNa_per_litro",
+        "velocita_ml_h"
+      ],
+      "limiti_correzione": {
+        "target_24h": "6-8 mEq/L",
+        "high_risk_24h": "<= 6 mEq/L",
+        "limite_48h": "< 18 mEq/L",
+        "fattori_high_risk": "Na < 115, etilismo, malnutrizione, ipokaliemia, epatopatia avanzata"
+      },
+      "sicurezza": [
+        "la formula SOTTOSTIMA il rialzo reale (ignora diuresi/perdite di acqua libera): e' solo una stima iniziale -> RICONTROLLARE il Na ogni 2-4 h",
+        "sintomi neurologici gravi (convulsioni, coma): boli di ipertonica 3% 100-150 ml in 10-20 min, ripetibili fino a un rialzo di 4-6 mEq/L, poi STOP (il tetto delle 24h vale comunque)",
+        "se overcorrezione: ri-abbassare con glucosata 5% +/- desmopressina (DDAVP)"
+      ],
+      "esempio": "donna anziana 60 kg, Na 110, ipertonica 3%: ACT = 60*0.45 = 27; deltaNa/L = (513-110)/(27+1) = 14.4; target +6 -> 6/14.4*1000 = 416 ml/24h -> ~17 ml/h",
+      "verificato": false,
+      "fonte": "Adrogue-Madias; limiti da linee guida (panel USA 2013 / europee 2014), tetto 6-8/24h",
+      "ordine": 4
+    },
+    {
+      "id": "deficit_idrico",
+      "nome": "Deficit idrico (ipernatriemia)",
+      "formula": "deficit_L = ACT * ((Na_attuale/140) - 1) ; ACT = peso * 0.6/0.5",
+      "input": [
+        "peso",
+        "sesso",
+        "Na_attuale"
+      ],
+      "categoria": "elettroliti",
+      "note": "IPERnatriemia: abbassare il Na max ~10 mmol/L in 24h (circa 0.5 mmol/L/h) per evitare edema cerebrale",
+      "ordine": 5
+    },
+    {
+      "id": "correzione_potassio",
+      "nome": "Deficit di potassio (stima)",
+      "formula": "stima: ogni 0.1 mmol/L sotto 4.0 ~ deficit 100-200 mmol totali",
+      "note": "stima grossolana, guidare con emogas seriati",
+      "categoria": "elettroliti",
+      "ordine": 6
+    },
+    {
+      "id": "calcio_corretto",
+      "nome": "Calcio corretto per albumina",
+      "formula": "Ca_corretto = Ca_misurato + 0.8 * (4.0 - albumina_g_dl)",
+      "categoria": "elettroliti",
+      "ordine": 7
+    },
+    {
       "id": "gamma",
       "nome": "Gamma <-> ml/h",
       "formula": "ml/h = (dose_mcg_kg_min * peso_kg * 60) / concentrazione_mcg_ml ; inverso: mcg_kg_min = (ml_h * concentrazione_mcg_ml) / (peso_kg * 60)",
@@ -9,7 +102,8 @@
         "dose_mcg_kg_min",
         "peso_kg",
         "concentrazione_mcg_ml"
-      ]
+      ],
+      "categoria": "infusioni"
     },
     {
       "id": "infusione_da_dose_oraria",
@@ -21,47 +115,42 @@
         "dose_oraria_desiderata"
       ],
       "output": "ml/h",
-      "note": "quantita_farmaco e dose_oraria devono usare la stessa unita di massa (mg con mg/h, g convertito in mg, ecc). Esempio: 1 g (=1000 mg) in 50 ml, 125 mg/h -> 20 mg/ml -> 6.25 ml/h"
+      "note": "quantita_farmaco e dose_oraria devono usare la stessa unita di massa (mg con mg/h, g convertito in mg, ecc). Esempio: 1 g (=1000 mg) in 50 ml, 125 mg/h -> 20 mg/ml -> 6.25 ml/h",
+      "categoria": "infusioni"
     },
     {
-      "id": "correzione_sodio",
-      "nome": "Sodio corretto per glicemia",
-      "formula": "Na_corretto = Na_misurato + 0.016 * (glicemia_mg_dl - 100)",
-      "note": "alcuni usano 0.024 per glicemie molto alte"
+      "id": "map",
+      "nome": "Pressione arteriosa media",
+      "formula": "MAP = (PAS + 2*PAD) / 3",
+      "categoria": "emodinamica"
     },
     {
-      "id": "deficit_sodio",
-      "nome": "Deficit di sodio",
-      "formula": "deficit_mmol = (Na_target - Na_attuale) * acqua_corporea_totale ; ACT = peso * 0.6 (uomo) / 0.5 (donna)",
-      "note": "correggere max 8-10 mmol/L per 24h"
+      "id": "shock_index",
+      "nome": "Shock index",
+      "formula": "SI = FC / PAS",
+      "note": "normale 0.5-0.7; >0.9 allarme",
+      "categoria": "emodinamica"
     },
     {
-      "id": "correzione_potassio",
-      "nome": "Deficit di potassio (stima)",
-      "formula": "stima: ogni 0.1 mmol/L sotto 4.0 ~ deficit 100-200 mmol totali",
-      "note": "stima grossolana, guidare con emogas seriati"
+      "id": "aa_gradient",
+      "nome": "Gradiente Alveolo-arterioso",
+      "formula": "A-a = (FiO2*(Patm - 47) - PaCO2/0.8) - PaO2 ; a aria ambiente ~ 150 - PaCO2/0.8 - PaO2",
+      "note": "normale ~ eta/4 + 4",
+      "categoria": "respiratorio"
     },
     {
       "id": "anion_gap",
       "nome": "Anion gap",
       "formula": "AG = Na - (Cl + HCO3) ; corretto per albumina: AG + 2.5*(4.0 - albumina_g_dl)",
-      "note": "normale 8-12"
+      "note": "normale 8-12",
+      "categoria": "equilibrio acido-base"
     },
     {
-      "id": "gap_osmolare",
-      "nome": "Gap osmolare",
-      "formula": "osm_calcolata = 2*Na + glicemia/18 + BUN/2.8 ; gap = osm_misurata - osm_calcolata",
-      "note": "normale <10"
-    },
-    {
-      "id": "deficit_idrico",
-      "nome": "Deficit idrico (ipernatriemia)",
-      "formula": "deficit_L = ACT * ((Na_attuale/140) - 1) ; ACT = peso * 0.6/0.5",
-      "input": [
-        "peso",
-        "sesso",
-        "Na_attuale"
-      ]
+      "id": "winter",
+      "nome": "Compenso respiratorio atteso (Winter)",
+      "formula": "PaCO2_atteso = 1.5 * HCO3 + 8 (+/- 2)",
+      "note": "acidosi metabolica",
+      "categoria": "equilibrio acido-base"
     },
     {
       "id": "clearance_creatinina",
@@ -72,7 +161,8 @@
         "peso_kg",
         "creatinina_mg_dl",
         "sesso"
-      ]
+      ],
+      "categoria": "renale"
     },
     {
       "id": "egfr_ckdepi",
@@ -86,41 +176,15 @@
       "output": "ml/min/1.73m2",
       "note": "equazione senza fattore razza (2021); diversa dalla Cockcroft-Gault (che stima la clearance in ml/min per il dosaggio farmaci)",
       "verificato": false,
-      "fonte": "CKD-EPI 2021 (Inker NEJM 2021)"
-    },
-    {
-      "id": "calcio_corretto",
-      "nome": "Calcio corretto per albumina",
-      "formula": "Ca_corretto = Ca_misurato + 0.8 * (4.0 - albumina_g_dl)"
-    },
-    {
-      "id": "winter",
-      "nome": "Compenso respiratorio atteso (Winter)",
-      "formula": "PaCO2_atteso = 1.5 * HCO3 + 8 (+/- 2)",
-      "note": "acidosi metabolica"
+      "fonte": "CKD-EPI 2021 (Inker NEJM 2021)",
+      "categoria": "renale"
     },
     {
       "id": "qtc",
       "nome": "QTc (Bazett)",
       "formula": "QTc = QT_ms / sqrt(RR_s) ; RR_s = 60/FC",
-      "note": "prolungato >450 (uomo) / >470 (donna)"
-    },
-    {
-      "id": "aa_gradient",
-      "nome": "Gradiente Alveolo-arterioso",
-      "formula": "A-a = (FiO2*(Patm - 47) - PaCO2/0.8) - PaO2 ; a aria ambiente ~ 150 - PaCO2/0.8 - PaO2",
-      "note": "normale ~ eta/4 + 4"
-    },
-    {
-      "id": "map",
-      "nome": "Pressione arteriosa media",
-      "formula": "MAP = (PAS + 2*PAD) / 3"
-    },
-    {
-      "id": "shock_index",
-      "nome": "Shock index",
-      "formula": "SI = FC / PAS",
-      "note": "normale 0.5-0.7; >0.9 allarme"
+      "note": "prolungato >450 (uomo) / >470 (donna)",
+      "categoria": "cardiologia"
     },
     {
       "id": "cpp",
@@ -133,7 +197,23 @@
       "output": "mmHg",
       "note": "target tipico 60-70 mmHg; MAP misurata a livello del trago",
       "verificato": false,
-      "fonte": "riferimento standard"
+      "fonte": "riferimento standard",
+      "categoria": "neuro"
+    },
+    {
+      "id": "pia_conversione",
+      "nome": "PIA: conversione cmH2O <-> mmHg",
+      "formula": "mmHg = cmH2O / 1.36 ; cmH2O = mmHg * 1.36",
+      "input": [
+        "valore",
+        "unita_di_partenza"
+      ],
+      "output": "valore convertito",
+      "note": "PIA (pressione intra-addominale) misurata in vescica. Normale 5-7 mmHg; ipertensione intra-addominale >12 mmHg; sindrome compartimentale addominale >20 mmHg",
+      "verificato": false,
+      "fonte": "bozza",
+      "categoria": "addome"
     }
-  ]
+  ],
+  "_ordine_elettroliti": "La sezione elettroliti segue il flusso di un caso clinico: 1) Na corretto per glicemia -> 2) gap osmolare -> 3) deficit di sodio -> 4) Adrogue-Madias (correzione sicura) -> 5) deficit idrico (ipernatriemia) -> 6) potassio -> 7) calcio. Ordinare per il campo 'ordine'."
 }

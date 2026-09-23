@@ -34,8 +34,19 @@
 }
 
 .avviso-anziano,
-.avviso-pediatrico {
+.avviso-pediatrico,
+.avviso-sicurezza {
   border: 1px solid #d97706;
+}
+
+/* Blocco di sicurezza sempre visibile (non una nota in fondo): piu' paragrafi, quindi
+   margini verticali tra loro invece del margine unico di .avviso. */
+.avviso-sicurezza p {
+  margin: 0 0 6px;
+}
+
+.avviso-sicurezza p:last-child {
+  margin-bottom: 0;
 }
 
 .avviso-errore {

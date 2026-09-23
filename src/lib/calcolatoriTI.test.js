@@ -16,6 +16,9 @@ import {
   calcolaMAP,
   calcolaShockIndex,
   calcolaCPP,
+  coeffACTAdrogue,
+  calcolaCorrezioneSodioAdrogue,
+  calcolaPIAConversione,
 } from './calcolatoriTI'
 
 // "gamma" e "infusione_da_dose_oraria" (i 2 calcolatori restanti dei 15 di
@@ -199,5 +202,149 @@ describe('calcolaCPP', () => {
 
   it('lancia un errore se manca la MAP', () => {
     expect(() => calcolaCPP({ map: 0, icp: 15 })).toThrow(/MAP/)
+  })
+})
+
+describe('coeffACTAdrogue', () => {
+  it('uomo non anziano -> 0.6', () => {
+    expect(coeffACTAdrogue('M', 40)).toEqual({ chiave: 'uomo', valore: 0.6 })
+  })
+
+  it('donna non anziana -> 0.5 (stessa fascia dell\'uomo anziano)', () => {
+    expect(coeffACTAdrogue('F', 40)).toEqual({ chiave: 'donna_o_uomo_anziano', valore: 0.5 })
+  })
+
+  it('uomo anziano (>=65) -> 0.5', () => {
+    expect(coeffACTAdrogue('M', 70)).toEqual({ chiave: 'donna_o_uomo_anziano', valore: 0.5 })
+  })
+
+  it('donna anziana (>=65) -> 0.45', () => {
+    expect(coeffACTAdrogue('F', 70)).toEqual({ chiave: 'donna_anziana', valore: 0.45 })
+  })
+
+  it('confine 65 anni e\' gia\' anziano', () => {
+    expect(coeffACTAdrogue('F', 65).chiave).toBe('donna_anziana')
+  })
+})
+
+describe('calcolaCorrezioneSodioAdrogue', () => {
+  // Caso dell'esempio in data/calcolatori-ti.json > correzione_sodio_adrogue.esempio:
+  // donna anziana 60 kg, Na 110, ipertonica 3%, target +6 mEq/L/24h -> ~17 ml/h.
+  // Verificato passo-passo (non solo l'atteso "~17" del JSON, che e' gia' arrotondato):
+  // ACT = 60*0.45 = 27; deltaNa/L = (513-110)/28 = 14.392857...; volume24h = 6/14.392857
+  // = 0.4168734 L = 416.8734 ml; velocita = 416.8734/24 = 17.369... -> 17.4 ml/h.
+  it('donna anziana 60 kg, Na 110, ipertonica 3%, target +6 -> ~17.4 ml/h', () => {
+    const r = calcolaCorrezioneSodioAdrogue({
+      naPaziente: 110,
+      pesoKg: 60,
+      sesso: 'F',
+      eta: 78,
+      soluzione: 'ipertonica_3%',
+      targetDeltaNa24h: 6,
+    })
+
+    expect(r.coeffChiave).toBe('donna_anziana')
+    expect(r.actL).toBe(27)
+    expect(r.deltaNaPerLitro).toBe(14.39)
+    expect(r.volumeMl24h).toBe(417)
+    expect(r.velocitaMlH).toBe(17.4)
+    expect(r.superaLimiteAltoRischio).toBe(false)
+    expect(r.superaLimiteAssoluto).toBe(false)
+  })
+
+  it('uomo giovane 70 kg, Na 118, fisiologica 0.9%, target +8 (limite standard)', () => {
+    // ACT = 70*0.6 = 42; deltaNa/L = (154-118)/43 = 0.837209...; volume24h =
+    // 8/0.837209 = 9.5556 L -> velocita = 9555.6/24 = 398.15 ml/h (fisiologica corregge
+    // molto piu' lentamente dell'ipertonica: volume enorme, atteso).
+    const r = calcolaCorrezioneSodioAdrogue({
+      naPaziente: 118,
+      pesoKg: 70,
+      sesso: 'M',
+      eta: 45,
+      soluzione: 'fisiologica_0.9%',
+      targetDeltaNa24h: 8,
+    })
+
+    expect(r.coeffChiave).toBe('uomo')
+    expect(r.deltaNaPerLitro).toBe(0.84)
+    expect(r.superaLimiteAltoRischio).toBe(true)
+    expect(r.superaLimiteAssoluto).toBe(false)
+  })
+
+  it('target oltre il tetto assoluto (>8 mEq/L/24h) segnala superaLimiteAssoluto', () => {
+    const r = calcolaCorrezioneSodioAdrogue({
+      naPaziente: 110,
+      pesoKg: 60,
+      sesso: 'F',
+      eta: 78,
+      soluzione: 'ipertonica_3%',
+      targetDeltaNa24h: 10,
+    })
+
+    expect(r.superaLimiteAltoRischio).toBe(true)
+    expect(r.superaLimiteAssoluto).toBe(true)
+  })
+
+  it('lancia un errore se manca il sodio del paziente', () => {
+    expect(() =>
+      calcolaCorrezioneSodioAdrogue({
+        naPaziente: 0,
+        pesoKg: 60,
+        sesso: 'F',
+        eta: 78,
+        soluzione: 'ipertonica_3%',
+        targetDeltaNa24h: 6,
+      }),
+    ).toThrow(/sodio/i)
+  })
+
+  it('lancia un errore se la soluzione non e\' riconosciuta', () => {
+    expect(() =>
+      calcolaCorrezioneSodioAdrogue({
+        naPaziente: 110,
+        pesoKg: 60,
+        sesso: 'F',
+        eta: 78,
+        soluzione: 'ringer',
+        targetDeltaNa24h: 6,
+      }),
+    ).toThrow(/soluzione/i)
+  })
+})
+
+describe('calcolaPIAConversione', () => {
+  it('6 mmHg -> 8.2 cmH2O (arrotondato a 1 decimale), livello normale', () => {
+    const r = calcolaPIAConversione({ valore: 6, unitaDiPartenza: 'mmHg' })
+    expect(r.convertito).toBe(8.2)
+    expect(r.unitaConvertita).toBe('cmH2O')
+    expect(r.valoreMmHg).toBe(6)
+    expect(r.livello).toBe('normale')
+  })
+
+  it('10 mmHg -> livello elevato (sopra il range normale, non ancora IAH)', () => {
+    const r = calcolaPIAConversione({ valore: 10, unitaDiPartenza: 'mmHg' })
+    expect(r.livello).toBe('elevato')
+  })
+
+  it('15 mmHg -> ipertensione intra-addominale (>12)', () => {
+    const r = calcolaPIAConversione({ valore: 15, unitaDiPartenza: 'mmHg' })
+    expect(r.livello).toBe('ipertensione_intra_addominale')
+  })
+
+  it('25 mmHg -> sindrome compartimentale (>20)', () => {
+    const r = calcolaPIAConversione({ valore: 25, unitaDiPartenza: 'mmHg' })
+    expect(r.livello).toBe('sindrome_compartimentale')
+  })
+
+  it('20 cmH2O -> 14.7 mmHg (ipertensione intra-addominale)', () => {
+    const r = calcolaPIAConversione({ valore: 20, unitaDiPartenza: 'cmH2O' })
+    expect(r.convertito).toBe(14.7)
+    expect(r.unitaConvertita).toBe('mmHg')
+    expect(r.valoreMmHg).toBe(14.7)
+    expect(r.livello).toBe('ipertensione_intra_addominale')
+  })
+
+  it('lancia un errore se l\'unita di partenza non e\' valida', () => {
+    expect(() => calcolaPIAConversione({ valore: 10, unitaDiPartenza: 'kPa' })).toThrow(/unita/i)
   })
 })

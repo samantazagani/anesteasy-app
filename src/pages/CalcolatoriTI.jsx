@@ -17,18 +17,27 @@ import {
   calcolaMAP,
   calcolaShockIndex,
   calcolaCPP,
+  calcolaCorrezioneSodioAdrogue,
+  calcolaPIAConversione,
 } from '../lib/calcolatoriTI'
 import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './CalcolatoriTI.css'
 
+// Stesso raggruppamento per "categoria" di data/calcolatori-ti.json (19 calcolatori):
+// elettroliti ordinati per il campo "ordine" del JSON (flusso di un caso clinico), CPP
+// spostato da Emodinamica a Neuro, "equilibrio acido-base" come categoria propria
+// (anion gap + Winter, prima divisi tra Elettroliti e Respiratorio).
 const CATEGORIE = [
   { id: 'elettroliti', label: 'Elettroliti' },
+  { id: 'equilibrio-acido-base', label: 'Equilibrio acido-base' },
   { id: 'respiratorio', label: 'Respiratorio' },
   { id: 'emodinamica', label: 'Emodinamica' },
+  { id: 'neuro', label: 'Neuro' },
+  { id: 'addome', label: 'Addome' },
   { id: 'renale', label: 'Renale' },
-  { id: 'cardio', label: 'Cardio' },
-  { id: 'altro', label: 'Altro' },
+  { id: 'cardiologia', label: 'Cardiologia' },
+  { id: 'infusioni', label: 'Infusioni' },
 ]
 
 function numero(testo) {
@@ -80,16 +89,12 @@ function Calcolatore({ titolo, children }) {
 export function CalcolatoriTI() {
   const { profile } = usePatientProfile()
   const [categoria, setCategoria] = useState('elettroliti')
-  // Permette a CalcCPP di precompilare il campo MAP con l'ultimo valore calcolato in
-  // CalcMAP (stessa sezione Emodinamica): i calcolatori restano indipendenti, questo e'
-  // solo un suggerimento di comodita', il campo resta modificabile.
-  const [ultimoMap, setUltimoMap] = useState(null)
 
   return (
     <section id="calcolatori-ti">
       <h1>Calcolatori TI</h1>
       <p className="sottotitolo">
-        17 calcolatori indipendenti (data/calcolatori-ti.json): valori di laboratorio da
+        19 calcolatori indipendenti (data/calcolatori-ti.json): valori di laboratorio da
         inserire manualmente ogni volta, tranne peso/età/sesso già noti dal profilo.
       </p>
 
@@ -108,25 +113,39 @@ export function CalcolatoriTI() {
         ))}
       </nav>
 
+      {/* Ordine come da data/calcolatori-ti.json > _ordine_elettroliti: segue il flusso di
+          un caso clinico (Na corretto -> gap osmolare -> deficit sodio -> Adrogue-Madias
+          -> deficit idrico -> potassio -> calcio). */}
       <div hidden={categoria !== 'elettroliti'}>
         <CalcSodioCorretto />
-        <CalcDeficitSodio profile={profile} />
-        <CalcDeficitPotassio />
-        <CalcAnionGap />
         <CalcGapOsmolare />
+        <CalcDeficitSodio profile={profile} />
+        <CalcCorrezioneSodioAdrogue profile={profile} />
         <CalcDeficitIdrico profile={profile} />
+        <CalcDeficitPotassio />
         <CalcCalcioCorretto />
+      </div>
+
+      <div hidden={categoria !== 'equilibrio-acido-base'}>
+        <CalcAnionGap />
+        <CalcWinter />
       </div>
 
       <div hidden={categoria !== 'respiratorio'}>
         <CalcAaGradient />
-        <CalcWinter />
       </div>
 
       <div hidden={categoria !== 'emodinamica'}>
-        <CalcMAP onMapCalcolato={setUltimoMap} />
+        <CalcMAP />
         <CalcShockIndex />
-        <CalcCPP mapPrecompilata={ultimoMap} />
+      </div>
+
+      <div hidden={categoria !== 'neuro'}>
+        <CalcCPP />
+      </div>
+
+      <div hidden={categoria !== 'addome'}>
+        <CalcPIAConversione />
       </div>
 
       <div hidden={categoria !== 'renale'}>
@@ -134,11 +153,11 @@ export function CalcolatoriTI() {
         <CalcEGFR profile={profile} />
       </div>
 
-      <div hidden={categoria !== 'cardio'}>
+      <div hidden={categoria !== 'cardiologia'}>
         <CalcQTc />
       </div>
 
-      <div hidden={categoria !== 'altro'}>
+      <div hidden={categoria !== 'infusioni'}>
         <CalcGamma profile={profile} />
         <CalcInfusioneOraria />
       </div>
@@ -224,6 +243,115 @@ function CalcDeficitSodio({ profile }) {
         </>
       )}
       <p className="nota">Correggere max 8-10 mmol/L per 24h.</p>
+    </Calcolatore>
+  )
+}
+
+const LABEL_SOLUZIONE_ADROGUE = {
+  'ipertonica_3%': 'Ipertonica 3% (Na 513 mEq/L)',
+  'fisiologica_0.9%': 'Fisiologica 0.9% (Na 154 mEq/L)',
+}
+
+function CalcCorrezioneSodioAdrogue({ profile }) {
+  const [pesoKg, setPesoKg] = useState('')
+  const [sesso, setSesso] = useState('M')
+  const [eta, setEta] = useState('')
+  const [naPaziente, setNaPaziente] = useState('')
+  const [soluzione, setSoluzione] = useState('ipertonica_3%')
+  const [targetDeltaNa24h, setTargetDeltaNa24h] = useState('6')
+
+  useEffect(() => {
+    if (profile.pesoKg > 0) setPesoKg(String(profile.pesoKg))
+  }, [profile.pesoKg])
+  useEffect(() => {
+    if (profile.sesso) setSesso(profile.sesso)
+  }, [profile.sesso])
+  useEffect(() => {
+    if (profile.eta >= 0) setEta(String(profile.eta))
+  }, [profile.eta])
+
+  let risultato = null
+  let errore = null
+  const peso = numero(pesoKg)
+  const etaN = numero(eta)
+  const na = numero(naPaziente)
+  const target = numero(targetDeltaNa24h)
+  if (peso !== null && etaN !== null && na !== null && target !== null) {
+    try {
+      risultato = calcolaCorrezioneSodioAdrogue({
+        naPaziente: na,
+        pesoKg: peso,
+        sesso,
+        eta: etaN,
+        soluzione,
+        targetDeltaNa24h: target,
+      })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <Calcolatore titolo="Correzione Na sicura (Adrogue-Madias)">
+      {/* Limiti e protocollo di sicurezza sempre visibili, non solo una nota in fondo: vanno
+          letti prima del risultato, non dopo. */}
+      <div className="avviso avviso-sicurezza">
+        <p>
+          <strong>Limiti di correzione in 24h:</strong> 6-8 mEq/L (≤6 se alto rischio: Na&lt;115,
+          etilismo, malnutrizione, ipokaliemia, epatopatia avanzata). Limite in 48h: &lt;18 mEq/L.
+        </p>
+        <p>
+          La formula <strong>sottostima</strong> il rialzo reale (ignora diuresi/perdite di acqua
+          libera): è solo una stima iniziale — ricontrollare il Na ogni 2-4h.
+        </p>
+        <p>
+          <strong>Sintomi neurologici gravi</strong> (convulsioni, coma): boli di ipertonica 3%
+          100-150 ml in 10-20 min, ripetibili fino a un rialzo di 4-6 mEq/L, poi STOP (il tetto
+          delle 24h vale comunque).
+        </p>
+        <p>Se overcorrezione: ri-abbassare con glucosata 5% ± desmopressina (DDAVP).</p>
+      </div>
+
+      <div className="griglia-campi-ti">
+        <Campo etichetta="Na paziente (mmol/L)" valore={naPaziente} onChange={setNaPaziente} />
+        <Campo etichetta="Peso (kg)" valore={pesoKg} onChange={setPesoKg} />
+        <CampoSesso etichetta="Sesso" valore={sesso} onChange={setSesso} />
+        <Campo etichetta="Età (anni)" valore={eta} onChange={setEta} />
+        <label className="campo-numerico">
+          Soluzione
+          <select value={soluzione} onChange={(e) => setSoluzione(e.target.value)}>
+            {Object.entries(LABEL_SOLUZIONE_ADROGUE).map(([valore, etichetta]) => (
+              <option key={valore} value={valore}>
+                {etichetta}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Campo etichetta="Target ΔNa 24h (mEq/L)" valore={targetDeltaNa24h} onChange={setTargetDeltaNa24h} />
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">{risultato.velocitaMlH} ml/h</p>
+          <p className="formula">{risultato.formula}</p>
+          <p className="nota">
+            ACT calcolata con coefficiente {risultato.coeff} ({risultato.coeffChiave.replaceAll('_', ' ')}) ={' '}
+            {risultato.actL} L. Volume stimato: {risultato.volumeMl24h} ml/24h.
+          </p>
+          {risultato.superaLimiteAssoluto && (
+            <p className="avviso avviso-errore">
+              Target sopra il tetto assoluto di 8 mEq/L/24h: rivedere il target prima di impostare
+              l'infusione.
+            </p>
+          )}
+          {!risultato.superaLimiteAssoluto && risultato.superaLimiteAltoRischio && (
+            <p className="avviso avviso-sicurezza">
+              Target sopra 6 mEq/L/24h: accettabile solo se il paziente NON ha fattori di alto
+              rischio (Na&lt;115, etilismo, malnutrizione, ipoK, epatopatia).
+            </p>
+          )}
+        </>
+      )}
     </Calcolatore>
   )
 }
@@ -495,7 +623,7 @@ function CalcWinter() {
 
 // --- Emodinamica ---------------------------------------------------------------------------
 
-function CalcMAP({ onMapCalcolato }) {
+function CalcMAP() {
   const [pas, setPas] = useState('')
   const [pad, setPad] = useState('')
 
@@ -510,11 +638,6 @@ function CalcMAP({ onMapCalcolato }) {
       errore = e.message
     }
   }
-
-  useEffect(() => {
-    if (risultato) onMapCalcolato?.(risultato.map)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [risultato?.map])
 
   return (
     <Calcolatore titolo="Pressione arteriosa media (MAP)">
@@ -567,17 +690,9 @@ function CalcShockIndex() {
   )
 }
 
-function CalcCPP({ mapPrecompilata }) {
+function CalcCPP() {
   const [map, setMap] = useState('')
   const [icp, setIcp] = useState('')
-
-  // Precompila con l'ultimo MAP calcolato in CalcMAP (stessa categoria Emodinamica), ma
-  // solo se il campo e' ancora vuoto: un valore digitato a mano qui non viene sovrascritto
-  // da un nuovo calcolo di MAP fatto sopra.
-  useEffect(() => {
-    if (mapPrecompilata > 0 && map.trim() === '') setMap(String(mapPrecompilata))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapPrecompilata])
 
   let risultato = null
   let errore = null
@@ -604,9 +719,60 @@ function CalcCPP({ mapPrecompilata }) {
           <p className="formula">{risultato.formula}</p>
         </>
       )}
+      <p className="nota">Target tipico 60-70 mmHg. MAP misurata a livello del trago.</p>
+    </Calcolatore>
+  )
+}
+
+// --- Addome ------------------------------------------------------------------------------
+
+const LABEL_LIVELLO_PIA = {
+  normale: 'Normale (5-7 mmHg)',
+  elevato: 'Sopra il range normale (non ancora IAH)',
+  ipertensione_intra_addominale: 'Ipertensione intra-addominale (>12 mmHg)',
+  sindrome_compartimentale: 'Sindrome compartimentale addominale (>20 mmHg)',
+}
+
+function CalcPIAConversione() {
+  const [valore, setValore] = useState('')
+  const [unitaDiPartenza, setUnitaDiPartenza] = useState('cmH2O')
+
+  let risultato = null
+  let errore = null
+  const valoreN = numero(valore)
+  if (valoreN !== null) {
+    try {
+      risultato = calcolaPIAConversione({ valore: valoreN, unitaDiPartenza })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <Calcolatore titolo="PIA: conversione cmH2O ↔ mmHg">
+      <div className="griglia-campi-ti">
+        <Campo etichetta="Valore" valore={valore} onChange={setValore} />
+        <label className="campo-numerico">
+          Unità di partenza
+          <select value={unitaDiPartenza} onChange={(e) => setUnitaDiPartenza(e.target.value)}>
+            <option value="cmH2O">cmH2O</option>
+            <option value="mmHg">mmHg</option>
+          </select>
+        </label>
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className="risultato-primario">
+            {risultato.convertito} {risultato.unitaConvertita}
+          </p>
+          <p className="formula">{risultato.formula}</p>
+          <p className="avviso avviso-sicurezza">{LABEL_LIVELLO_PIA[risultato.livello]}</p>
+        </>
+      )}
       <p className="nota">
-        Target tipico 60-70 mmHg. MAP misurata a livello del trago.
-        {mapPrecompilata > 0 && ' MAP precompilata dal calcolo MAP sopra: modificabile.'}
+        PIA (pressione intra-addominale) misurata in vescica. Normale 5-7 mmHg; ipertensione
+        intra-addominale &gt;12 mmHg; sindrome compartimentale addominale &gt;20 mmHg.
       </p>
     </Calcolatore>
   )
