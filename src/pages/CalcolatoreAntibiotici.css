@@ -82,3 +82,33 @@
   color: var(--accent);
   cursor: pointer;
 }
+
+/* Profilassi/terapia antibiotica: contenuto di riferimento (schede leggibili), distinto
+   dal calcolatore per farmaco sopra. */
+.riquadro-antibiotici {
+  margin-bottom: 24px;
+}
+
+.titolo-sezione-antibiotici {
+  margin: 0 0 4px;
+}
+
+.scheda-antibiotico {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 12px;
+}
+
+.scheda-titolo-antibiotico {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 6px;
+}
+
+.sotto-scheda-antibiotico {
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+  padding-top: 12px;
+}
