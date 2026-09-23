@@ -1,45 +1,87 @@
 {
-  "_stato": "BOZZA da verificare. Valori da ESPEN 2023 (critico) e ASPEN 2016 (obeso). verificato=false.",
+  "_stato": "BOZZA. A) fabbisogno paziente (kcal + proteine + fluidi) SEMPRE calcolato (per sacche galeniche); B) ml/h con prodotto commerciale OPZIONALE. Autocontrollo ESPEN (kcal/kg effettive + semaforo). Confronto prodotti come NutriCalc. Peso nutrizionale primario, propofol+glucosata sottratte. verificato=false.",
   "_fonti": [
-    {"id": "espen-2023", "titolo": "ESPEN practical guideline: clinical nutrition in the ICU (2023)", "url": "https://www.clinicalnutritionjournal.com/article/S0261-5614(23)00230-3/fulltext"},
-    {"id": "aspen-2016", "titolo": "SCCM/ASPEN Guidelines for nutrition support in critically ill (obese)", "url": "https://derangedphysiology.com/main/required-reading/gastrointestinal-intensive-care/Chapter-518/nutritional-support-morbidly-obese-icu-patient"}
-  ],
-
-  "fabbisogno_calorico": {
-    "_nota": "l'app sceglie il REGIME dal BMI (come il peso condizionale). Poi applica la percentuale di fase e sottrae le calorie del propofol.",
-    "regime_per_bmi": {
-      "non_obeso_BMI<30": {"kcal_kg": [25, 30], "peso": "reale", "regime": "normocalorico"},
-      "obeso_BMI_30-50": {"kcal_kg": [11, 14], "peso": "reale", "regime": "ipocalorico-iperproteico", "fonte": "aspen-2016"},
-      "obeso_BMI>50": {"kcal_kg": [22, 25], "peso": "IBW", "regime": "ipocalorico-iperproteico", "fonte": "aspen-2016"}
+    {
+      "id": "espen-2023",
+      "titolo": "ESPEN practical guideline: clinical nutrition in the ICU (2023)",
+      "url": "https://www.clinicalnutritionjournal.com/article/S0261-5614(23)00230-3/fulltext"
     },
+    {
+      "id": "aspen-2016",
+      "titolo": "SCCM/ASPEN Guidelines for nutrition support in critically ill (obese)",
+      "url": "https://derangedphysiology.com/main/required-reading/gastrointestinal-intensive-care/Chapter-518/nutritional-support-morbidly-obese-icu-patient"
+    },
+    {
+      "id": "nutricalc",
+      "titolo": "NutriCalc V2 (foglio del medico) - database prodotti + logica"
+    }
+  ],
+  "fabbisogno_calorico": {
+    "peso_di_riferimento": "peso_nutrizionale (reale/IBW/ABW)",
+    "kcal_kg": [
+      25,
+      30
+    ],
+    "nota_fase_acuta": "nel critico partire piu bassi e salire (vedi percentuale_fase)",
     "harris_benedict": {
       "formula_uomo": "66.5 + (13.75*peso_kg) + (5.003*altezza_cm) - (6.75*eta)",
       "formula_donna": "655.1 + (9.563*peso_kg) + (1.850*altezza_cm) - (4.676*eta)",
       "fattore_stress": "x1.2-1.5 secondo gravita"
     },
-    "verificato": false, "fonte": "espen-2023"
+    "controllo_espen": {
+      "_nota": "guardrail di affidabilita per non sovra/sotto-alimentare",
+      "obeso_BMI>30": "usando ABW x 25-30 kcal/kg il target e gia ipocalorico; verificare che NON superi ~25 kcal/kg IBW (ASPEN: 11-14 kcal/kg peso reale se BMI 30-50)",
+      "critico_fase_acuta": "non superare il 70% del target (evitare overfeeding)"
+    },
+    "verificato": false,
+    "fonte": "espen-2023 / aspen-2016 (guardrail) + nutricalc (peso)"
   },
-
   "percentuale_fase": {
     "_nota": "nel critico si raggiunge il pieno regime in qualche giorno; la % si applica al target CALORICO e PROTEICO",
     "fasi": [
-      {"fase": "acuta precoce (giorni 1-2)", "percentuale_target": "<=70%", "motivo": "evitare overfeeding/refeeding"},
-      {"fase": "acuta tardiva (>= giorno 3)", "percentuale_target": "80-100%"},
-      {"fase": "recupero", "percentuale_target": "100% (o piu se catabolismo)"}
+      {
+        "fase": "acuta precoce (giorni 1-2)",
+        "percentuale_target": "<=70%",
+        "motivo": "evitare overfeeding/refeeding"
+      },
+      {
+        "fase": "acuta tardiva (>= giorno 3)",
+        "percentuale_target": "80-100%"
+      },
+      {
+        "fase": "recupero",
+        "percentuale_target": "100% (o piu se catabolismo)"
+      }
     ],
     "campo_app": "percentuale_target selezionabile dall'utente (default suggerito per fase)",
-    "verificato": false, "fonte": "espen-2023"
+    "verificato": false,
+    "fonte": "espen-2023"
   },
-
   "proteine": {
     "regime_per_bmi": {
-      "non_obeso": {"g_kg": 1.3, "range": [1.2, 2.0], "peso": "reale", "note": "progressivo; CRRT/ustionato fino a 2.0-2.5"},
-      "obeso_BMI_30-40": {"g_kg": 2.0, "peso": "IBW", "fonte": "aspen-2016"},
-      "obeso_BMI>=40": {"g_kg": 2.5, "peso": "IBW", "fonte": "aspen-2016"}
+      "non_obeso": {
+        "g_kg": 1.3,
+        "range": [
+          1.2,
+          2.0
+        ],
+        "peso": "peso_nutrizionale",
+        "note": "progressivo; CRRT/ustionato fino a 2.0-2.5"
+      },
+      "obeso_BMI_30-40": {
+        "g_kg": 2.0,
+        "peso": "IBW",
+        "fonte": "aspen-2016"
+      },
+      "obeso_BMI>=40": {
+        "g_kg": 2.5,
+        "peso": "IBW",
+        "fonte": "aspen-2016"
+      }
     },
-    "verificato": false, "fonte": "espen-2023"
+    "verificato": false,
+    "fonte": "espen-2023"
   },
-
   "propofol_calorie": {
     "descrizione": "il propofol e in emulsione lipidica 10%: apporta calorie e lipidi da SOTTRARRE dal fabbisogno da somministrare",
     "kcal_per_ml": 1.1,
@@ -47,41 +89,443 @@
     "formula_kcal_die": "kcal_propofol = ml_h * 24 * 1.1",
     "formula_lipidi_g_die": "lipidi_propofol_g = ml_h * 24 * 0.1",
     "nota": "vale per propofol 1% e 2% (entrambi veicolo lipidico 10%)",
-    "verificato": false, "fonte": "bozza"
+    "verificato": false,
+    "fonte": "bozza"
   },
-
   "calcolatore_target": {
-    "descrizione": "flusso completo del calcolo nutrizionale",
-    "passi": [
-      "1. BMI da peso/altezza -> scegli il regime (normocalorico vs obeso ipocalorico-iperproteico)",
-      "2. kcal_target = kcal_kg * peso_di_riferimento (reale o IBW secondo regime)",
-      "3. kcal_fase = kcal_target * percentuale_fase (es. 70%)",
-      "4. kcal_propofol = ml_h_propofol * 24 * 1.1",
-      "5. kcal_da_nutrizione = kcal_fase - kcal_propofol",
-      "6. proteine_target_g = g_kg(regime) * peso_di_riferimento  (le proteine NON si riducono con la fase quanto le calorie)"
-    ],
-    "verificato": false, "fonte": "espen-2023"
+    "descrizione": "Due output: A) fabbisogno del paziente (sempre); B) somministrazione con prodotto commerciale (opzionale).",
+    "A_fabbisogno_paziente": {
+      "_nota": "SEMPRE calcolato, indipendente dal prodotto. Serve anche per le sacche PERSONALIZZATE galeniche (farmacia): da qui la TI sa kcal e proteine da mettere.",
+      "passi": [
+        "1. peso_nutrizionale dal BMI (reale/IBW/ABW)",
+        "2. kcal_target = 25-30 kcal/kg * peso_nutrizionale",
+        "3. kcal_fase = kcal_target * percentuale_fase (acuta <=70% -> 80-100%)",
+        "4. kcal_da_nutrizione = kcal_fase - kcal_propofol - kcal_glucosata",
+        "5. proteine: g_kg(regime) * (peso_nutrizionale, o IBW se obeso)"
+      ],
+      "output": {
+        "kcal_target_die": "25-30 * peso_nutrizionale",
+        "kcal_da_nutrizione_die": "kcal_fase - propofol - glucosata",
+        "kcal_kg_effettive": "kcal_da_nutrizione / peso_di_riferimento  -> MOSTRARE SEMPRE accanto al totale",
+        "proteine_g_die": "g_kg * peso_di_riferimento",
+        "proteine_g_kg": "proteine_g_die / peso_di_riferimento",
+        "fabbisogno_idrico_ml_die": "30-35 ml/kg (vedi fabbisogno_idrico)"
+      },
+      "controllo_espen": {
+        "_scopo": "il calcolatore SI AUTOCONTROLLA: confronta le kcal/kg effettive col range ESPEN e segnala se fuori (semaforo)",
+        "verde": "non obeso ~20-30 kcal/kg; obeso <=25 kcal/kg IBW; in fase acuta <=70% del target",
+        "rosso": "> 30 kcal/kg (rischio overfeeding) oppure, nell'obeso, > 25 kcal/kg IBW",
+        "mostra": "kcal_kg_effettive + esito (verde/giallo/rosso) accanto al totale kcal"
+      }
+    },
+    "B_somministrazione_prodotto": {
+      "_nota": "OPZIONALE: solo se si usa un PRODOTTO COMMERCIALE. Con sacca personalizzata si salta questo passo.",
+      "passi": [
+        "1. (facolt.) filtra i prodotti sulla condizione del paziente (filtri_paziente_enterale)",
+        "2. scegli un prodotto (enterale o parenterale)",
+        "3. ml_h = kcal_da_nutrizione / (kcal_ml * 24)",
+        "4. apporti effettivi: kcal_die = ml_h*24*kcal_ml ; proteine_g_die = ml_h*24*prot_g_ml ; proteine_g_kg = /peso",
+        "5. confronta le proteine effettive col fabbisogno proteico (punto A): se sotto, valutare modulo proteico o prodotto iperproteico"
+      ]
+    },
+    "verificato": false,
+    "fonte": "espen-2023 + nutricalc"
   },
-
-  "fabbisogno_idrico": {"ml_kg_die": [30, 35], "verificato": false, "fonte": "bozza"},
-  "micronutrienti": {"glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)", "note": "aggiungere vitamine e oligoelementi", "verificato": false, "fonte": "bozza"},
-
+  "fabbisogno_idrico": {
+    "ml_kg_die": [
+      30,
+      35
+    ],
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "micronutrienti": {
+    "glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)",
+    "note": "aggiungere vitamine e oligoelementi",
+    "verificato": false,
+    "fonte": "bozza"
+  },
   "refeeding_syndrome": {
-    "rischio": ["BMI <16", "calo ponderale >15% in 3-6 mesi", "scarso apporto >10 gg", "ipoK/ipoPO4/ipoMg pre-esistenti"],
+    "rischio": [
+      "BMI <16",
+      "calo ponderale >15% in 3-6 mesi",
+      "scarso apporto >10 gg",
+      "ipoK/ipoPO4/ipoMg pre-esistenti"
+    ],
     "gestione": {
       "avvio_kcal": "10 kcal/kg/die, aumento graduale in 4-7 gg",
-      "correzione_elettroliti": {"fosfato": "monitorare e reintegrare", "potassio": "reintegrare", "magnesio": "reintegrare"},
+      "correzione_elettroliti": {
+        "fosfato": "monitorare e reintegrare",
+        "potassio": "reintegrare",
+        "magnesio": "reintegrare"
+      },
       "tiamina": "200-300 mg/die prima di iniziare"
     },
-    "verificato": false, "fonte": "bozza"
+    "verificato": false,
+    "fonte": "bozza"
   },
-
   "npt_calcolatore": {
     "descrizione": "Input: peso, target kcal/kg, ripartizione macro, volume. Output: g/die e ml di ciascun componente.",
-    "densita_kcal": {"glucosio_g": 4, "lipidi_g": 9, "aminoacidi_g": 4},
-    "ripartizione_tipica": {"glucidi_percent": [50, 60], "lipidi_percent": [25, 35]},
-    "limiti": {"glucosio_max_mg_kg_min": 4, "lipidi_max_g_kg_die": 1.5},
+    "densita_kcal": {
+      "glucosio_g": 4,
+      "lipidi_g": 9,
+      "aminoacidi_g": 4
+    },
+    "ripartizione_tipica": {
+      "glucidi_percent": [
+        50,
+        60
+      ],
+      "lipidi_percent": [
+        25,
+        35
+      ]
+    },
+    "limiti": {
+      "glucosio_max_mg_kg_min": 4,
+      "lipidi_max_g_kg_die": 1.5
+    },
     "nota": "scalare le calorie non proteiche per le kcal gia date dal propofol",
-    "verificato": false, "fonte": "bozza"
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "bilancio_azotato": {
+    "descrizione": "bilancio azotato (g N / 24h) = azoto introdotto - azoto eliminato",
+    "formula": "N_bilancio = (proteine_g_die / 6.25) - (azoturia_UUN_g_die + 4)",
+    "note": "UUN = azoto ureico urinario nelle 24h; +4 g = perdite insensibili/non ureiche. Positivo = anabolismo, negativo = catabolismo",
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "glucosata_calorie": {
+    "descrizione": "le infusioni di glucosata apportano calorie da SOTTRARRE dal target (come il propofol)",
+    "kcal_per_g_glucosio": 3.4,
+    "formula_kcal_die": "kcal = ml_h * 24 * (concentrazione_percento / 100) * 3.4",
+    "esempio": "glucosata 5% a 84 ml/h -> 84*24*0.05*3.4 = ~343 kcal/die",
+    "note": "glucosata X% = X g/100 ml; destrosio monoidrato = 3.4 kcal/g",
+    "verificato": false,
+    "fonte": "bozza"
+  },
+  "peso_nutrizionale": {
+    "_ruolo": "PESO OPERATIVO per i target calorico/proteico (logica NutriCalc). ESPEN resta come controllo di affidabilita (vedi fabbisogno_calorico.controllo_espen).",
+    "IBW_devine": "IBW = (50 se uomo / 45.5 se donna) + 2.3*(altezza_pollici - 60); altezza_pollici = altezza_cm/2.54",
+    "ABW": "ABW = IBW + 0.4*(peso_reale - IBW)",
+    "regola": "BMI <18.5 -> peso reale; BMI 18.5-30 -> IBW; BMI >30 -> ABW",
+    "verificato": false,
+    "fonte": "nutricalc"
+  },
+  "prodotti_enterali": {
+    "_colonne": "nome, kcal_ml, prot_g_ml, fibre, indicazione",
+    "voci": [
+      {
+        "nome": "Isosource Standard",
+        "kcal_ml": 1.0,
+        "prot_g_ml": 0.039,
+        "fibre": "No",
+        "indicazione": "standard isocalorica",
+        "tags": [
+          "standard"
+        ]
+      },
+      {
+        "nome": "Nutrison Multifibre",
+        "kcal_ml": 1.0,
+        "prot_g_ml": 0.04,
+        "fibre": "Miste",
+        "indicazione": "standard con fibre",
+        "tags": [
+          "standard",
+          "fibre"
+        ]
+      },
+      {
+        "nome": "Novasource GI Control",
+        "kcal_ml": 1.1,
+        "prot_g_ml": 0.041,
+        "fibre": "PHGG",
+        "indicazione": "intolleranza GI / diarrea",
+        "tags": [
+          "GI",
+          "fibre-PHGG"
+        ]
+      },
+      {
+        "nome": "Glucerna Select",
+        "kcal_ml": 1.2,
+        "prot_g_ml": 0.06,
+        "fibre": "FOS",
+        "indicazione": "diabete / iperglicemia",
+        "tags": [
+          "diabete"
+        ]
+      },
+      {
+        "nome": "Jevity Plus",
+        "kcal_ml": 1.2,
+        "prot_g_ml": 0.055,
+        "fibre": "Miste",
+        "indicazione": "standard con fibre",
+        "tags": [
+          "standard",
+          "fibre"
+        ]
+      },
+      {
+        "nome": "Oxepa",
+        "kcal_ml": 1.4,
+        "prot_g_ml": 0.064,
+        "fibre": "No",
+        "indicazione": "ARDS/sepsi (omega-3, anti-infiammatoria)",
+        "tags": [
+          "ARDS",
+          "sepsi",
+          "immunomodulante"
+        ]
+      },
+      {
+        "nome": "Novasource GI Balance Plus",
+        "kcal_ml": 1.5,
+        "prot_g_ml": 0.076,
+        "fibre": "PHGG",
+        "indicazione": "intolleranza GI, ipercalorica-iperproteica",
+        "tags": [
+          "GI",
+          "fibre-PHGG",
+          "ipercalorica",
+          "iperproteica"
+        ]
+      },
+      {
+        "nome": "Novasource GI Forte",
+        "kcal_ml": 1.5,
+        "prot_g_ml": 0.06,
+        "fibre": "PHGG",
+        "indicazione": "intolleranza GI, ipercalorica",
+        "tags": [
+          "GI",
+          "fibre-PHGG",
+          "ipercalorica"
+        ]
+      },
+      {
+        "nome": "Peptamen AF",
+        "kcal_ml": 1.5,
+        "prot_g_ml": 0.094,
+        "fibre": "No (peptidica)",
+        "indicazione": "peptidica alto-proteica / malassorbimento",
+        "tags": [
+          "peptidica",
+          "iperproteica",
+          "malassorbimento"
+        ]
+      },
+      {
+        "nome": "Isosource Energy",
+        "kcal_ml": 1.6,
+        "prot_g_ml": 0.061,
+        "fibre": "No",
+        "indicazione": "ipercalorica (restrizione fluidi)",
+        "tags": [
+          "ipercalorica",
+          "restrizione-fluidi"
+        ]
+      },
+      {
+        "nome": "Nephro LP",
+        "kcal_ml": 1.8,
+        "prot_g_ml": 0.045,
+        "fibre": "Miste",
+        "indicazione": "renale, basso contenuto proteico (predialisi)",
+        "tags": [
+          "renale",
+          "ipoproteica",
+          "predialisi",
+          "ipercalorica"
+        ]
+      },
+      {
+        "nome": "Nephro HP",
+        "kcal_ml": 1.8,
+        "prot_g_ml": 0.081,
+        "fibre": "Miste",
+        "indicazione": "renale, alto contenuto proteico (dialisi)",
+        "tags": [
+          "renale",
+          "iperproteica",
+          "dialisi",
+          "ipercalorica"
+        ]
+      }
+    ],
+    "verificato": false,
+    "fonte": "nutricalc"
+  },
+  "prodotti_parenterali": {
+    "_colonne": "nome, kcal_ml, prot_g_ml",
+    "voci": [
+      {
+        "nome": "LIPOFLEX",
+        "kcal_ml": 0.76,
+        "prot_g_ml": 0.032
+      },
+      {
+        "nome": "PLUSFLEX",
+        "kcal_ml": 0.79,
+        "prot_g_ml": 0.048
+      },
+      {
+        "nome": "OLIMEL N4",
+        "kcal_ml": 0.7,
+        "prot_g_ml": 0.0253
+      },
+      {
+        "nome": "OMEGAFLEX",
+        "kcal_ml": 1.01,
+        "prot_g_ml": 0.0384
+      },
+      {
+        "nome": "SMOFKABIVEN 1477 mL",
+        "kcal_ml": 1.08,
+        "prot_g_ml": 0.0508
+      },
+      {
+        "nome": "SMOFKABIVEN 1970 mL",
+        "kcal_ml": 1.12,
+        "prot_g_ml": 0.0381
+      },
+      {
+        "nome": "OMEGAPRO",
+        "kcal_ml": 1.18,
+        "prot_g_ml": 0.056
+      }
+    ],
+    "verificato": false,
+    "fonte": "nutricalc"
+  },
+  "avanzamento_enterale": {
+    "_nota": "avanzamento progressivo della NE espresso in kcal/kg/die (NutriCalc), convertito in ml/h per prodotto",
+    "fasi": [
+      {
+        "giorni": "1-4",
+        "kcal_kg_die": [
+          5,
+          10
+        ]
+      },
+      {
+        "giorni": "5-7",
+        "kcal_kg_die": [
+          15,
+          20
+        ]
+      },
+      {
+        "giorni": ">7 (regime pieno)",
+        "kcal_kg_die": [
+          25,
+          30
+        ]
+      }
+    ],
+    "formula_ml_h": "ml/h = (kcal_kg * peso_nutrizionale) / (kcal_ml_prodotto * 24)",
+    "verificato": false,
+    "fonte": "nutricalc",
+    "_ruolo": "ALTERNATIVA / riferimento (NutriCalc). La progressione PRIMARIA e 'percentuale_fase' (ESPEN: acuta <=70% -> 80-100%)."
+  },
+  "calcolatore_prodotto": {
+    "descrizione": "USO: convertire il TARGET (calcolato col modello ESPEN) in ml/h del prodotto scelto (enterale o parenterale)",
+    "passi": [
+      "1. target dal modello ESPEN: kcal_kg (regime_per_bmi) * peso_di_riferimento * percentuale_fase",
+      "2. target_netto = target - kcal_propofol - kcal_glucosata",
+      "3. ml_h = target_netto / (kcal_ml_prodotto * 24)",
+      "4. kcal_die = ml_h*24*kcal_ml ; proteine_g_die = ml_h*24*prot_g_ml ; proteine_g_kg = proteine_g_die / peso_nutrizionale"
+    ],
+    "verificato": false,
+    "fonte": "nutricalc (prodotti) + espen (target)"
+  },
+  "filtri_paziente_enterale": {
+    "_uso": "proporre i prodotti in base alla condizione del paziente (match sui tags)",
+    "condizioni": [
+      {
+        "condizione": "Diabete / iperglicemia",
+        "tag": "diabete",
+        "prodotti": [
+          "Glucerna Select"
+        ]
+      },
+      {
+        "condizione": "Insufficienza renale - predialisi",
+        "tag": "renale+ipoproteica",
+        "prodotti": [
+          "Nephro LP"
+        ]
+      },
+      {
+        "condizione": "Insufficienza renale - in dialisi",
+        "tag": "renale+iperproteica",
+        "prodotti": [
+          "Nephro HP"
+        ]
+      },
+      {
+        "condizione": "Intolleranza GI / diarrea",
+        "tag": "GI",
+        "prodotti": [
+          "Novasource GI Control",
+          "Novasource GI Forte",
+          "Novasource GI Balance Plus"
+        ]
+      },
+      {
+        "condizione": "ARDS / sepsi",
+        "tag": "ARDS",
+        "prodotti": [
+          "Oxepa"
+        ]
+      },
+      {
+        "condizione": "Malassorbimento",
+        "tag": "peptidica",
+        "prodotti": [
+          "Peptamen AF"
+        ]
+      },
+      {
+        "condizione": "Restrizione dei fluidi",
+        "tag": "ipercalorica",
+        "prodotti": [
+          "Isosource Energy",
+          "Nephro HP",
+          "Novasource GI Forte"
+        ]
+      },
+      {
+        "condizione": "Fabbisogno proteico elevato",
+        "tag": "iperproteica",
+        "prodotti": [
+          "Peptamen AF",
+          "Nephro HP",
+          "Novasource GI Balance Plus"
+        ]
+      },
+      {
+        "condizione": "Standard (nessuna comorbidita)",
+        "tag": "standard",
+        "prodotti": [
+          "Isosource Standard",
+          "Nutrison Multifibre",
+          "Jevity Plus"
+        ]
+      }
+    ],
+    "verificato": false,
+    "fonte": "nutricalc + indicazioni prodotto"
+  },
+  "confronto_prodotti": {
+    "descrizione": "per il target calcolato, confronta i prodotti commerciali (come NutriCalc): per ciascuno mostra ml/h, kcal/die, proteine/die, proteine g/kg",
+    "per_ogni_prodotto": "ml_h = kcal_da_nutrizione / (kcal_ml*24); kcal_die = ml_h*24*kcal_ml; prot_die = ml_h*24*prot_g_ml; prot_g_kg = prot_die / peso_di_riferimento",
+    "scopo": "a parita di target CALORICO, i prodotti danno PROTEINE diverse (rapporto prot/kcal variabile): il confronto aiuta a scegliere quello che copre anche il fabbisogno proteico",
+    "ordina_per": "proteine_g_kg piu vicine al target (o filtrare prima per condizione)",
+    "verificato": false,
+    "fonte": "nutricalc"
   }
 }

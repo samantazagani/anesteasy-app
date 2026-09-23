@@ -68,22 +68,64 @@ export function calcolaHarrisBenedict(
   }
 }
 
-// --- Passo 1: regime da BMI (calorico e proteico) --------------------------------------
+// --- Peso nutrizionale (rework: sostituisce il regime-calorico-per-BMI) -----------------
+//
+// Prima il REGIME calorico stesso veniva scelto dal BMI (3 fasce di kcal/kg diverse, con
+// peso reale o IBW secondo la fascia). Ora il target calorico e' un range fisso
+// (fabbisogno_calorico.kcal_kg, 25-30 kcal/kg per chiunque): a cambiare col BMI e' solo il
+// PESO su cui si applica quel range (data/nutrizione.json > peso_nutrizionale.regola):
+// BMI<18.5 -> reale, 18.5-30 -> IBW, >30 -> ABW (peso aggiustato, meno aggressivo del solo
+// IBW). Stesso principio del guard pediatrico di pesoResolver.js: IBW/ABW sono formule per
+// adulti (Devine/ABW sotto ~152cm non hanno senso clinico), quindi su un paziente
+// pediatrico questa funzione ricade sempre sul peso reale.
 
-/** Regime calorico da BMI (fabbisogno_calorico.regime_per_bmi): <30 normocalorico, 30-50 e
- * >50 ipocalorico-iperproteico (soglie diverse da quelle del regime proteico sotto). */
-export function selezionaRegimeCalorico(regimePerBmi, bmi) {
-  if (bmi === null || bmi === undefined || !(bmi >= 0)) return null
-  let chiave
-  if (bmi < 30) chiave = 'non_obeso_BMI<30'
-  else if (bmi <= 50) chiave = 'obeso_BMI_30-50'
-  else chiave = 'obeso_BMI>50'
-  const regime = regimePerBmi[chiave]
-  return regime ? { chiave, ...regime } : null
+/** ABW (adjusted body weight): IBW + 0.4×(peso reale - IBW). Usato solo per BMI>30. */
+function calcolaABW(pesoKg, ibw) {
+  return ibw + 0.4 * (pesoKg - ibw)
 }
 
-/** Regime proteico da BMI (proteine.regime_per_bmi): soglie 30/40, DIVERSE da quelle del
- * regime calorico sopra (es. BMI 35 e' "30-50" per le calorie ma "30-40" per le proteine). */
+/**
+ * @param {{ pesoKg: number, ibw: number|null, bmi: number|null, categoria?: 'pediatrico'|'adulto'|'anziano'|null }} input
+ * @returns {{ chiave: 'reale'|'IBW'|'ABW', valoreKg: number|null, bmiUsato: number|null, formula?: string, pesoPediatricoEscluso?: 'IBW'|'ABW' }}
+ */
+export function calcolaPesoNutrizionale({ pesoKg, ibw, bmi, categoria }, { decimali = 1 } = {}) {
+  if (!(pesoKg > 0)) {
+    throw new Error('calcolaPesoNutrizionale: peso mancante o non valido')
+  }
+  if (bmi === null || bmi === undefined || !(bmi >= 0)) {
+    return { chiave: 'reale', valoreKg: pesoKg, bmiUsato: null }
+  }
+
+  let chiave
+  if (bmi < 18.5) chiave = 'reale'
+  else if (bmi <= 30) chiave = 'IBW'
+  else chiave = 'ABW'
+
+  const bmiUsato = round(bmi, decimali)
+
+  if (categoria === 'pediatrico' && chiave !== 'reale') {
+    return { chiave: 'reale', valoreKg: pesoKg, bmiUsato, pesoPediatricoEscluso: chiave }
+  }
+
+  if (chiave === 'reale') {
+    return { chiave, valoreKg: pesoKg, bmiUsato }
+  }
+  if (!(ibw > 0)) {
+    return { chiave, valoreKg: null, bmiUsato }
+  }
+  if (chiave === 'IBW') {
+    return { chiave, valoreKg: round(ibw, decimali), bmiUsato }
+  }
+
+  const abw = calcolaABW(pesoKg, ibw)
+  const formula = `${formatNumero(ibw, decimali)} + 0.4×(${formatNumero(pesoKg, decimali)}-${formatNumero(ibw, decimali)}) = ${formatNumero(abw, decimali)} kg`
+  return { chiave: 'ABW', valoreKg: round(abw, decimali), bmiUsato, formula }
+}
+
+// --- Regime proteico da BMI (invariato nelle soglie) ------------------------------------
+
+/** Regime proteico da BMI (proteine.regime_per_bmi): soglie 30/40. Il campo "peso" del
+ * bracket non-obeso ora vale "peso_nutrizionale" (era "reale"): vedi pesoDiRiferimento. */
 export function selezionaRegimeProteico(regimePerBmi, bmi) {
   if (bmi === null || bmi === undefined || !(bmi >= 0)) return null
   let chiave
@@ -95,16 +137,81 @@ export function selezionaRegimeProteico(regimePerBmi, bmi) {
 }
 
 /**
- * Peso di riferimento indicato dal regime (campo "peso": "reale"|"IBW"). A differenza della
- * pediatria (dove IBW e' sempre vietato, vedi pesoResolver.js), qui il paziente e' adulto:
- * IBW e' un riferimento legittimo per il regime obeso, quando il JSON lo richiede.
+ * Peso di riferimento indicato da un regime/bracket (campo "peso": "reale"|"IBW"|
+ * "peso_nutrizionale"). "IBW" resta un valore fisso ed esplicito (i bracket obesi delle
+ * proteine lo richiedono sempre, anche quando peso_nutrizionale sceglierebbe ABW: per il
+ * dosaggio proteico ASPEN raccomanda IBW, non ABW, nell'obeso). "peso_nutrizionale" usa il
+ * risultato gia' calcolato da calcolaPesoNutrizionale.
  */
-export function pesoDiRiferimento(regime, { pesoKg, ibw }) {
+export function pesoDiRiferimento(regime, { pesoKg, ibw, pesoNutrizionale }) {
   if (!regime) return { chiave: null, valoreKg: null }
   if (regime.peso === 'IBW') {
     return { chiave: 'IBW', valoreKg: ibw ?? null }
   }
+  if (regime.peso === 'peso_nutrizionale') {
+    return pesoNutrizionale
+      ? { chiave: pesoNutrizionale.chiave, valoreKg: pesoNutrizionale.valoreKg }
+      : { chiave: null, valoreKg: null }
+  }
   return { chiave: 'reale', valoreKg: pesoKg ?? null }
+}
+
+/**
+ * Guardrail ESPEN (semaforo verde/giallo/rosso) sulle kcal/kg EFFETTIVE della nutrizione
+ * (dopo fase e sottrazioni), come da data/nutrizione.json > calcolatore_target >
+ * A_fabbisogno_paziente.controllo_espen: nell'obeso il controllo si rifa' all'IBW (non
+ * all'ABW usato per calcolare il target: l'ABW rende il target gia' ipocalorico "a vista",
+ * l'IBW e' il denominatore di sicurezza che lo verifica). Il JSON definisce solo verde/
+ * rosso: la fascia "giallo" e' un'interpolazione ragionevole di margine, non una soglia
+ * ESPEN pubblicata.
+ */
+export function calcolaSemaforoESPEN(
+  { kcalDaNutrizione, pesoNutrizionaleKg, ibwKg, bmi, faseAcutaPrecoce = false, percentualeFase },
+  { decimali = 1 } = {},
+) {
+  if (!(kcalDaNutrizione >= 0) || !(pesoNutrizionaleKg > 0)) {
+    throw new Error('calcolaSemaforoESPEN: kcal da nutrizione o peso di riferimento mancanti')
+  }
+
+  const kcalKgEffettive = kcalDaNutrizione / pesoNutrizionaleKg
+  const obeso = bmi > 30
+
+  let base = 'peso_nutrizionale'
+  let kcalKgControllo = kcalKgEffettive
+  if (obeso) {
+    base = 'IBW'
+    if (!(ibwKg > 0)) {
+      return { kcalKgEffettive: round(kcalKgEffettive, decimali), kcalKgControllo: null, base, livello: null }
+    }
+    kcalKgControllo = kcalDaNutrizione / ibwKg
+  }
+
+  let livello
+  if (obeso) {
+    if (kcalKgControllo <= 25) livello = 'verde'
+    else if (kcalKgControllo <= 30) livello = 'giallo'
+    else livello = 'rosso'
+  } else if (kcalKgControllo >= 20 && kcalKgControllo <= 30) {
+    livello = 'verde'
+  } else if ((kcalKgControllo > 30 && kcalKgControllo <= 35) || (kcalKgControllo < 20 && kcalKgControllo >= 15)) {
+    livello = 'giallo'
+  } else {
+    livello = 'rosso'
+  }
+
+  const superaLimiteFaseAcuta = faseAcutaPrecoce && percentualeFase > 70
+  if (superaLimiteFaseAcuta) {
+    if (livello === 'verde') livello = 'giallo'
+    else if (livello === 'giallo') livello = 'rosso'
+  }
+
+  return {
+    kcalKgEffettive: round(kcalKgEffettive, decimali),
+    kcalKgControllo: round(kcalKgControllo, decimali),
+    base,
+    livello,
+    superaLimiteFaseAcuta,
+  }
 }
 
 // --- Passo 2-3: target calorico e target di fase ----------------------------------------
@@ -135,9 +242,12 @@ export function calcolaTargetCalorico({ kcalKgRange, pesoRiferimentoKg, percentu
   const kcalTarget = kcalKgMedio * pesoRiferimentoKg
   const kcalFase = kcalTarget * (percentualeFase / 100)
 
+  // Il peso si mostra sempre con 1 decimale (non "decimali", che e' la precisione delle
+  // kcal): con peso_nutrizionale spesso frazionario (IBW/ABW, es. 67.4 kg) arrotondarlo a
+  // 0 decimali nasconderebbe il numero effettivamente usato nel calcolo.
   const formulaTarget =
     `(${kcalKgRange[0]}-${kcalKgRange[1]} kcal/kg, media ${formatNumero(kcalKgMedio, 1)}) × ` +
-    `${formatNumero(pesoRiferimentoKg, decimali)} kg = ${formatNumero(kcalTarget, decimali)} kcal/die`
+    `${formatNumero(pesoRiferimentoKg, 1)} kg = ${formatNumero(kcalTarget, decimali)} kcal/die`
   const formulaFase = `${formatNumero(kcalTarget, decimali)} kcal/die × ${formatNumero(percentualeFase, 0)}% = ${formatNumero(kcalFase, decimali)} kcal/die`
 
   return {
@@ -174,16 +284,22 @@ export function calcolaCaloriePropofol({ mlH, kcalPerMl, lipidiGPerMl }, { decim
   }
 }
 
-/** kcal_da_nutrizione = kcal_fase - kcal_propofol (mai negativo: se il propofol da solo
- * copre o supera il target di fase, il netto e' 0 e viene segnalato). */
-export function calcolaTargetNetto({ kcalFase, kcalPropofol = 0 }, { decimali = 0 } = {}) {
+/** kcal_da_nutrizione = kcal_fase - kcal_propofol - kcal_glucosata (mai negativo: se le
+ * infusioni da sole coprono o superano il target di fase, il netto e' 0 e viene segnalato).
+ * kcalGlucosata e' opzionale (rework: prima si sottraeva solo il propofol) — con 0/assente
+ * la formula resta identica a prima. */
+export function calcolaTargetNetto({ kcalFase, kcalPropofol = 0, kcalGlucosata = 0 }, { decimali = 0 } = {}) {
   if (!(kcalFase >= 0)) {
     throw new Error('calcolaTargetNetto: target di fase mancante o non valido')
   }
 
-  const netto = Math.max(0, kcalFase - kcalPropofol)
-  const copertoDaPropofol = kcalPropofol >= kcalFase && kcalPropofol > 0
-  const formula = `${formatNumero(kcalFase, decimali)} kcal/die - ${formatNumero(kcalPropofol, decimali)} kcal/die (propofol) = ${formatNumero(netto, decimali)} kcal/die`
+  const kcalSottratte = kcalPropofol + kcalGlucosata
+  const netto = Math.max(0, kcalFase - kcalSottratte)
+  const copertoDaPropofol = kcalSottratte >= kcalFase && kcalSottratte > 0
+  const formula =
+    kcalGlucosata > 0
+      ? `${formatNumero(kcalFase, decimali)} kcal/die - ${formatNumero(kcalPropofol, decimali)} kcal/die (propofol) - ${formatNumero(kcalGlucosata, decimali)} kcal/die (glucosata) = ${formatNumero(netto, decimali)} kcal/die`
+      : `${formatNumero(kcalFase, decimali)} kcal/die - ${formatNumero(kcalPropofol, decimali)} kcal/die (propofol) = ${formatNumero(netto, decimali)} kcal/die`
 
   return { kcalNetto: round(netto, decimali), copertoDaPropofol, formula }
 }
@@ -308,4 +424,117 @@ export function calcolaVolumeComponente(grammi, concentrazionePercento, { decima
 /** Criterio di rischio refeeding "BMI <16": confronto automatico col BMI del profilo. */
 export function criterioBMIRefeeding(bmi) {
   return bmi !== null && bmi !== undefined && bmi < 16
+}
+
+// --- Calorie da glucosata (stesso pattern di calcolaCaloriePropofol) --------------------
+
+/** kcal/die apportate da un'infusione di glucosata in corso, da sottrarre al fabbisogno
+ * come il propofol (data/nutrizione.json > glucosata_calorie). */
+export function calcolaCaloriaGlucosata({ mlH, concentrazionePercento, kcalPerGGlucosio = 3.4 }, { decimali = 0 } = {}) {
+  if (!(mlH > 0)) {
+    throw new Error('calcolaCaloriaGlucosata: ml/h mancante o non valido')
+  }
+  if (!(concentrazionePercento > 0)) {
+    throw new Error('calcolaCaloriaGlucosata: concentrazione mancante o non valida')
+  }
+
+  const kcalDie = mlH * 24 * (concentrazionePercento / 100) * kcalPerGGlucosio
+  const formula =
+    `${formatNumero(mlH, 1)} ml/h × 24 × (${formatNumero(concentrazionePercento, 1)}/100) × ${kcalPerGGlucosio} = ` +
+    `${formatNumero(kcalDie, decimali)} kcal/die`
+
+  return { kcalDie: round(kcalDie, decimali), formula }
+}
+
+// --- Bilancio azotato --------------------------------------------------------------------
+
+/** Bilancio azotato (g N/24h) = azoto introdotto (proteine/6.25) - azoto eliminato
+ * (UUN + 4 g perdite insensibili/non ureiche). Positivo = anabolismo, negativo = catabolismo. */
+export function calcolaBilancioAzotato({ proteineGDie, uunGDie }, { decimali = 1 } = {}) {
+  if (!(proteineGDie >= 0)) {
+    throw new Error('calcolaBilancioAzotato: proteine g/die mancanti o non valide')
+  }
+  if (!(uunGDie >= 0)) {
+    throw new Error('calcolaBilancioAzotato: azoturia (UUN) mancante o non valida')
+  }
+
+  const azotoIntrodottoG = proteineGDie / 6.25
+  const azotoEliminatoG = uunGDie + 4
+  const bilancioG = azotoIntrodottoG - azotoEliminatoG
+  const formula =
+    `(${formatNumero(proteineGDie, decimali)} ÷ 6.25 = ${formatNumero(azotoIntrodottoG, decimali)} g) - ` +
+    `(${formatNumero(uunGDie, decimali)} + 4 = ${formatNumero(azotoEliminatoG, decimali)} g) = ${formatNumero(bilancioG, decimali)} g N/24h`
+
+  return {
+    azotoIntrodottoG: round(azotoIntrodottoG, decimali),
+    azotoEliminatoG: round(azotoEliminatoG, decimali),
+    bilancioG: round(bilancioG, decimali),
+    catabolico: bilancioG < 0,
+    formula,
+  }
+}
+
+// --- B) Somministrazione con prodotto commerciale (opzionale) --------------------------
+//
+// A differenza di A_fabbisogno_paziente (sempre calcolato), questa parte si usa solo se si
+// somministra un prodotto commerciale invece di una sacca galenica personalizzata
+// (data/nutrizione.json > calcolatore_target.B_somministrazione_prodotto).
+
+/** ml/h di un prodotto (enterale o parenterale) per erogare il target calorico netto, e gli
+ * apporti effettivi che ne derivano (kcal/die, proteine g/die e g/kg). */
+export function calcolaConversioneProdotto({ kcalDaNutrizione, kcalMl, protGMl, pesoRiferimentoKg }, { decimali = 1 } = {}) {
+  if (!(kcalDaNutrizione > 0)) {
+    throw new Error('calcolaConversioneProdotto: target calorico netto mancante o non valido')
+  }
+  if (!(kcalMl > 0)) {
+    throw new Error('calcolaConversioneProdotto: kcal/ml del prodotto mancante o non valida')
+  }
+
+  const mlH = kcalDaNutrizione / (kcalMl * 24)
+  const kcalDieEffettive = mlH * 24 * kcalMl
+  const proteineGDie = mlH * 24 * (protGMl ?? 0)
+  const proteineGKg = pesoRiferimentoKg > 0 ? proteineGDie / pesoRiferimentoKg : null
+  const formula = `${formatNumero(kcalDaNutrizione, 0)} kcal/die ÷ (${kcalMl} kcal/ml × 24) = ${formatNumero(mlH, decimali)} ml/h`
+
+  return {
+    mlH: round(mlH, decimali),
+    kcalDie: round(kcalDieEffettive, 0),
+    proteineGDie: round(proteineGDie, 1),
+    proteineGKg: proteineGKg === null ? null : round(proteineGKg, 2),
+    formula,
+  }
+}
+
+/**
+ * Confronto affiancato tra piu' prodotti per lo stesso target calorico (come NutriCalc):
+ * a parita' di kcal, prodotti diversi danno proteine diverse (rapporto prot/kcal variabile).
+ * Ordinato per vicinanza al target proteico (g/kg), non per nome o kcal/ml.
+ */
+export function calcolaConfrontoProdotti({ prodotti, kcalDaNutrizione, pesoRiferimentoKg, targetProteineGKg }) {
+  if (!Array.isArray(prodotti) || prodotti.length === 0) {
+    throw new Error('calcolaConfrontoProdotti: elenco prodotti mancante o vuoto')
+  }
+
+  const righe = prodotti.map((p) => {
+    const conversione = calcolaConversioneProdotto({
+      kcalDaNutrizione,
+      kcalMl: p.kcal_ml,
+      protGMl: p.prot_g_ml,
+      pesoRiferimentoKg,
+    })
+    const distanzaTargetGKg =
+      targetProteineGKg > 0 && conversione.proteineGKg !== null
+        ? round(Math.abs(conversione.proteineGKg - targetProteineGKg), 2)
+        : null
+    return { nome: p.nome, ...conversione, distanzaTargetGKg }
+  })
+
+  righe.sort((a, b) => {
+    if (a.distanzaTargetGKg === null && b.distanzaTargetGKg === null) return 0
+    if (a.distanzaTargetGKg === null) return 1
+    if (b.distanzaTargetGKg === null) return -1
+    return a.distanzaTargetGKg - b.distanzaTargetGKg
+  })
+
+  return righe
 }

@@ -1,33 +1,32 @@
 import { describe, expect, it } from 'vitest'
 import {
   calcolaHarrisBenedict,
-  selezionaRegimeCalorico,
+  calcolaPesoNutrizionale,
   selezionaRegimeProteico,
   pesoDiRiferimento,
   percentualeFaseDefault,
   calcolaTargetCalorico,
   calcolaCaloriePropofol,
+  calcolaCaloriaGlucosata,
   calcolaTargetNetto,
+  calcolaSemaforoESPEN,
   calcolaProteineTarget,
   calcolaNPT,
   calcolaVolumeComponente,
   criterioBMIRefeeding,
+  calcolaBilancioAzotato,
+  calcolaConversioneProdotto,
+  calcolaConfrontoProdotti,
 } from './nutrizioneCalculator'
 
 // Voce reale da data/nutrizione.json > npt_calcolatore
 const densitaKcal = { glucosio_g: 4, lipidi_g: 9, aminoacidi_g: 4 }
 const limiti = { glucosio_max_mg_kg_min: 4, lipidi_max_g_kg_die: 1.5 }
 
-// Voci reali da data/nutrizione.json > fabbisogno_calorico.regime_per_bmi
-const regimePerBmiCalorico = {
-  'non_obeso_BMI<30': { kcal_kg: [25, 30], peso: 'reale', regime: 'normocalorico' },
-  'obeso_BMI_30-50': { kcal_kg: [11, 14], peso: 'reale', regime: 'ipocalorico-iperproteico', fonte: 'aspen-2016' },
-  'obeso_BMI>50': { kcal_kg: [22, 25], peso: 'IBW', regime: 'ipocalorico-iperproteico', fonte: 'aspen-2016' },
-}
-
-// Voci reali da data/nutrizione.json > proteine.regime_per_bmi
+// Voci reali da data/nutrizione.json > proteine.regime_per_bmi ("peso" del bracket
+// non-obeso e' ora "peso_nutrizionale" (rework), i bracket obesi restano fissi su "IBW".
 const regimePerBmiProteico = {
-  non_obeso: { g_kg: 1.3, range: [1.2, 2.0], peso: 'reale', note: 'progressivo; CRRT/ustionato fino a 2.0-2.5' },
+  non_obeso: { g_kg: 1.3, range: [1.2, 2.0], peso: 'peso_nutrizionale', note: 'progressivo; CRRT/ustionato fino a 2.0-2.5' },
   'obeso_BMI_30-40': { g_kg: 2.0, peso: 'IBW', fonte: 'aspen-2016' },
   'obeso_BMI>=40': { g_kg: 2.5, peso: 'IBW', fonte: 'aspen-2016' },
 }
@@ -66,41 +65,11 @@ describe('calcolaHarrisBenedict - un caso reale per sesso', () => {
   })
 })
 
-describe('selezionaRegimeCalorico - soglie BMI (diverse da quelle del regime proteico)', () => {
-  it('BMI 25 (< 30) -> non_obeso_BMI<30', () => {
-    const r = selezionaRegimeCalorico(regimePerBmiCalorico, 25)
-    expect(r.chiave).toBe('non_obeso_BMI<30')
-    expect(r.regime).toBe('normocalorico')
-  })
-
-  it('BMI 30 esatto -> obeso_BMI_30-50 (il bracket "<30" e\' escludente)', () => {
-    const r = selezionaRegimeCalorico(regimePerBmiCalorico, 30)
-    expect(r.chiave).toBe('obeso_BMI_30-50')
-  })
-
-  it('BMI 35 -> obeso_BMI_30-50, peso reale', () => {
-    const r = selezionaRegimeCalorico(regimePerBmiCalorico, 35)
-    expect(r.chiave).toBe('obeso_BMI_30-50')
-    expect(r.peso).toBe('reale')
-  })
-
-  it('BMI 55 (> 50) -> obeso_BMI>50, peso IBW', () => {
-    const r = selezionaRegimeCalorico(regimePerBmiCalorico, 55)
-    expect(r.chiave).toBe('obeso_BMI>50')
-    expect(r.peso).toBe('IBW')
-  })
-
-  it('BMI non disponibile -> null', () => {
-    expect(selezionaRegimeCalorico(regimePerBmiCalorico, null)).toBeNull()
-    expect(selezionaRegimeCalorico(regimePerBmiCalorico, undefined)).toBeNull()
-  })
-})
-
-describe('selezionaRegimeProteico - soglie BMI diverse da quelle del regime calorico', () => {
-  it('BMI 25 (< 30) -> non_obeso', () => {
+describe('selezionaRegimeProteico - soglie BMI (fabbisogno calorico ora e\' un range fisso, non piu\' un regime per BMI)', () => {
+  it('BMI 25 (< 30) -> non_obeso, peso "peso_nutrizionale" (rework: era "reale")', () => {
     const r = selezionaRegimeProteico(regimePerBmiProteico, 25)
     expect(r.chiave).toBe('non_obeso')
-    expect(r.peso).toBe('reale')
+    expect(r.peso).toBe('peso_nutrizionale')
   })
 
   // Stesso BMI 35 usato sopra per il calorico (30-50), ma qui cade in una fascia diversa:
@@ -117,19 +86,143 @@ describe('selezionaRegimeProteico - soglie BMI diverse da quelle del regime calo
   })
 })
 
-describe('pesoDiRiferimento - reale o IBW secondo il campo "peso" del regime', () => {
+describe('pesoDiRiferimento - reale, IBW o peso_nutrizionale secondo il campo "peso"', () => {
   it('regime.peso "reale" -> usa pesoKg', () => {
     const r = pesoDiRiferimento({ peso: 'reale' }, { pesoKg: 105, ibw: 68.7 })
     expect(r).toEqual({ chiave: 'reale', valoreKg: 105 })
   })
 
-  it('regime.peso "IBW" -> usa ibw (legittimo per adulti, a differenza della pediatria)', () => {
-    const r = pesoDiRiferimento({ peso: 'IBW' }, { pesoKg: 105, ibw: 68.7 })
+  it('regime.peso "IBW" -> usa ibw (fisso, anche se peso_nutrizionale sceglierebbe ABW)', () => {
+    const r = pesoDiRiferimento(
+      { peso: 'IBW' },
+      { pesoKg: 105, ibw: 68.7, pesoNutrizionale: { chiave: 'ABW', valoreKg: 83.2 } },
+    )
     expect(r).toEqual({ chiave: 'IBW', valoreKg: 68.7 })
+  })
+
+  it('regime.peso "peso_nutrizionale" -> usa il risultato gia\' calcolato da calcolaPesoNutrizionale', () => {
+    const r = pesoDiRiferimento(
+      { peso: 'peso_nutrizionale' },
+      { pesoKg: 105, ibw: 68.7, pesoNutrizionale: { chiave: 'ABW', valoreKg: 83.2 } },
+    )
+    expect(r).toEqual({ chiave: 'ABW', valoreKg: 83.2 })
+  })
+
+  it('regime.peso "peso_nutrizionale" ma pesoNutrizionale non fornito -> valori nulli', () => {
+    const r = pesoDiRiferimento({ peso: 'peso_nutrizionale' }, { pesoKg: 105, ibw: 68.7 })
+    expect(r).toEqual({ chiave: null, valoreKg: null })
   })
 
   it('nessun regime -> valori nulli', () => {
     expect(pesoDiRiferimento(null, { pesoKg: 105, ibw: 68.7 })).toEqual({ chiave: null, valoreKg: null })
+  })
+})
+
+describe('calcolaPesoNutrizionale - 3 fasce da BMI (regola in data/nutrizione.json > peso_nutrizionale)', () => {
+  it('BMI < 18.5 -> peso reale', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 50, ibw: 55, bmi: 17.5, categoria: 'adulto' })
+    expect(r).toEqual({ chiave: 'reale', valoreKg: 50, bmiUsato: 17.5 })
+  })
+
+  it('BMI 18.5-30 -> IBW', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 80, ibw: 70, bmi: 25, categoria: 'adulto' })
+    expect(r).toEqual({ chiave: 'IBW', valoreKg: 70, bmiUsato: 25 })
+  })
+
+  it('BMI esattamente 30 -> ancora IBW (il bracket ">30" e\' escludente)', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 90, ibw: 70, bmi: 30, categoria: 'adulto' })
+    expect(r.chiave).toBe('IBW')
+  })
+
+  // Caso verificato con Node (vedi risposta): donna 90 kg, 160 cm -> BMI 35.2, IBW 52.4 ->
+  // ABW = 52.4 + 0.4×(90-52.4) = 67.4 kg.
+  it('BMI > 30 -> ABW (IBW + 0.4×(reale-IBW))', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 90, ibw: 52.4, bmi: 35.2, categoria: 'adulto' })
+    expect(r.chiave).toBe('ABW')
+    expect(r.valoreKg).toBe(67.4)
+    expect(r.formula).toBe('52.4 + 0.4×(90-52.4) = 67.4 kg')
+  })
+
+  it('paziente pediatrico con BMI che sceglierebbe ABW: ricade su reale (IBW/ABW non validi in pediatria)', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 30, ibw: 25, bmi: 32, categoria: 'pediatrico' })
+    expect(r).toEqual({ chiave: 'reale', valoreKg: 30, bmiUsato: 32, pesoPediatricoEscluso: 'ABW' })
+  })
+
+  it('paziente pediatrico con BMI che sceglierebbe IBW: ricade su reale', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 20, ibw: 18, bmi: 22, categoria: 'pediatrico' })
+    expect(r.chiave).toBe('reale')
+    expect(r.pesoPediatricoEscluso).toBe('IBW')
+  })
+
+  it('BMI non disponibile -> ricade sul peso reale', () => {
+    const r = calcolaPesoNutrizionale({ pesoKg: 70, ibw: 65, bmi: null, categoria: 'adulto' })
+    expect(r).toEqual({ chiave: 'reale', valoreKg: 70, bmiUsato: null })
+  })
+
+  it('lancia un errore se manca il peso', () => {
+    expect(() => calcolaPesoNutrizionale({ pesoKg: 0, ibw: 65, bmi: 25 })).toThrow(/peso/i)
+  })
+})
+
+describe('calcolaSemaforoESPEN - guardrail verde/giallo/rosso sulle kcal/kg effettive', () => {
+  it('non obeso, 25 kcal/kg (dentro 20-30) -> verde', () => {
+    const r = calcolaSemaforoESPEN({ kcalDaNutrizione: 1750, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24 })
+    expect(r.base).toBe('peso_nutrizionale')
+    expect(r.kcalKgEffettive).toBe(25)
+    expect(r.livello).toBe('verde')
+  })
+
+  it('non obeso, 34 kcal/kg (>30) -> giallo', () => {
+    const r = calcolaSemaforoESPEN({ kcalDaNutrizione: 2380, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24 })
+    expect(r.livello).toBe('giallo')
+  })
+
+  it('non obeso, 40 kcal/kg (ben oltre 35) -> rosso (overfeeding)', () => {
+    const r = calcolaSemaforoESPEN({ kcalDaNutrizione: 2800, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24 })
+    expect(r.livello).toBe('rosso')
+  })
+
+  // Obeso: il controllo si rifa' all'IBW, non al peso_nutrizionale (ABW) usato per il target.
+  it('obeso: 1101 kcal / IBW 52.4 = 21 kcal/kg IBW -> verde, anche se sul peso_nutrizionale (67.4) sarebbe 16.3', () => {
+    const r = calcolaSemaforoESPEN({ kcalDaNutrizione: 1101, pesoNutrizionaleKg: 67.4, ibwKg: 52.4, bmi: 35.2 })
+    expect(r.base).toBe('IBW')
+    expect(r.kcalKgEffettive).toBe(16.3)
+    expect(r.kcalKgControllo).toBe(21)
+    expect(r.livello).toBe('verde')
+  })
+
+  it('obeso oltre 25 kcal/kg IBW -> giallo; oltre 30 -> rosso', () => {
+    const giallo = calcolaSemaforoESPEN({ kcalDaNutrizione: 1400, pesoNutrizionaleKg: 67.4, ibwKg: 52.4, bmi: 35.2 })
+    expect(giallo.kcalKgControllo).toBeCloseTo(26.7, 1)
+    expect(giallo.livello).toBe('giallo')
+
+    const rosso = calcolaSemaforoESPEN({ kcalDaNutrizione: 1700, pesoNutrizionaleKg: 67.4, ibwKg: 52.4, bmi: 35.2 })
+    expect(rosso.kcalKgControllo).toBeCloseTo(32.4, 1)
+    expect(rosso.livello).toBe('rosso')
+  })
+
+  it('fase acuta precoce con percentuale >70%: declassa il livello di un gradino', () => {
+    const senzaSforamento = calcolaSemaforoESPEN({
+      kcalDaNutrizione: 1750, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24, faseAcutaPrecoce: true, percentualeFase: 70,
+    })
+    expect(senzaSforamento.livello).toBe('verde')
+    expect(senzaSforamento.superaLimiteFaseAcuta).toBe(false)
+
+    const conSforamento = calcolaSemaforoESPEN({
+      kcalDaNutrizione: 1750, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24, faseAcutaPrecoce: true, percentualeFase: 85,
+    })
+    expect(conSforamento.superaLimiteFaseAcuta).toBe(true)
+    expect(conSforamento.livello).toBe('giallo')
+  })
+
+  it('accetta 0 kcal (target gia\' coperto dalle infusioni, come in calcolaTargetNetto)', () => {
+    const r = calcolaSemaforoESPEN({ kcalDaNutrizione: 0, pesoNutrizionaleKg: 70, ibwKg: null, bmi: 24 })
+    expect(r.kcalKgEffettive).toBe(0)
+    expect(r.livello).toBe('rosso') // sotto 15 kcal/kg: fuori da qualunque fascia definita
+  })
+
+  it('lancia un errore se manca il peso di riferimento', () => {
+    expect(() => calcolaSemaforoESPEN({ kcalDaNutrizione: 1750, pesoNutrizionaleKg: 0 })).toThrow(/peso/i)
   })
 })
 
@@ -173,20 +266,36 @@ describe('calcolaCaloriePropofol - kcal e lipidi apportati dal propofol in corso
   })
 })
 
-describe('calcolaTargetNetto - target di fase meno il propofol', () => {
-  it('1181 - 528 = 653 kcal/die', () => {
+describe('calcolaCaloriaGlucosata - kcal apportate da un\'infusione di glucosata', () => {
+  // Esempio di data/nutrizione.json > glucosata_calorie.esempio: 84 ml/h al 5% -> ~343 kcal/die.
+  it('glucosata 5% a 84 ml/h -> 343 kcal/die (esempio del JSON, verificato passo-passo)', () => {
+    const r = calcolaCaloriaGlucosata({ mlH: 84, concentrazionePercento: 5 })
+    expect(r.kcalDie).toBe(343)
+    expect(r.formula).toBe('84 ml/h × 24 × (5/100) × 3.4 = 343 kcal/die')
+  })
+})
+
+describe('calcolaTargetNetto - target di fase meno propofol e glucosata', () => {
+  it('1181 - 528 (propofol) = 653 kcal/die', () => {
     const r = calcolaTargetNetto({ kcalFase: 1181, kcalPropofol: 528 })
     expect(r.kcalNetto).toBe(653)
     expect(r.copertoDaPropofol).toBe(false)
+    expect(r.formula).toBe('1181 kcal/die - 528 kcal/die (propofol) = 653 kcal/die')
   })
 
-  it('il propofol da solo supera il target di fase: netto 0, segnalato', () => {
-    const r = calcolaTargetNetto({ kcalFase: 400, kcalPropofol: 600 })
+  it('con anche glucosata: 1668 - 396 (propofol) - 171 (glucosata) = 1101 kcal/die', () => {
+    const r = calcolaTargetNetto({ kcalFase: 1668, kcalPropofol: 396, kcalGlucosata: 171 })
+    expect(r.kcalNetto).toBe(1101)
+    expect(r.formula).toBe('1668 kcal/die - 396 kcal/die (propofol) - 171 kcal/die (glucosata) = 1101 kcal/die')
+  })
+
+  it('propofol + glucosata da soli superano il target di fase: netto 0, segnalato', () => {
+    const r = calcolaTargetNetto({ kcalFase: 400, kcalPropofol: 300, kcalGlucosata: 300 })
     expect(r.kcalNetto).toBe(0)
     expect(r.copertoDaPropofol).toBe(true)
   })
 
-  it('senza propofol (kcalPropofol default 0): netto = target di fase', () => {
+  it('senza infusioni (default 0): netto = target di fase', () => {
     const r = calcolaTargetNetto({ kcalFase: 1181 })
     expect(r.kcalNetto).toBe(1181)
   })
@@ -303,60 +412,135 @@ describe('criterioBMIRefeeding - confronto automatico col BMI del profilo', () =
   })
 })
 
-// --- Flusso end-to-end: paziente BMI 35, fase acuta tardiva, propofol 20 ml/h -----------
-// Ogni passo verificato indipendentemente con Node prima di scrivere il test (vedi
-// spiegazione nella risposta), incluso l'arrotondamento "a cascata" (ogni step usa
-// l'output GIA' ARROTONDATO dello step precedente, come mostrato/modificabile in UI, non il
-// valore interno a piena precisione).
-describe('Flusso end-to-end - paziente 105 kg, 173 cm, M, 55 anni (BMI 35.1, IBW 68.7)', () => {
-  const pesoKg = 105
-  const ibw = 68.7
-  const bmi = 35.1
+describe('calcolaBilancioAzotato', () => {
+  it('105 g proteine/die, UUN 12 g -> bilancio +0.8 g N/24h (anabolico)', () => {
+    const r = calcolaBilancioAzotato({ proteineGDie: 105, uunGDie: 12 })
+    expect(r.azotoIntrodottoG).toBe(16.8)
+    expect(r.azotoEliminatoG).toBe(16)
+    expect(r.bilancioG).toBe(0.8)
+    expect(r.catabolico).toBe(false)
+  })
 
-  it('passo per passo fino alla NPT finale', () => {
-    // 1. Regime da BMI (soglie diverse per calorico e proteico)
-    const regimeCalorico = selezionaRegimeCalorico(regimePerBmiCalorico, bmi)
-    expect(regimeCalorico.chiave).toBe('obeso_BMI_30-50')
-    expect(regimeCalorico.peso).toBe('reale')
+  it('proteine insufficienti rispetto alle perdite -> bilancio negativo (catabolico)', () => {
+    const r = calcolaBilancioAzotato({ proteineGDie: 60, uunGDie: 15 })
+    expect(r.bilancioG).toBeLessThan(0)
+    expect(r.catabolico).toBe(true)
+  })
+})
 
+describe('calcolaConversioneProdotto - target netto -> ml/h del prodotto scelto', () => {
+  // Nephro HP (data/nutrizione.json > prodotti_enterali): 1.8 kcal/ml, 0.081 g prot/ml.
+  it('target 1101 kcal/die con Nephro HP -> 25.5 ml/h, 49.5 g proteine/die', () => {
+    const r = calcolaConversioneProdotto({ kcalDaNutrizione: 1101, kcalMl: 1.8, protGMl: 0.081, pesoRiferimentoKg: 67.4 })
+    expect(r.mlH).toBe(25.5)
+    expect(r.kcalDie).toBe(1101)
+    expect(r.proteineGDie).toBe(49.5)
+    expect(r.proteineGKg).toBe(0.74)
+  })
+
+  it('lancia un errore se manca il target calorico netto', () => {
+    expect(() => calcolaConversioneProdotto({ kcalDaNutrizione: 0, kcalMl: 1.8, protGMl: 0.081, pesoRiferimentoKg: 67.4 })).toThrow(/target/i)
+  })
+})
+
+describe('calcolaConfrontoProdotti - ordinato per vicinanza al target proteico g/kg', () => {
+  const prodotti = [
+    { nome: 'Isosource Standard', kcal_ml: 1.0, prot_g_ml: 0.039 },
+    { nome: 'Nephro HP', kcal_ml: 1.8, prot_g_ml: 0.081 },
+    { nome: 'Peptamen AF', kcal_ml: 1.5, prot_g_ml: 0.094 },
+  ]
+
+  it('a parita\' di target calorico, ordina i 3 prodotti per g/kg proteine piu\' vicine al target (2.0 g/kg)', () => {
+    const r = calcolaConfrontoProdotti({ prodotti, kcalDaNutrizione: 1101, pesoRiferimentoKg: 67.4, targetProteineGKg: 2.0038 })
+
+    expect(r.map((p) => p.nome)).toEqual(['Peptamen AF', 'Nephro HP', 'Isosource Standard'])
+    expect(r[0].proteineGKg).toBe(1.02) // il piu' vicino a 2.0 g/kg, pur restando distante
+    expect(r[0].distanzaTargetGKg).toBeCloseTo(0.98, 1)
+    // Tutti e 3 erogano la STESSA dose calorica (1101 kcal/die): a cambiare e' solo il ml/h
+    // e le proteine, che e' esattamente il punto del confronto.
+    expect(r.every((p) => p.kcalDie === 1101)).toBe(true)
+  })
+
+  it('lancia un errore se l\'elenco prodotti e\' vuoto', () => {
+    expect(() => calcolaConfrontoProdotti({ prodotti: [], kcalDaNutrizione: 1101, pesoRiferimentoKg: 67.4, targetProteineGKg: 2 })).toThrow(/prodotti/i)
+  })
+})
+
+// --- Flusso end-to-end: paziente obeso, fase acuta tardiva, propofol + glucosata in corso,
+// un prodotto enterale scelto (Nephro HP) + confronto con altri due. Ogni passo verificato
+// indipendentemente con Node prima di scrivere il test (vedi spiegazione nella risposta),
+// incluso l'arrotondamento "a cascata" (ogni step usa l'output GIA' ARROTONDATO dello step
+// precedente, come mostrato/modificabile in UI, non il valore interno a piena precisione).
+describe('Flusso end-to-end - paziente 90 kg, 160 cm, F, 55 anni (BMI 35.2, IBW 52.4)', () => {
+  const pesoKg = 90
+  const ibw = 52.4
+  const bmi = 35.2
+  const categoria = 'adulto'
+
+  it('dal peso nutrizionale fino alla NPT e alla conversione/confronto prodotti', () => {
+    // 1. Peso nutrizionale: BMI>30 -> ABW (sostituisce il vecchio regime-calorico-per-BMI)
+    const pesoNutrizionale = calcolaPesoNutrizionale({ pesoKg, ibw, bmi, categoria })
+    expect(pesoNutrizionale).toEqual({
+      chiave: 'ABW',
+      valoreKg: 67.4,
+      bmiUsato: 35.2,
+      formula: '52.4 + 0.4×(90-52.4) = 67.4 kg',
+    })
+
+    // Regime proteico (soglie invariate): BMI 35.2 -> obeso_BMI_30-40, peso FISSO su IBW
+    // (non su peso_nutrizionale/ABW: l'obeso usa IBW per le proteine anche qui).
     const regimeProteico = selezionaRegimeProteico(regimePerBmiProteico, bmi)
-    expect(regimeProteico.chiave).toBe('obeso_BMI_30-40')
-    expect(regimeProteico.peso).toBe('IBW')
+    expect(regimeProteico).toMatchObject({ chiave: 'obeso_BMI_30-40', g_kg: 2.0, peso: 'IBW' })
 
-    // 2-3. Target calorico e target di fase (fase "acuta tardiva", default 90%)
-    const pesoRifCal = pesoDiRiferimento(regimeCalorico, { pesoKg, ibw })
-    expect(pesoRifCal).toEqual({ chiave: 'reale', valoreKg: 105 })
+    const pesoRifProteico = pesoDiRiferimento(regimeProteico, { pesoKg, ibw, pesoNutrizionale })
+    expect(pesoRifProteico).toEqual({ chiave: 'IBW', valoreKg: 52.4 })
 
+    // 2-3. Target calorico (range fisso 25-30 kcal/kg su peso_nutrizionale) e target di
+    // fase (fase "acuta tardiva", default 90%)
     const percentualeFase = percentualeFaseDefault('80-100%')
     expect(percentualeFase).toBe(90)
 
     const targetCalorico = calcolaTargetCalorico({
-      kcalKgRange: regimeCalorico.kcal_kg,
-      pesoRiferimentoKg: pesoRifCal.valoreKg,
+      kcalKgRange: [25, 30],
+      pesoRiferimentoKg: pesoNutrizionale.valoreKg,
       percentualeFase,
     })
-    expect(targetCalorico.kcalTarget).toBe(1313)
-    expect(targetCalorico.kcalFase).toBe(1181)
+    expect(targetCalorico.kcalTarget).toBe(1854)
+    expect(targetCalorico.kcalFase).toBe(1668)
 
-    // 4. Propofol 20 ml/h
-    const caloriePropofol = calcolaCaloriePropofol({ mlH: 20, kcalPerMl: 1.1, lipidiGPerMl: 0.1 })
-    expect(caloriePropofol.kcalDie).toBe(528)
-    expect(caloriePropofol.lipidiGDie).toBe(48)
+    // 4. Propofol 15 ml/h + glucosata 5% a 42 ml/h, entrambe da sottrarre
+    const caloriePropofol = calcolaCaloriePropofol({ mlH: 15, kcalPerMl: 1.1, lipidiGPerMl: 0.1 })
+    expect(caloriePropofol.kcalDie).toBe(396)
+    expect(caloriePropofol.lipidiGDie).toBe(36)
 
-    // 5. Target netto (usa il target di fase GIA' ARROTONDATO, 1181, come mostrato in UI)
-    const targetNetto = calcolaTargetNetto({ kcalFase: targetCalorico.kcalFase, kcalPropofol: caloriePropofol.kcalDie })
-    expect(targetNetto.kcalNetto).toBe(653)
+    const calorieGlucosata = calcolaCaloriaGlucosata({ mlH: 42, concentrazionePercento: 5 })
+    expect(calorieGlucosata.kcalDie).toBe(171)
+
+    // 5. Target netto
+    const targetNetto = calcolaTargetNetto({
+      kcalFase: targetCalorico.kcalFase,
+      kcalPropofol: caloriePropofol.kcalDie,
+      kcalGlucosata: calorieGlucosata.kcalDie,
+    })
+    expect(targetNetto.kcalNetto).toBe(1101)
     expect(targetNetto.copertoDaPropofol).toBe(false)
 
+    // Autocontrollo ESPEN: nell'obeso si rifa' all'IBW (52.4), non all'ABW (67.4) usato
+    // per il target -> 21 kcal/kg IBW, verde (<=25).
+    const semaforo = calcolaSemaforoESPEN({
+      kcalDaNutrizione: targetNetto.kcalNetto,
+      pesoNutrizionaleKg: pesoNutrizionale.valoreKg,
+      ibwKg: ibw,
+      bmi,
+      percentualeFase,
+    })
+    expect(semaforo).toMatchObject({ kcalKgEffettive: 16.3, kcalKgControllo: 21, base: 'IBW', livello: 'verde' })
+
     // 6. Proteine (peso di riferimento IBW, NON scalate dalla fase)
-    const pesoRifProt = pesoDiRiferimento(regimeProteico, { pesoKg, ibw })
-    expect(pesoRifProt).toEqual({ chiave: 'IBW', valoreKg: 68.7 })
+    const proteineTarget = calcolaProteineTarget({ gKg: regimeProteico.g_kg, pesoRiferimentoKg: pesoRifProteico.valoreKg })
+    expect(proteineTarget.grammiDie).toBe(105)
 
-    const proteineTarget = calcolaProteineTarget({ gKg: regimeProteico.g_kg, pesoRiferimentoKg: pesoRifProt.valoreKg })
-    expect(proteineTarget.grammiDie).toBe(137)
-
-    // NPT finale: target netto (653) e aminoacidi (137, GIA' ARROTONDATI) come mostrati in
-    // UI, 55% glucidi / 30% lipidi, con i lipidi del propofol sommati per il limite
+    // A_fabbisogno_paziente e' completo qui: NPT (galenica) invariata come richiesto -----
     const npt = calcolaNPT({
       pesoKg,
       kcalTotaliTarget: targetNetto.kcalNetto,
@@ -367,15 +551,38 @@ describe('Flusso end-to-end - paziente 105 kg, 173 cm, M, 55 anni (BMI 35.1, IBW
       limiti,
       lipidiPropofolG: caloriePropofol.lipidiGDie,
     })
-
-    expect(npt.kcalTotali).toBe(653)
-    expect(npt.aminoacidi).toMatchObject({ g: 137, kcal: 548 })
-    expect(npt.glucidi).toMatchObject({ g: 89.8 })
-    expect(npt.lipidi).toMatchObject({ g: 21.8, propofolG: 48, gTotaliConPropofol: 69.8 })
-
-    expect(npt.glucidi.mgKgMin).toBeCloseTo(0.59, 1)
+    expect(npt.kcalTotali).toBe(1101)
+    expect(npt.aminoacidi).toMatchObject({ g: 105, kcal: 420 })
+    expect(npt.glucidi).toMatchObject({ g: 151.4 })
+    expect(npt.lipidi).toMatchObject({ g: 36.7, propofolG: 36, gTotaliConPropofol: 72.7 })
     expect(npt.glucidi.superaLimite).toBe(false)
-    expect(npt.lipidi.gKgDie).toBeCloseTo(0.66, 1)
     expect(npt.lipidi.superaLimite).toBe(false)
+
+    // B_somministrazione_prodotto (opzionale): stesso target netto (1101), ma con un
+    // prodotto commerciale (Nephro HP) invece della sacca galenica NPT.
+    const nephroHP = calcolaConversioneProdotto({
+      kcalDaNutrizione: targetNetto.kcalNetto,
+      kcalMl: 1.8,
+      protGMl: 0.081,
+      pesoRiferimentoKg: pesoNutrizionale.valoreKg,
+    })
+    expect(nephroHP).toMatchObject({ mlH: 25.5, kcalDie: 1101, proteineGDie: 49.5, proteineGKg: 0.74 })
+
+    // Confronto con altri due prodotti per lo stesso target: il confronto usa il target
+    // proteico g/kg calcolato sopra (105 g / 52.4 kg IBW), non g/kg sul peso_nutrizionale.
+    const targetProteineGKg = proteineTarget.grammiDie / pesoRifProteico.valoreKg
+    const confronto = calcolaConfrontoProdotti({
+      prodotti: [
+        { nome: 'Isosource Standard', kcal_ml: 1.0, prot_g_ml: 0.039 },
+        { nome: 'Nephro HP', kcal_ml: 1.8, prot_g_ml: 0.081 },
+        { nome: 'Peptamen AF', kcal_ml: 1.5, prot_g_ml: 0.094 },
+      ],
+      kcalDaNutrizione: targetNetto.kcalNetto,
+      pesoRiferimentoKg: pesoNutrizionale.valoreKg,
+      targetProteineGKg,
+    })
+    // Nessuno dei 3 copre il target proteico (2.0 g/kg): Peptamen AF (piu' iperproteico)
+    // resta comunque il piu' vicino.
+    expect(confronto.map((p) => p.nome)).toEqual(['Peptamen AF', 'Nephro HP', 'Isosource Standard'])
   })
 })

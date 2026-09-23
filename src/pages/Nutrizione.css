@@ -172,10 +172,75 @@
   text-transform: capitalize;
 }
 
-/* Propofol: box "prima/dopo" della sottrazione, distinto dalle altre schede per
+/* Infusioni: box "prima/dopo" della sottrazione, distinto dalle altre schede per
    richiamare l'attenzione sul fatto che il target netto e' quello da usare nella NPT. */
 .scheda-sottrazione {
   background: var(--social-bg);
   border-radius: 8px;
   padding: 12px;
+}
+
+/* Semaforo ESPEN (autocontrollo kcal/kg): mostrato come chip accanto al totale, mai solo
+   come nota in fondo. */
+.chip-semaforo {
+  font-weight: 600;
+}
+
+.semaforo-verde {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.semaforo-giallo {
+  border-color: #d97706;
+  color: #d97706;
+}
+
+.semaforo-rosso {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.tabella-prodotti {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.tabella-prodotti th,
+.tabella-prodotti td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.tabella-prodotti th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tabella-prodotti td {
+  color: var(--text-h);
+}
+
+.tabella-prodotti td:first-child,
+.tabella-prodotti th:first-child {
+  white-space: normal;
+}
+
+.riga-cliccabile {
+  cursor: pointer;
+}
+
+.riga-cliccabile:hover {
+  background: var(--social-bg);
+}
+
+/* Riga del prodotto attualmente selezionato nel confronto, stesso trattamento della
+   "prima scelta" nella tabella uterotonici di Ostetricia. */
+.riga-prima-scelta {
+  background: var(--accent-bg);
 }
