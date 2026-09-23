@@ -6,6 +6,7 @@ import {
   calcolaGCS,
   calcolaCamIcu,
   calcolaROX,
+  calcolaRSBI,
   calcolaAldrete,
   calcolaFour,
   calcolaElGanzouri,
@@ -160,6 +161,36 @@ describe('calcolaROX', () => {
 
   it('lancia un errore se FiO2 non e\' una frazione 0-1', () => {
     expect(() => calcolaROX({ spo2: 95, fiO2: 40, fr: 22 })).toThrow(/FiO2/)
+  })
+})
+
+// Caso reale: paziente in respiro spontaneo, FR 30 atti/min, Vt 250 ml -> RSBI = 30/0.25 = 120.
+describe('calcolaRSBI', () => {
+  it('FR 30, Vt 250 ml -> RSBI 120, alto rischio di fallimento estubazione', () => {
+    const r = calcolaRSBI({ fr: 30, vtMl: 250 })
+    expect(r.indice).toBe(120)
+    expect(r.altoRischio).toBe(true)
+    expect(r.formula).toBe('30 ÷ (250 ml = 0.25 L) = 120')
+  })
+
+  it('FR 18, Vt 450 ml -> RSBI 40, buona probabilita di svezzamento', () => {
+    const r = calcolaRSBI({ fr: 18, vtMl: 450 })
+    expect(r.indice).toBe(40)
+    expect(r.altoRischio).toBe(false)
+  })
+
+  it('esattamente alla soglia (105) -> alto rischio (soglia inclusiva, Yang-Tobin)', () => {
+    const r = calcolaRSBI({ fr: 21, vtMl: 200 })
+    expect(r.indice).toBe(105)
+    expect(r.altoRischio).toBe(true)
+  })
+
+  it('lancia un errore se manca la frequenza respiratoria', () => {
+    expect(() => calcolaRSBI({ fr: 0, vtMl: 400 })).toThrow(/respiratoria/i)
+  })
+
+  it('lancia un errore se manca il volume corrente', () => {
+    expect(() => calcolaRSBI({ fr: 20, vtMl: 0 })).toThrow(/volume/i)
   })
 })
 

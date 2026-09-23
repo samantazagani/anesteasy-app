@@ -1137,6 +1137,15 @@
       },
       "verificato": false,
       "fonte": "riferimento standard (rule of nines / Parkland)"
+    },
+    {
+      "id": "rsbi",
+      "nome": "RSBI / indice di Tobin (svezzamento)",
+      "categoria": "terapia_intensiva",
+      "formula": "RSBI = FR / Vt(L)   (FR in atti/min, Vt in litri; misurato in respiro spontaneo)",
+      "interpretazione": "<105 = buona probabilita di svezzamento riuscito; >=105 = alto rischio di fallimento dell'estubazione",
+      "verificato": false,
+      "fonte": "riferimento standard (Yang-Tobin)"
     }
   ]
 }

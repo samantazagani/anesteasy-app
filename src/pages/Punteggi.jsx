@@ -8,6 +8,7 @@ import {
   calcolaGCS,
   calcolaCamIcu,
   calcolaROX,
+  calcolaRSBI,
   calcolaAldrete,
   calcolaFour,
   calcolaElGanzouri,
@@ -119,6 +120,7 @@ export function Punteggi() {
         <CalcFour dati={trova('four')} />
         <CalcHacor dati={trova('hacor')} />
         <CalcROX dati={trova('rox')} />
+        <CalcRSBI dati={trova('rsbi')} />
         <CalcMacocha dati={trova('macocha')} />
       </div>
 
@@ -531,6 +533,42 @@ function CalcROX({ dati }) {
         <>
           <p className="risultato-primario">
             ROX {risultato.indice} {risultato.successoProbabile ? '(≥4.88)' : '(<4.88)'}
+          </p>
+          <p className="formula">{risultato.formula}</p>
+        </>
+      )}
+      <p className="nota">{dati.interpretazione}</p>
+    </Punteggio>
+  )
+}
+
+function CalcRSBI({ dati }) {
+  const [fr, setFr] = useState('')
+  const [vt, setVt] = useState('')
+
+  let risultato = null
+  let errore = null
+  const frN = numero(fr)
+  const vtN = numero(vt)
+  if (frN !== null && vtN !== null) {
+    try {
+      risultato = calcolaRSBI({ fr: frN, vtMl: vtN })
+    } catch (e) {
+      errore = e.message
+    }
+  }
+
+  return (
+    <Punteggio titolo={dati.nome}>
+      <div className="griglia-campi-p">
+        <Campo etichetta="FR (atti/min)" valore={fr} onChange={setFr} />
+        <Campo etichetta="Vt (ml)" valore={vt} onChange={setVt} />
+      </div>
+      {errore && <p className="avviso avviso-errore">{errore}</p>}
+      {risultato && (
+        <>
+          <p className={risultato.altoRischio ? 'risultato-primario risultato-positivo' : 'risultato-primario'}>
+            RSBI {risultato.indice} {risultato.altoRischio ? '(≥105)' : '(<105)'}
           </p>
           <p className="formula">{risultato.formula}</p>
         </>

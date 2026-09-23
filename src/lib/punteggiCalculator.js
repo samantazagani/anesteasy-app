@@ -98,6 +98,27 @@ export function calcolaROX({ spo2, fiO2, fr }, { decimali = 2 } = {}) {
 }
 
 /**
+ * RSBI (indice di Tobin): FR / Vt(L), misurato in respiro spontaneo. Vt si inserisce in ml
+ * (convenzione dell'app, es. Ventilazione.jsx) e si converte in litri internamente, come
+ * richiede la formula di data/punteggi.json. <105 = buona probabilita di svezzamento
+ * riuscito; >=105 (soglia originale di Yang-Tobin) = alto rischio di fallimento.
+ */
+export function calcolaRSBI({ fr, vtMl }, { decimali = 0 } = {}) {
+  if (!(fr > 0)) {
+    throw new Error('calcolaRSBI: frequenza respiratoria mancante o non valida')
+  }
+  if (!(vtMl > 0)) {
+    throw new Error('calcolaRSBI: volume corrente mancante o non valido')
+  }
+
+  const vtL = vtMl / 1000
+  const indice = fr / vtL
+  const formula = `${fr} ÷ (${vtMl} ml = ${round(vtL, 3)} L) = ${round(indice, decimali)}`
+
+  return { indice: round(indice, decimali), formula, altoRischio: indice >= 105 }
+}
+
+/**
  * Aldrete: 5 voci, punteggio manuale 0-2 ciascuna (il JSON non fornisce le descrizioni dei
  * singoli livelli, solo il range). >=9 dimissibile dalla recovery.
  */
