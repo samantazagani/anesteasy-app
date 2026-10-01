@@ -5,7 +5,6 @@ import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreAntibiotici.css'
@@ -114,7 +113,6 @@ export function CalcolatoreAntibiotici() {
                 {peso?.chiave && (
                   <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
                 )}
-                <BadgeVerifica verificato={antibiotico.verificato} />
               </div>
 
               {peso?.pesoPediatricoEscluso && (
@@ -200,10 +198,9 @@ export function CalcolatoreAntibiotici() {
 // e' la dose pediatrica di cefazolina (30 mg/kg, un numero pulito): quella ha un vero
 // mini-calcolatore sotto, CalcCefazolinaPediatrica.
 
-function SchedaFonte({ verificato, fonte }) {
+function SchedaFonte({ fonte }) {
   return (
     <div className="riga-meta">
-      <BadgeVerifica verificato={verificato} />
       <InfoFonte fonte={fonte} />
     </div>
   )
@@ -221,7 +218,7 @@ function SezioneProfilassi({ profilassi, profile, categoria }) {
         <p className="scheda-titolo-antibiotico">
           {primaScelta.farmaco[0].toUpperCase() + primaScelta.farmaco.slice(1)} (prima scelta)
         </p>
-        <SchedaFonte verificato={primaScelta.verificato} fonte={primaScelta.fonte} />
+        <SchedaFonte fonte={primaScelta.fonte} />
         <p className="nota">
           {/* dose_adulto.standard ("2 g") gia' contiene l'unita: da "unita" ("g EV") si mostra
               solo la via di somministrazione, per non ripetere "g" due volte. */}
@@ -240,7 +237,7 @@ function SezioneProfilassi({ profilassi, profile, categoria }) {
         {allergiaBetaLattamici.alternative.map((alt) => (
           <div key={alt.farmaco} className="sotto-scheda-antibiotico">
             <p className="scheda-titolo-antibiotico">{alt.farmaco[0].toUpperCase() + alt.farmaco.slice(1)}</p>
-            <SchedaFonte verificato={alt.verificato} fonte={alt.fonte} />
+            <SchedaFonte fonte={alt.fonte} />
             <p className="nota">Adulto: {alt.dose_adulto}</p>
             <p className="nota">Pediatrico: {alt.dose_pediatrica}</p>
             <p className="nota">Timing: {alt.timing}</p>
@@ -251,7 +248,7 @@ function SezioneProfilassi({ profilassi, profile, categoria }) {
 
       <div className="scheda-antibiotico">
         <p className="scheda-titolo-antibiotico">MRSA</p>
-        <SchedaFonte verificato={mrsa.verificato} fonte={mrsa.fonte} />
+        <SchedaFonte fonte={mrsa.fonte} />
         <p className="nota">Indicazione: {mrsa.indicazione}</p>
         <p className="nota">{mrsa.farmaco}</p>
         <p className="nota">{mrsa.note}</p>
@@ -259,7 +256,7 @@ function SezioneProfilassi({ profilassi, profile, categoria }) {
 
       <div className="scheda-antibiotico">
         <p className="scheda-titolo-antibiotico">Timing generale</p>
-        <SchedaFonte verificato={timingGenerale.verificato} fonte={timingGenerale.fonte} />
+        <SchedaFonte fonte={timingGenerale.fonte} />
         <p className="nota">Standard: {timingGenerale.standard}</p>
         <p className="nota">Vancomicina/fluorochinoloni: {timingGenerale.vancomicina_fluorochinoloni}</p>
       </div>
@@ -280,7 +277,7 @@ function SezioneTerapiaAntibiotica({ terapia }) {
           <p className="scheda-titolo-antibiotico">
             {farmaco.nome} <span className="antibiotico-indicazione">{farmaco.classe}</span>
           </p>
-          <SchedaFonte verificato={farmaco.verificato} fonte={farmaco.fonte} />
+          <SchedaFonte fonte={farmaco.fonte} />
           {Object.entries(farmaco)
             .filter(([chiave]) => !CAMPI_TERAPIA_ESCLUSI.has(chiave))
             .map(([chiave, valore]) => (

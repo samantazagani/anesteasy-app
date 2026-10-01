@@ -5,7 +5,6 @@ import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { selezionaDose, etichettaVariante } from '../lib/selezioneDose'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
@@ -209,7 +208,6 @@ export function CalcolatoreDoseBolo() {
                     <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
                   )}
                   {doseScelta.via && <span className="chip">Via: {doseScelta.via}</span>}
-                  <BadgeVerifica verificato={doseScelta.verificato} />
                 </div>
 
                 {selezione.fallback && categoria === 'anziano' && doseScelta.aggiustamento_anziano && (

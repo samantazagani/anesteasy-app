@@ -9,7 +9,6 @@ import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { calcolaConcentrazione, calcolaInfusione } from '../lib/infusionCalculator'
 import { calcolaLAST } from '../lib/anestesiaLocaleCalculator'
 import { tipoPasso, risolviPassoFarmaco } from '../lib/emergenzaStepEngine'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './Emergenze.css'
@@ -63,7 +62,6 @@ export function Emergenze() {
       <div className="stepper">
         <div className="riga-meta">
           <h2>{emergenza.titolo}</h2>
-          <BadgeVerifica verificato={emergenza.verificato} />
         </div>
 
         <div className="stepper-nav">
@@ -181,7 +179,6 @@ function PassoBolo({ farmaco, doseScelta, fasciaUsata, fallback, passo, derivati
           {passo.fascia_eta ? ' (dal passo)' : ' (dal profilo)'}
         </span>
         {peso.chiave && <span className="chip">Peso: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>}
-        <BadgeVerifica verificato={doseScelta.verificato} />
       </div>
 
       {fallback && (
@@ -239,7 +236,6 @@ function PassoInfusione({ farmaco, doseScelta, pesoKg }) {
       <div className="riga-meta">
         <span className="chip">{farmaco.nome} · infusione</span>
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg` : 'non impostato'}</span>
-        <BadgeVerifica verificato={doseScelta.verificato} />
       </div>
 
       {(doseScelta.min !== undefined || doseScelta.valore !== undefined) && (
@@ -316,7 +312,6 @@ function PassoLAST({ lastData, pesoKg }) {
     <div className="formula-a-vista">
       <div className="riga-meta">
         <span className="chip">Emulsione lipidica 20% (Intralipid)</span>
-        <BadgeVerifica verificato={lastData.verificato} />
       </div>
 
       {!(pesoKg > 0) && (

@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import './InfoFonte.css'
 
-// Fonte/pagina/revisione sono dettaglio bibliografico, non un'informazione di sicurezza
-// (a differenza di BadgeVerifica, sempre visibile senza interazione): stanno dietro
-// un'icona informativa per non affollare la vista del risultato, richiamabili con un
-// tocco/click. Se non c'e' una fonte non renderizza nulla (stesso comportamento del
-// paragrafo .fonte condizionale che sostituisce).
+// Fonte/pagina/revisione sono dettaglio bibliografico: stanno dietro un'icona informativa
+// per non affollare la vista del risultato, richiamabili con un tocco/click. Se non c'e'
+// una fonte non renderizza nulla (stesso comportamento del paragrafo .fonte condizionale
+// che sostituisce).
 export function InfoFonte({ fonte, pagina, revisione }) {
   const [aperto, setAperto] = useState(false)
   const wrapperRef = useRef(null)

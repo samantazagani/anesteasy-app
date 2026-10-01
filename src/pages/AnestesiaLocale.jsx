@@ -7,7 +7,6 @@ import {
   calcolaElastomero,
   mgMlDaPercento,
 } from '../lib/anestesiaLocaleCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import { TossicitaAdditiva } from '../components/TossicitaAdditiva.jsx'
 import { SezioneLAST } from '../components/SezioneLAST.jsx'
@@ -207,7 +206,6 @@ export function AnestesiaLocale() {
                       : `${volumeMassimo.doseMgKg} mg/kg`}
                     )
                   </span>
-                  <BadgeVerifica verificato={anestetico.verificato} />
                 </div>
                 <p className="risultato-primario">
                   {volumeMassimo.volumeMaxMl} ml

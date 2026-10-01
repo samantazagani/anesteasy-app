@@ -12,8 +12,14 @@ import { calcolaDose, formatoRisultato } from './doseCalculator'
 describe('Cefazolina pediatrica (data/profilassi-antibiotica.json > prima_scelta.dose_pediatrica)', () => {
   const dosePediatrica = profilassiData.prima_scelta.dose_pediatrica
 
-  it('la voce JSON e\' un numero pulito (30 mg/kg, peso reale), non testo libero', () => {
-    expect(dosePediatrica).toMatchObject({ valore: 30, unita: 'mg/kg', peso: 'reale' })
+  it('la voce JSON e\' un numero pulito (30 mg/kg), non testo libero', () => {
+    expect(dosePediatrica).toMatchObject({ valore: 30, unita: 'mg/kg' })
+  })
+
+  it('senza un campo "peso" esplicito, risolviPeso ricade sul default (reale) comunque corretto per un pediatrico', () => {
+    expect(dosePediatrica.peso).toBeUndefined()
+    const peso = risolviPeso(dosePediatrica.peso, { pesoKg: 20, ibw: null, lbw: null, bmi: null, categoria: 'pediatrico' })
+    expect(peso).toEqual({ chiave: 'reale', valoreKg: 20, condizioneApplicata: null })
   })
 
   it('bambino 20 kg -> 600 mg, peso reale (nessun fallback su IBW/LBW)', () => {
@@ -70,7 +76,6 @@ describe('Contenuto di riferimento (profilassi/terapia): resta testo libero, non
     expect(farmaci.map((f) => f.id)).toEqual(['vancomicina', 'meropenem', 'piperacillina-tazobactam'])
     for (const farmaco of farmaci) {
       expect(farmaco.fonte).toBe('prontuario')
-      expect(farmaco.verificato).toBe(false)
     }
   })
 })

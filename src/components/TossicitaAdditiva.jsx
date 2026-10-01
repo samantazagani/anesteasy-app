@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import anesteticiData from '../../data/anestetici-locali.json'
 import { calcolaTossicitaAdditiva, calcolaMargineResiduo, mgMlDaPercento } from '../lib/anestesiaLocaleCalculator'
-import { BadgeVerifica } from './BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './TossicitaAdditiva.css'
 
@@ -73,7 +71,6 @@ export function TossicitaAdditiva({ anestetici, pesoKg }) {
     <div className="riquadro-calcolatore" id="tossicita-additiva">
       <div className="riga-meta">
         <h2>Tossicita' additiva</h2>
-        <BadgeVerifica verificato={anesteticiData.tossicita_additiva.verificato} />
       </div>
       <p className="sottotitolo">
         Seleziona gli anestetici locali usati insieme e la dose somministrata di ciascuno: la

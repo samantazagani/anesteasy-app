@@ -1,5 +1,4 @@
 {
-  "_stato": "BOZZA da verificare. Sezione EMORRAGIA POST-PARTUM (diagnosi, prevenzione, bundle, trattamento, refrattaria, trasfusione massiva) riscritta su WHO/FIGO/ICM 2025 (file del medico). Il resto (parto-analgesia, TC, eclampsia, neonato) resta pratica standard. verificato=false.",
   "parto_analgesia": {
     "epidurale": {
       "soluzione": "ropivacaina 0.1-0.2% (o levobupivacaina 0.0625-0.125%) + oppioide",
@@ -18,14 +17,10 @@
           5,
           10
         ]
-      },
-      "verificato": false,
-      "fonte": "bozza"
+      }
     },
     "combinata_spinale_epidurale": {
-      "componente_spinale": "bupivacaina 2.5 mg + sufentanil 2.5-5 mcg",
-      "verificato": false,
-      "fonte": "bozza"
+      "componente_spinale": "bupivacaina 2.5 mg + sufentanil 2.5-5 mcg"
     }
   },
   "taglio_cesareo": {
@@ -35,20 +30,14 @@
         10,
         12
       ],
-      "oppioidi": "fentanyl 15-25 mcg + morfina 100 mcg",
-      "verificato": false,
-      "fonte": "bozza"
+      "oppioidi": "fentanyl 15-25 mcg + morfina 100 mcg"
     },
     "dose_test_peridurale": {
-      "soluzione": "lidocaina 2% 3 ml (+/- adrenalina 15 mcg)",
-      "verificato": false,
-      "fonte": "bozza"
+      "soluzione": "lidocaina 2% 3 ml (+/- adrenalina 15 mcg)"
     }
   },
   "dose_max_peridurale": {
-    "nota": "usare i tetti degli anestetici locali (vedi anestetici-locali.json)",
-    "verificato": false,
-    "fonte": "bozza"
+    "nota": "usare i tetti degli anestetici locali (vedi anestetici-locali.json)"
   },
   "oppioidi_neuroassiali": [
     {
@@ -59,43 +48,33 @@
       "durata_h": [
         12,
         24
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "farmaco": "morfina",
       "via": "peridurale",
       "min": 2,
       "max": 4,
-      "unita": "mg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mg"
     },
     {
       "farmaco": "fentanyl",
       "via": "intratecale",
       "min": 15,
       "max": 25,
-      "unita": "mcg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mcg"
     },
     {
       "farmaco": "sufentanil",
       "via": "intratecale",
       "min": 2.5,
       "max": 5,
-      "unita": "mcg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mcg"
     }
   ],
   "profilassi_ipotensione_post_spinale": {
     "farmaco": "fenilefrina",
-    "schema": "infusione profilattica 25-50 mcg/min (o 0.1 mcg/kg/min), titolare su PA",
-    "verificato": false,
-    "fonte": "bozza"
+    "schema": "infusione profilattica 25-50 mcg/min (o 0.1 mcg/kg/min), titolare su PA"
   },
   "emorragia_postpartum": {
     "bundle_prima_risposta": {
@@ -113,7 +92,6 @@
     "ossitocina": {
       "iniziale": "10 UI EV lenta (bolo 1-2 min o in 5-10 min diluita)",
       "mantenimento": "10-20 UI in cristalloidi nelle 4h successive, titolata sulla risposta",
-      "verificato": false,
       "fonte": "who-2025"
     },
     "acido_tranexamico": {
@@ -122,7 +100,6 @@
       "finestra": "entro 3h dalla nascita (oltre: nessun beneficio)",
       "controindicazione": "evento tromboembolico noto in gravidanza",
       "sicurezza": "stoccare SEPARATO dalla bupivacaina (rischio scambio intratecale, ampolle simili)",
-      "verificato": false,
       "fonte": "who-2025"
     },
     "seconda_linea_uterotonici": {
@@ -136,13 +113,11 @@
         "carbetocina NON raccomandata per il trattamento",
         "misoprostolo aggiunto a ossitocina senza beneficio"
       ],
-      "verificato": false,
       "fonte": "who-2025"
     },
     "fluidi": {
       "scelta": "cristalloidi isotonici (Ringer lattato o fisiologica), preferiti ai colloidi",
       "attenzione": "evitare overload in preeclampsia/cardiopatia",
-      "verificato": false,
       "fonte": "who-2025"
     }
   },
@@ -152,9 +127,7 @@
       "mantenimento": "1-2 g/h EV",
       "monitoraggio": "riflessi osteotendinei, diuresi >30 ml/h, FR >12",
       "antidoto": "calcio gluconato 1 g EV (10 ml 10%)",
-      "note": "vedi anche scheda MgSO4 (uso analgesico 30-50 mg/kg, diverso da questo)",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "vedi anche scheda MgSO4 (uso analgesico 30-50 mg/kg, diverso da questo)"
     }
   },
   "rianimazione_neonatale": {
@@ -193,9 +166,7 @@
     "algoritmo": "riscaldare-asciugare-stimolare -> se FC<100 o apnea: VPP -> se FC<60 dopo VPP efficace: compressioni 3:1 -> adrenalina",
     "adrenalina": {
       "valore": "0.01-0.03 mg/kg EV (0.05-0.1 mg/kg ET)",
-      "note": "vedi farmaci.json (adrenalina, neonato)",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "vedi farmaci.json (adrenalina, neonato)"
     }
   },
   "_fonti": [
@@ -214,7 +185,6 @@
       "PAD <60 mmHg"
     ],
     "nota": "misurazione OBIETTIVA (drappeggio calibrato); la stima visiva sottostima",
-    "verificato": false,
     "fonte": "who-2025"
   },
   "prevenzione_terzo_stadio": {
@@ -243,7 +213,6 @@
       "prostaglandine iniettabili (carboprost, sulprostone)",
       "acido tranexamico"
     ],
-    "verificato": false,
     "fonte": "who-2025"
   },
   "pph_refrattaria": {
@@ -258,7 +227,6 @@
       "embolizzazione arterie uterine (se radiologia interventistica)",
       "chirurgia sequenziale: suture compressive (B-Lynch/Hayman/Cho) -> devascolarizzazione stepwise (uterine -> utero-ovariche -> ipogastriche) -> isterectomia"
     ],
-    "verificato": false,
     "fonte": "who-2025"
   },
   "trasfusione_massiva": {
@@ -280,11 +248,10 @@
       "PFC per deficit documentato",
       "piastrine se indicato"
     ],
-    "verificato": false,
     "fonte": "who-2025"
   },
   "calcolatore_peso_pph": {
-    "_nota": "nella PPH la maggior parte dei farmaci e a DOSE FISSA (non scalare col peso!). Qui solo le voci realmente peso-dipendenti.",
+    "_nota": "nella PPH la maggior parte dei farmaci e a DOSE FISSA (non scalare col peso!). Qui solo le voci realmente peso-dipendenti",
     "dosi_fisse": {
       "ossitocina": "10 UI",
       "acido_tranexamico": "1 g",
@@ -298,18 +265,18 @@
         "min": 5,
         "max": 10,
         "unita": "ml/kg",
-        "formula_testo": "volume_ml = ml_kg * peso_kg ; ml_kg = 5-10"
+        "formula": "volume_ml = ml_kg * peso_kg ; ml_kg = 5-10",
+        "output": "ml"
       },
       {
         "id": "volemia_gravida",
         "nome": "Volemia stimata (gravida a termine)",
         "valore": 100,
         "unita": "ml/kg",
-        "formula_testo": "volemia_ml ~= 100 * peso_kg",
+        "formula": "volemia_ml ~= 100 * peso_kg",
         "note": "soglia trasfusione massiva: perdita >50% in 3h"
       }
     ],
-    "verificato": false,
     "fonte": "who-2025"
   }
 }

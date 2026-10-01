@@ -2,7 +2,6 @@ import ostetriciaData from '../../data/ostetricia.json'
 import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Ostetricia.css'
 
@@ -80,7 +79,6 @@ function SezioneParotoAnalgesia({ dati }) {
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Epidurale</p>
-          <BadgeVerifica verificato={epidurale.verificato} />
         </div>
         <p className="nota">Soluzione: {epidurale.soluzione}</p>
         <p className="nota">Oppioide: {epidurale.oppioide}</p>
@@ -94,7 +92,6 @@ function SezioneParotoAnalgesia({ dati }) {
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Combinata spinale-epidurale</p>
-          <BadgeVerifica verificato={combinata.verificato} />
         </div>
         <p className="nota">Componente spinale: {combinata.componente_spinale}</p>
       </div>
@@ -112,7 +109,6 @@ function SezioneTaglioCesareo({ taglioCesareo, doseMaxPeridurale }) {
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Spinale</p>
-          <BadgeVerifica verificato={spinale.verificato} />
         </div>
         <p className="nota">Farmaco: {spinale.farmaco}</p>
         <p className="nota">Dose: {intervallo(spinale.dose_mg, 'mg')}</p>
@@ -122,7 +118,6 @@ function SezioneTaglioCesareo({ taglioCesareo, doseMaxPeridurale }) {
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Dose test peridurale</p>
-          <BadgeVerifica verificato={doseTest.verificato} />
         </div>
         <p className="nota">{doseTest.soluzione}</p>
       </div>
@@ -130,7 +125,6 @@ function SezioneTaglioCesareo({ taglioCesareo, doseMaxPeridurale }) {
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Dose massima peridurale</p>
-          <BadgeVerifica verificato={doseMaxPeridurale.verificato} />
         </div>
         <p className="nota">{doseMaxPeridurale.nota}</p>
       </div>
@@ -150,7 +144,6 @@ function SezioneOppioidiNeuroassiali({ lista }) {
               <div className="riga-meta">
                 <span className="chip chip-capitalizza">{dose.farmaco}</span>
                 <span className="chip chip-capitalizza">Via: {dose.via}</span>
-                <BadgeVerifica verificato={dose.verificato} />
               </div>
               <p className="risultato-primario">{formatoRisultato(risultato)}</p>
               <p className="formula">{risultato.formula}</p>
@@ -168,7 +161,6 @@ function SezioneIpotensione({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Profilassi ipotensione post-spinale</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">Farmaco: {dati.farmaco}</p>
       <p className="nota">Schema: {dati.schema}</p>
@@ -181,7 +173,6 @@ function SezioneDiagnosiPPH({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Emorragia postpartum · Diagnosi</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">{dati.criteri}</p>
       <p className="scheda-titolo">Segni emodinamici (riferimento)</p>
@@ -223,7 +214,6 @@ function SezioneOssitocinaTXA({ ossitocina, acidoTranexamico, secondaLinea, flui
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Ossitocina</p>
-          <BadgeVerifica verificato={ossitocina.verificato} />
         </div>
         <p className="nota">Iniziale: {ossitocina.iniziale}</p>
         <p className="nota">Mantenimento: {ossitocina.mantenimento}</p>
@@ -232,7 +222,6 @@ function SezioneOssitocinaTXA({ ossitocina, acidoTranexamico, secondaLinea, flui
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Acido tranexamico</p>
-          <BadgeVerifica verificato={acidoTranexamico.verificato} />
         </div>
         <p className="avviso avviso-errore">⚠ Sicurezza: {acidoTranexamico.sicurezza}</p>
         <p className="nota">Prima dose: {acidoTranexamico.prima_dose}</p>
@@ -244,7 +233,6 @@ function SezioneOssitocinaTXA({ ossitocina, acidoTranexamico, secondaLinea, flui
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Seconda linea uterotonici</p>
-          <BadgeVerifica verificato={secondaLinea.verificato} />
         </div>
         <p className="nota">{secondaLinea.indicazione}</p>
         <ul className="lista-riferimento">
@@ -262,7 +250,6 @@ function SezioneOssitocinaTXA({ ossitocina, acidoTranexamico, secondaLinea, flui
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Fluidi</p>
-          <BadgeVerifica verificato={fluidi.verificato} />
         </div>
         <p className="nota">{fluidi.scelta}</p>
         <p className="avviso">{fluidi.attenzione}</p>
@@ -276,7 +263,6 @@ function SezionePrevenzioneTerzoStadio({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Prevenzione terzo stadio</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">{dati.principio}</p>
 
@@ -321,7 +307,6 @@ function SezionePPHRefrattaria({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>PPH refrattaria</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
 
       <p className="scheda-titolo">Misure temporizzanti (riferimento)</p>
@@ -349,7 +334,6 @@ function SezioneTrasfusioneMassiva({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Trasfusione massiva</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">{dati.definizione}</p>
 
@@ -387,7 +371,6 @@ function SezioneCalcolatorePesoPPH({ dati, pesoKg }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Calcolatore PPH</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="avviso">{dati._nota}</p>
 
@@ -439,7 +422,6 @@ function SezionePreeclampsia({ dati }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Preeclampsia / eclampsia</h2>
-        <BadgeVerifica verificato={mgso4.verificato} />
       </div>
       <p className="nota">Carico: {mgso4.carico}</p>
       <p className="nota">Mantenimento: {mgso4.mantenimento}</p>
@@ -455,7 +437,6 @@ function SezioneRianimazioneNeonatale({ dati, adrenalina }) {
     <div className="riquadro-ostetricia">
       <div className="riga-meta">
         <h2>Rianimazione neonatale</h2>
-        <BadgeVerifica verificato={false} />
       </div>
 
       <div className="tabella-scroll">

@@ -19,7 +19,6 @@ import {
   calcolaMacocha,
   calcolaParkland,
 } from '../lib/punteggiCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Punteggi.css'
 
@@ -62,7 +61,6 @@ function Punteggio({ titolo, children }) {
     <div className="riquadro-punteggio">
       <div className="riga-meta">
         <p className="punteggio-titolo">{titolo}</p>
-        <BadgeVerifica verificato={false} />
       </div>
       {children}
     </div>

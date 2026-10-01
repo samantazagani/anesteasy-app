@@ -17,7 +17,6 @@ import {
   calcolaAutonomiaBombola,
   valutaLimite,
 } from '../lib/ventilazioneCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import { BadgeFormulaDaVerificare } from '../components/BadgeFormulaDaVerificare.jsx'
 import '../styles/risultato.css'
 import './Ventilazione.css'
@@ -72,7 +71,7 @@ function Calcolatore({ titolo, badge, children }) {
     <div className="riquadro-vent">
       <div className="riga-meta">
         <p className="vent-titolo">{titolo}</p>
-        {badge ?? <BadgeVerifica verificato={false} />}
+        {badge}
       </div>
       {children}
     </div>

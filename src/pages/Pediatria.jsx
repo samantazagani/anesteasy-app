@@ -26,7 +26,6 @@ import {
   calcolaIBWPediatricoTraubJohnson,
   doseDaIntervallo,
 } from '../lib/pediatriaCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Pediatria.css'
 
@@ -65,7 +64,6 @@ export function Pediatria() {
       <div className="riga-meta">
         <span className="chip">Età: {formatEta(etaAnni)}</span>
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
-        <BadgeVerifica verificato={false} />
       </div>
 
       <SezionePresidi presidi={pediatriaData.presidi} etaAnni={etaAnni} pesoKg={pesoKg} />
@@ -116,7 +114,6 @@ function SezionePresidi({ presidi, etaAnni, pesoKg }) {
     <div className="riquadro-pediatria">
       <div className="riga-meta">
         <h2>Presidi</h2>
-        <BadgeVerifica verificato={tubo_iot.verificato} />
       </div>
 
       <SezioneTuboIOT tuboIot={tubo_iot} sngOf={sng_of} etaAnni={etaAnni} />
@@ -272,7 +269,6 @@ function SezioneDefibrillazione({ defibrillazione, pesoKg }) {
     <div className="presidio">
       <div className="riga-meta">
         <p className="presidio-titolo">Defibrillazione / cardioversione</p>
-        <BadgeVerifica verificato={defibrillazione.verificato} />
       </div>
       {!(pesoKg > 0) ? (
         <p className="avviso">Imposta il peso nel profilo per calcolare i Joule.</p>
@@ -367,7 +363,6 @@ function SezioneStime({ stime, etaAnni, pesoKg }) {
     <div className="riquadro-pediatria">
       <div className="riga-meta">
         <h2>Stime</h2>
-        <BadgeVerifica verificato={stime.peso_stimato_kg.verificato} />
       </div>
 
       <div className="presidio">
@@ -468,7 +463,6 @@ function SezioneFluidi({ fluidi, pesoKg }) {
       <div className="presidio">
         <div className="riga-meta">
           <p className="presidio-titolo">Mantenimento (regola 4-2-1)</p>
-          <BadgeVerifica verificato={fluidi.mantenimento_4_2_1.verificato} />
         </div>
         {erroreMantenimento && <p className="avviso avviso-errore">{erroreMantenimento}</p>}
         {mantenimento && (
@@ -482,7 +476,6 @@ function SezioneFluidi({ fluidi, pesoKg }) {
       <div className="presidio">
         <div className="riga-meta">
           <p className="presidio-titolo">Bolo di riempimento</p>
-          <BadgeVerifica verificato={fluidi.bolo_riempimento.verificato} />
         </div>
         {bolo && (
           <>
@@ -496,7 +489,6 @@ function SezioneFluidi({ fluidi, pesoKg }) {
       <div className="presidio">
         <div className="riga-meta">
           <p className="presidio-titolo">Ipoglicemia</p>
-          <BadgeVerifica verificato={fluidi.ipoglicemia.verificato} />
         </div>
         {ipoglicemia && (
           <>
@@ -584,7 +576,6 @@ function SezioneIBWPediatrico({ calcoloPesi, altezzaCmProfilo }) {
     <div className="riquadro-pediatria">
       <div className="riga-meta">
         <h2>IBW pediatrico (Traub-Johnson)</h2>
-        <BadgeVerifica verificato={calcoloPesi.verificato} />
       </div>
       <p className="avviso avviso-pediatrico">
         Strumento eccezionale: da usare solo in casi selezionati di bambino obeso, non come
@@ -647,7 +638,6 @@ function SezionePremedicazione({ titolo, lista, derivati }) {
               <div className="riga-meta">
                 <span className="chip chip-capitalizza">{farmaco.farmaco}</span>
                 {farmaco.via && <span className="chip">Via: {farmaco.via}</span>}
-                <BadgeVerifica verificato={farmaco.verificato} />
               </div>
               {!(peso.valoreKg > 0) && (
                 <p className="avviso">Imposta il peso nel profilo per calcolare.</p>
@@ -725,7 +715,6 @@ function SezioneEmergenzePediatriche({ lista, farmaci, derivati }) {
               <div className="riga-meta">
                 <span className="chip">{farmaco.nome}</span>
                 <span className="chip">{mappa.contesto}</span>
-                <BadgeVerifica verificato={doseScelta.verificato} />
               </div>
               {selezione.fallback && (
                 <p className="avviso avviso-pediatrico">

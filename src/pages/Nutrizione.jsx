@@ -21,7 +21,6 @@ import {
   calcolaBilancioAzotato,
   calcolaConfrontoProdotti,
 } from '../lib/nutrizioneCalculator'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './Nutrizione.css'
 
@@ -176,7 +175,6 @@ export function Nutrizione() {
       <div className="riga-meta">
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
         <span className="chip">BMI: {bmi !== null && bmi !== undefined ? bmi : 'non disponibile'}</span>
-        <BadgeVerifica verificato={false} />
       </div>
 
       <SezioneFabbisognoCalorico
@@ -213,7 +211,6 @@ export function Nutrizione() {
       />
 
       <SezioneProteine
-        proteine={proteine}
         regimeProteico={regimeProteico}
         pesoRifProteico={pesoRifProteico}
         proteineTarget={proteineTarget}
@@ -280,7 +277,6 @@ function SezioneFabbisognoCalorico({
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Fabbisogno calorico</h2>
-        <BadgeVerifica verificato={fabbisognoCalorico.verificato} />
       </div>
 
       <div className="scheda">
@@ -367,7 +363,6 @@ function SezioneFabbisognoCalorico({
       <div className="scheda">
         <div className="riga-meta">
           <p className="scheda-titolo">Harris-Benedict</p>
-          <BadgeVerifica verificato={harrisBenedict.verificato} />
         </div>
 
         <div className="griglia-campi-piccola">
@@ -434,7 +429,6 @@ function SezioneInfusioni({
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Infusioni in corso</h2>
-        <BadgeVerifica verificato={false} />
       </div>
 
       <div className="scheda">
@@ -540,12 +534,11 @@ function SezioneInfusioni({
   )
 }
 
-function SezioneProteine({ proteine, regimeProteico, pesoRifProteico, proteineTarget, erroreProteine }) {
+function SezioneProteine({ regimeProteico, pesoRifProteico, proteineTarget, erroreProteine }) {
   return (
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Proteine</h2>
-        <BadgeVerifica verificato={proteine.verificato} />
       </div>
 
       {regimeProteico ? (
@@ -597,7 +590,6 @@ function SezioneFabbisognoIdrico({ dati, pesoKg }) {
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Fabbisogno idrico</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       {risultato ? (
         <>
@@ -631,7 +623,6 @@ function SezioneRefeeding({ dati, bmi }) {
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Refeeding syndrome</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
 
       <div className="checklist-refeeding">
@@ -722,7 +713,6 @@ function SezioneNPT({ dati, pesoKg, targetNetto, proteineTarget, lipidiPropofolG
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Calcolatore NPT</h2>
-        <BadgeVerifica verificato={dati.verificato} />
       </div>
       <p className="nota">{dati.descrizione}</p>
       <p className="nota">{dati.nota}</p>
@@ -909,7 +899,6 @@ function SezioneBilancioAzotato({ proteineTarget }) {
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Bilancio azotato</h2>
-        <BadgeVerifica verificato={false} />
       </div>
       <p className="nota">g N/24h = (proteine somministrate ÷ 6.25) - (azoturia UUN + 4 g perdite non ureiche).</p>
 
@@ -1008,7 +997,6 @@ function SezioneProdottoCommerciale({
     <div className="riquadro-nutrizione">
       <div className="riga-meta">
         <h2>Somministrazione con prodotto commerciale (opzionale)</h2>
-        <BadgeVerifica verificato={false} />
       </div>
       <p className="nota">
         Solo se si usa un prodotto COMMERCIALE (invece di una sacca galenica personalizzata): converte lo stesso

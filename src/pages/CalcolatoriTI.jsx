@@ -20,7 +20,6 @@ import {
   calcolaCorrezioneSodioAdrogue,
   calcolaPIAConversione,
 } from '../lib/calcolatoriTI'
-import { BadgeVerifica } from '../components/BadgeVerifica.jsx'
 import '../styles/risultato.css'
 import './CalcolatoriTI.css'
 
@@ -79,7 +78,6 @@ function Calcolatore({ titolo, children }) {
     <div className="riquadro-calcolatore-ti">
       <div className="riga-meta">
         <p className="calcolatore-titolo">{titolo}</p>
-        <BadgeVerifica verificato={false} />
       </div>
       {children}
     </div>
