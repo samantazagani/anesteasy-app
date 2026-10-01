@@ -1,3 +1,5 @@
+import { calcABW } from './anthropometrics'
+
 // Motore condiviso per il Modulo 5 (Nutrizione), letto da data/nutrizione.json.
 // Il flusso e' quello descritto in data/nutrizione.json > calcolatore_target.passi:
 // 1. BMI -> regime (calorico e proteico, soglie DIVERSE tra loro)
@@ -79,11 +81,6 @@ export function calcolaHarrisBenedict(
 // adulti (Devine/ABW sotto ~152cm non hanno senso clinico), quindi su un paziente
 // pediatrico questa funzione ricade sempre sul peso reale.
 
-/** ABW (adjusted body weight): IBW + 0.4×(peso reale - IBW). Usato solo per BMI>30. */
-function calcolaABW(pesoKg, ibw) {
-  return ibw + 0.4 * (pesoKg - ibw)
-}
-
 /**
  * @param {{ pesoKg: number, ibw: number|null, bmi: number|null, categoria?: 'pediatrico'|'adulto'|'anziano'|null }} input
  * @returns {{ chiave: 'reale'|'IBW'|'ABW', valoreKg: number|null, bmiUsato: number|null, formula?: string, pesoPediatricoEscluso?: 'IBW'|'ABW' }}
@@ -117,7 +114,9 @@ export function calcolaPesoNutrizionale({ pesoKg, ibw, bmi, categoria }, { decim
     return { chiave, valoreKg: round(ibw, decimali), bmiUsato }
   }
 
-  const abw = calcolaABW(pesoKg, ibw)
+  // calcABW (Blocco P, anthropometrics.js): stessa formula gia' condivisa dal profilo
+  // paziente, non piu' duplicata qui.
+  const abw = calcABW(pesoKg, ibw)
   const formula = `${formatNumero(ibw, decimali)} + 0.4×(${formatNumero(pesoKg, decimali)}-${formatNumero(ibw, decimali)}) = ${formatNumero(abw, decimali)} kg`
   return { chiave: 'ABW', valoreKg: round(abw, decimali), bmiUsato, formula }
 }

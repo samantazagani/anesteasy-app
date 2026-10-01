@@ -1,5 +1,4 @@
 {
-  "_stato": "BOZZA. A) fabbisogno paziente (kcal + proteine + fluidi) SEMPRE calcolato (per sacche galeniche); B) ml/h con prodotto commerciale OPZIONALE. Autocontrollo ESPEN (kcal/kg effettive + semaforo). Confronto prodotti come NutriCalc. Peso nutrizionale primario, propofol+glucosata sottratte. verificato=false.",
   "_fonti": [
     {
       "id": "espen-2023",
@@ -33,7 +32,6 @@
       "obeso_BMI>30": "usando ABW x 25-30 kcal/kg il target e gia ipocalorico; verificare che NON superi ~25 kcal/kg IBW (ASPEN: 11-14 kcal/kg peso reale se BMI 30-50)",
       "critico_fase_acuta": "non superare il 70% del target (evitare overfeeding)"
     },
-    "verificato": false,
     "fonte": "espen-2023 / aspen-2016 (guardrail) + nutricalc (peso)"
   },
   "percentuale_fase": {
@@ -54,7 +52,6 @@
       }
     ],
     "campo_app": "percentuale_target selezionabile dall'utente (default suggerito per fase)",
-    "verificato": false,
     "fonte": "espen-2023"
   },
   "proteine": {
@@ -79,7 +76,6 @@
         "fonte": "aspen-2016"
       }
     },
-    "verificato": false,
     "fonte": "espen-2023"
   },
   "propofol_calorie": {
@@ -88,14 +84,12 @@
     "lipidi_g_per_ml": 0.1,
     "formula_kcal_die": "kcal_propofol = ml_h * 24 * 1.1",
     "formula_lipidi_g_die": "lipidi_propofol_g = ml_h * 24 * 0.1",
-    "nota": "vale per propofol 1% e 2% (entrambi veicolo lipidico 10%)",
-    "verificato": false,
-    "fonte": "bozza"
+    "nota": "vale per propofol 1% e 2% (entrambi veicolo lipidico 10%)"
   },
   "calcolatore_target": {
     "descrizione": "Due output: A) fabbisogno del paziente (sempre); B) somministrazione con prodotto commerciale (opzionale).",
     "A_fabbisogno_paziente": {
-      "_nota": "SEMPRE calcolato, indipendente dal prodotto. Serve anche per le sacche PERSONALIZZATE galeniche (farmacia): da qui la TI sa kcal e proteine da mettere.",
+      "_nota": "SEMPRE calcolato, indipendente dal prodotto. Serve anche per le sacche PERSONALIZZATE galeniche (farmacia): da qui la TI sa kcal e proteine da mettere",
       "passi": [
         "1. peso_nutrizionale dal BMI (reale/IBW/ABW)",
         "2. kcal_target = 25-30 kcal/kg * peso_nutrizionale",
@@ -119,7 +113,7 @@
       }
     },
     "B_somministrazione_prodotto": {
-      "_nota": "OPZIONALE: solo se si usa un PRODOTTO COMMERCIALE. Con sacca personalizzata si salta questo passo.",
+      "_nota": "OPZIONALE: solo se si usa un PRODOTTO COMMERCIALE. Con sacca personalizzata si salta questo passo",
       "passi": [
         "1. (facolt.) filtra i prodotti sulla condizione del paziente (filtri_paziente_enterale)",
         "2. scegli un prodotto (enterale o parenterale)",
@@ -128,22 +122,17 @@
         "5. confronta le proteine effettive col fabbisogno proteico (punto A): se sotto, valutare modulo proteico o prodotto iperproteico"
       ]
     },
-    "verificato": false,
     "fonte": "espen-2023 + nutricalc"
   },
   "fabbisogno_idrico": {
     "ml_kg_die": [
       30,
       35
-    ],
-    "verificato": false,
-    "fonte": "bozza"
+    ]
   },
   "micronutrienti": {
     "glutammina": "0.2-0.3 g/kg/die (se NPT esclusiva)",
-    "note": "aggiungere vitamine e oligoelementi",
-    "verificato": false,
-    "fonte": "bozza"
+    "note": "aggiungere vitamine e oligoelementi"
   },
   "refeeding_syndrome": {
     "rischio": [
@@ -160,9 +149,7 @@
         "magnesio": "reintegrare"
       },
       "tiamina": "200-300 mg/die prima di iniziare"
-    },
-    "verificato": false,
-    "fonte": "bozza"
+    }
   },
   "npt_calcolatore": {
     "descrizione": "Input: peso, target kcal/kg, ripartizione macro, volume. Output: g/die e ml di ciascun componente.",
@@ -185,32 +172,25 @@
       "glucosio_max_mg_kg_min": 4,
       "lipidi_max_g_kg_die": 1.5
     },
-    "nota": "scalare le calorie non proteiche per le kcal gia date dal propofol",
-    "verificato": false,
-    "fonte": "bozza"
+    "nota": "scalare le calorie non proteiche per le kcal gia date dal propofol"
   },
   "bilancio_azotato": {
     "descrizione": "bilancio azotato (g N / 24h) = azoto introdotto - azoto eliminato",
     "formula": "N_bilancio = (proteine_g_die / 6.25) - (azoturia_UUN_g_die + 4)",
-    "note": "UUN = azoto ureico urinario nelle 24h; +4 g = perdite insensibili/non ureiche. Positivo = anabolismo, negativo = catabolismo",
-    "verificato": false,
-    "fonte": "bozza"
+    "note": "UUN = azoto ureico urinario nelle 24h; +4 g = perdite insensibili/non ureiche. Positivo = anabolismo, negativo = catabolismo"
   },
   "glucosata_calorie": {
     "descrizione": "le infusioni di glucosata apportano calorie da SOTTRARRE dal target (come il propofol)",
     "kcal_per_g_glucosio": 3.4,
     "formula_kcal_die": "kcal = ml_h * 24 * (concentrazione_percento / 100) * 3.4",
     "esempio": "glucosata 5% a 84 ml/h -> 84*24*0.05*3.4 = ~343 kcal/die",
-    "note": "glucosata X% = X g/100 ml; destrosio monoidrato = 3.4 kcal/g",
-    "verificato": false,
-    "fonte": "bozza"
+    "note": "glucosata X% = X g/100 ml; destrosio monoidrato = 3.4 kcal/g"
   },
   "peso_nutrizionale": {
-    "_ruolo": "PESO OPERATIVO per i target calorico/proteico (logica NutriCalc). ESPEN resta come controllo di affidabilita (vedi fabbisogno_calorico.controllo_espen).",
+    "_ruolo": "PESO OPERATIVO per i target calorico/proteico (logica NutriCalc). ESPEN resta come controllo di affidabilita (vedi fabbisogno_calorico.controllo_espen)",
     "IBW_devine": "IBW = (50 se uomo / 45.5 se donna) + 2.3*(altezza_pollici - 60); altezza_pollici = altezza_cm/2.54",
     "ABW": "ABW = IBW + 0.4*(peso_reale - IBW)",
     "regola": "BMI <18.5 -> peso reale; BMI 18.5-30 -> IBW; BMI >30 -> ABW",
-    "verificato": false,
     "fonte": "nutricalc"
   },
   "prodotti_enterali": {
@@ -356,7 +336,6 @@
         ]
       }
     ],
-    "verificato": false,
     "fonte": "nutricalc"
   },
   "prodotti_parenterali": {
@@ -398,7 +377,6 @@
         "prot_g_ml": 0.056
       }
     ],
-    "verificato": false,
     "fonte": "nutricalc"
   },
   "avanzamento_enterale": {
@@ -427,9 +405,8 @@
       }
     ],
     "formula_ml_h": "ml/h = (kcal_kg * peso_nutrizionale) / (kcal_ml_prodotto * 24)",
-    "verificato": false,
     "fonte": "nutricalc",
-    "_ruolo": "ALTERNATIVA / riferimento (NutriCalc). La progressione PRIMARIA e 'percentuale_fase' (ESPEN: acuta <=70% -> 80-100%)."
+    "_ruolo": "ALTERNATIVA / riferimento (NutriCalc). La progressione PRIMARIA e 'percentuale_fase' (ESPEN: acuta <=70% -> 80-100%)"
   },
   "calcolatore_prodotto": {
     "descrizione": "USO: convertire il TARGET (calcolato col modello ESPEN) in ml/h del prodotto scelto (enterale o parenterale)",
@@ -439,7 +416,6 @@
       "3. ml_h = target_netto / (kcal_ml_prodotto * 24)",
       "4. kcal_die = ml_h*24*kcal_ml ; proteine_g_die = ml_h*24*prot_g_ml ; proteine_g_kg = proteine_g_die / peso_nutrizionale"
     ],
-    "verificato": false,
     "fonte": "nutricalc (prodotti) + espen (target)"
   },
   "filtri_paziente_enterale": {
@@ -517,7 +493,6 @@
         ]
       }
     ],
-    "verificato": false,
     "fonte": "nutricalc + indicazioni prodotto"
   },
   "confronto_prodotti": {
@@ -525,7 +500,6 @@
     "per_ogni_prodotto": "ml_h = kcal_da_nutrizione / (kcal_ml*24); kcal_die = ml_h*24*kcal_ml; prot_die = ml_h*24*prot_g_ml; prot_g_kg = prot_die / peso_di_riferimento",
     "scopo": "a parita di target CALORICO, i prodotti danno PROTEINE diverse (rapporto prot/kcal variabile): il confronto aiuta a scegliere quello che copre anche il fabbisogno proteico",
     "ordina_per": "proteine_g_kg piu vicine al target (o filtrare prima per condizione)",
-    "verificato": false,
     "fonte": "nutricalc"
   }
 }
