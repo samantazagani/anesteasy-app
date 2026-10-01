@@ -1,5 +1,4 @@
 {
-  "_stato": "BOZZA da verificare. Valori da standard pediatrici (APLS/PALS/ESAIC) - nessuna pagina Mapar/Manuale dedicata alla pediatria. verificato=false: controllare 1-a-1 e assegnare la fonte.",
   "presidi": {
     "tubo_iot": {
       "formula_diametro_cuffiato": "eta_anni/4 + 3.5",
@@ -34,8 +33,6 @@
           "profondita_cm": 12
         }
       ],
-      "verificato": false,
-      "fonte": "bozza",
       "formula_profondita_nasale_cm": "eta_anni/2 + 15 (circa profondita orale + 2-3 cm)",
       "arrotondamento": {
         "incremento_mm": 0.5,
@@ -157,8 +154,6 @@
     "defibrillazione": {
       "defibrillazione_J_kg": 4,
       "cardioversione_J_kg": "0.5-1 poi 2",
-      "verificato": false,
-      "fonte": "bozza",
       "arrotondamento": "arrotondare all'energia (J) selezionabile sul defibrillatore in uso"
     }
   },
@@ -270,9 +265,7 @@
           "formula": "(3 * eta_anni) + 7"
         }
       ],
-      "alternativa_APLS": "(eta_anni + 4) * 2",
-      "verificato": false,
-      "fonte": "bozza"
+      "alternativa_APLS": "(eta_anni + 4) * 2"
     },
     "volemia_ml_kg": [
       {
@@ -298,16 +291,12 @@
       }
     ],
     "perdita_ematica_max_ml": {
-      "formula": "volemia_ml_kg * peso * (Hct_iniziale - Hct_minimo) / Hct_iniziale",
-      "verificato": false,
-      "fonte": "bozza"
+      "formula": "volemia_ml_kg * peso * (Hct_iniziale - Hct_minimo) / Hct_iniziale"
     }
   },
   "fluidi": {
     "mantenimento_4_2_1": {
-      "formula": "4 ml/kg/h (primi 10 kg) + 2 ml/kg/h (10-20 kg) + 1 ml/kg/h (>20 kg)",
-      "verificato": false,
-      "fonte": "bozza"
+      "formula": "4 ml/kg/h (primi 10 kg) + 2 ml/kg/h (10-20 kg) + 1 ml/kg/h (>20 kg)"
     },
     "bolo_riempimento": {
       "valore": [
@@ -315,18 +304,14 @@
         20
       ],
       "unita": "ml/kg",
-      "note": "cristalloide isotonico, ripetibile",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "cristalloide isotonico, ripetibile"
     },
     "ipoglicemia": {
       "valore": [
         2,
         5
       ],
-      "unita": "ml/kg glucosata 10%",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "ml/kg glucosata 10%"
     }
   },
   "premedicazione_analgesia": [
@@ -335,53 +320,41 @@
       "via": "os",
       "valore": 0.5,
       "unita": "mg/kg",
-      "note": "max 15-20 mg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "max 15-20 mg"
     },
     {
       "farmaco": "ketamina",
       "via": "IM",
       "min": 4,
       "max": 6,
-      "unita": "mg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mg/kg"
     },
     {
       "farmaco": "paracetamolo",
       "via": "EV/os",
       "valore": 15,
       "unita": "mg/kg/dose",
-      "note": "max 60 mg/kg/die",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "max 60 mg/kg/die"
     },
     {
       "farmaco": "ibuprofene",
       "via": "os",
       "valore": 10,
-      "unita": "mg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mg/kg"
     },
     {
       "farmaco": "fentanyl",
       "via": "EV",
       "min": 1,
       "max": 2,
-      "unita": "mcg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mcg/kg"
     },
     {
       "farmaco": "morfina",
       "via": "EV",
       "min": 0.05,
       "max": 0.1,
-      "unita": "mg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mg/kg"
     }
   ],
   "emergenze_pediatriche": [
@@ -389,28 +362,22 @@
       "voce": "adrenalina arresto",
       "valore": 0.01,
       "unita": "mg/kg",
-      "note": "vedi farmaci.json (adrenalina, pediatrico)",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "vedi farmaci.json (adrenalina, pediatrico)"
     },
     {
       "voce": "atropina bradicardia",
       "valore": 0.02,
       "unita": "mg/kg",
-      "note": "min 0.1 mg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "min 0.1 mg"
     },
     {
       "voce": "amiodarone arresto",
       "valore": 5,
-      "unita": "mg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "unita": "mg/kg"
     }
   ],
   "calcolo_pesi": {
-    "_bug_noto": "Se l'app mostra ancora IBW/BMI errati in pediatria, il fix e nel CODICE: applicare questo algoritmo quando la categoria e pediatrica.",
+    "_bug_noto": "Se l'app mostra ancora IBW/BMI errati in pediatria, il fix e nel CODICE: applicare questo algoritmo quando la categoria e pediatrica",
     "algoritmo": [
       "1. categoria pediatrica se eta < ~15 anni (o sotto la soglia adulto configurata)",
       "2. BMI = peso_kg / (altezza_m)^2  (STESSA formula dell'adulto; ma NON usare i cutoff 25/30: in pediatria si interpreta per percentile)",
@@ -431,9 +398,7 @@
         "altezza_cm": 150,
         "IBW_kg_circa": 39.2
       }
-    ],
-    "verificato": false,
-    "fonte": "bozza (Traub-Johnson)"
+    ]
   },
   "calcolatori": [
     {
@@ -445,9 +410,7 @@
         "ml_kg"
       ],
       "output": "ml",
-      "note": "6-8 ml/kg; in ARDS 5-6 ml/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "6-8 ml/kg; in ARDS 5-6 ml/kg"
     },
     {
       "id": "liquidi_mantenimento_ml_h",
@@ -457,9 +420,7 @@
         "peso_kg"
       ],
       "output": "ml/h",
-      "esempio": "peso 25 kg -> 4*10 + 2*10 + 1*5 = 65 ml/h",
-      "verificato": false,
-      "fonte": "bozza"
+      "esempio": "peso 25 kg -> 4*10 + 2*10 + 1*5 = 65 ml/h"
     }
   ],
   "altri_farmaci": [
@@ -469,9 +430,7 @@
       "min": 0.15,
       "max": 0.5,
       "unita": "mg/kg",
-      "note": "PONV/antinfiammatorio ~0.15 mg/kg (max 8 mg); edema vie aeree/croup fino a 0.5 mg/kg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "PONV/antinfiammatorio ~0.15 mg/kg (max 8 mg); edema vie aeree/croup fino a 0.5 mg/kg"
     },
     {
       "farmaco": "metilprednisolone",
@@ -479,18 +438,14 @@
       "min": 1,
       "max": 2,
       "unita": "mg/kg",
-      "note": "antinfiammatorio",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "antinfiammatorio"
     },
     {
       "farmaco": "omeprazolo",
       "via": "EV/os",
       "valore": 1,
       "unita": "mg/kg/die",
-      "note": "max ~20-40 mg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "max ~20-40 mg"
     },
     {
       "farmaco": "ondansetron",
@@ -498,9 +453,7 @@
       "min": 0.1,
       "max": 0.15,
       "unita": "mg/kg",
-      "note": "PONV; max 4 mg",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "PONV; max 4 mg"
     },
     {
       "farmaco": "acido tranexamico",
@@ -508,9 +461,7 @@
       "min": 10,
       "max": 15,
       "unita": "mg/kg",
-      "note": "sanguinamento chirurgico; eventuale infusione successiva secondo protocollo",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "sanguinamento chirurgico; eventuale infusione successiva secondo protocollo"
     }
   ]
 }

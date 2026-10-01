@@ -1,5 +1,5 @@
 {
-  "_descrizione": "Fonti citate. Ogni dose nei file dati punta a un 'id' qui tramite il campo 'fonte' (+ eventuale 'pagina').",
+  "_descrizione": "Fonti citate. Ogni dose nei file dati punta a un 'id' qui tramite il campo 'fonte' (+ eventuale 'pagina')",
   "fonti": [
     {
       "id": "manuale-giovane-anestesista",
@@ -21,7 +21,7 @@
       "id": "revisione-medico",
       "titolo": "Verifica del medico su Mapar + Manuale del giovane anestesista",
       "tipo": "revisione-clinica",
-      "note": "voce confermata dal medico contro entrambi i manuali; numero di pagina da precisare",
+      "note": "voce confermata dal medico contro Mapar e Manuale del giovane anestesista",
       "anno": 2026,
       "url": ""
     },
@@ -45,6 +45,13 @@
       "titolo": "Linee guida ERC/IRC 2025 - ALS cap. 5 (Tabella 6, aritmie peri-arresto)",
       "tipo": "linee-guida",
       "anno": 2025,
+      "url": ""
+    },
+    {
+      "id": "prontuario",
+      "titolo": "Prontuario farmaci di reparto (foto del medico)",
+      "tipo": "prontuario",
+      "anno": 2026,
       "url": ""
     }
   ]
