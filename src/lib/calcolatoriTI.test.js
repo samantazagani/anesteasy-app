@@ -19,12 +19,15 @@ import {
   coeffACTAdrogue,
   calcolaCorrezioneSodioAdrogue,
   calcolaPIAConversione,
+  calcolaInfusioneDoseUnita,
 } from './calcolatoriTI'
 
-// "gamma" e "infusione_da_dose_oraria" (i 2 calcolatori restanti dei 15 di
-// data/calcolatori-ti.json) non hanno funzioni proprie: riusano calcolaInfusione e
-// calcolaMlOrariDaConcentrazione da infusionCalculator.js, gia' testate a fondo in
-// infusionCalculator.test.js (incluso un caso specifico per l'uso in questo modulo).
+// "gamma" (l'unico calcolatore rimasto senza una funzione propria qui) riusa
+// calcolaInfusione da infusionCalculator.js, gia' testata a fondo in
+// infusionCalculator.test.js. "infusione_da_dose_oraria" aveva anch'esso riusato
+// calcolaMlOrariDaConcentrazione (ancora vero per l'omonimo calcolatore del Modulo 1, "Dose
+// oraria -> ml/h"), ma qui e' stato sostituito dalla versione potenziata bidirezionale
+// calcolaInfusioneDoseUnita, testata sotto.
 
 describe('calcolaSodioCorretto', () => {
   // Caso verificato: Na 130, glicemia 400 -> 134.8
@@ -346,5 +349,78 @@ describe('calcolaPIAConversione', () => {
 
   it('lancia un errore se l\'unita di partenza non e\' valida', () => {
     expect(() => calcolaPIAConversione({ valore: 10, unitaDiPartenza: 'kPa' })).toThrow(/unita/i)
+  })
+})
+
+describe('calcolaInfusioneDoseUnita', () => {
+  // Esempio di data/calcolatori-ti.json > infusione_da_dose_oraria: 250 mg in 50 ml
+  // (5 mg/ml = 5000 mcg/ml), 1 mg/min -> 12 ml/h. Verificato passo-passo con Node (vedi
+  // risposta) prima di scriverlo: 1 mg/min = 1000 mcg/min; 1000/5000*60 = 12.
+  it('250 mg in 50 ml, dose 1 mg/min -> 12 ml/h (esempio del JSON), con tutte le equivalenze', () => {
+    const r = calcolaInfusioneDoseUnita({
+      quantitaFarmaco: 250,
+      quantitaUnita: 'mg',
+      volumeTotaleMl: 50,
+      doseValore: 1,
+      doseUnita: 'mg/min',
+    })
+
+    expect(r.concMcgMl).toBe(5000)
+    expect(r.equivalenze).toEqual({ mlH: 12, mgMin: 1, mcgMin: 1000, mgH: 60, mcgH: 60000 })
+  })
+
+  it('direzione inversa: stessa diluizione, partendo da 12 ml/h -> stesse equivalenze (round-trip)', () => {
+    const r = calcolaInfusioneDoseUnita({ quantitaFarmaco: 250, quantitaUnita: 'mg', volumeTotaleMl: 50, mlH: 12 })
+    expect(r.equivalenze).toEqual({ mlH: 12, mgMin: 1, mcgMin: 1000, mgH: 60, mcgH: 60000 })
+  })
+
+  // Caso con unita mcg (es. noradrenalina): 4 mg in 50 ml, dose 10 mcg/min -> 7.5 ml/h.
+  it('4 mg in 50 ml, dose 10 mcg/min -> 7.5 ml/h', () => {
+    const r = calcolaInfusioneDoseUnita({
+      quantitaFarmaco: 4,
+      quantitaUnita: 'mg',
+      volumeTotaleMl: 50,
+      doseValore: 10,
+      doseUnita: 'mcg/min',
+    })
+
+    expect(r.concMcgMl).toBe(80)
+    expect(r.equivalenze.mlH).toBe(7.5)
+    expect(r.equivalenze.mcgMin).toBe(10)
+  })
+
+  it('stessa diluizione, dose espressa in mcg/h invece che mcg/min -> stesso risultato', () => {
+    const r = calcolaInfusioneDoseUnita({
+      quantitaFarmaco: 4,
+      quantitaUnita: 'mg',
+      volumeTotaleMl: 50,
+      doseValore: 600,
+      doseUnita: 'mcg/h',
+    })
+
+    expect(r.equivalenze.mlH).toBe(7.5)
+    expect(r.equivalenze.mcgMin).toBe(10)
+  })
+
+  it('lancia un errore se non si specifica ne\' dose ne\' ml/h', () => {
+    expect(() => calcolaInfusioneDoseUnita({ quantitaFarmaco: 250, quantitaUnita: 'mg', volumeTotaleMl: 50 })).toThrow(/dose.*ml\/h|specificare/i)
+  })
+
+  it('lancia un errore se si specificano entrambi dose e ml/h', () => {
+    expect(() =>
+      calcolaInfusioneDoseUnita({
+        quantitaFarmaco: 250,
+        quantitaUnita: 'mg',
+        volumeTotaleMl: 50,
+        doseValore: 1,
+        doseUnita: 'mg/min',
+        mlH: 12,
+      }),
+    ).toThrow(/specificare/i)
+  })
+
+  it('lancia un errore se manca la quantita di farmaco o il volume', () => {
+    expect(() => calcolaInfusioneDoseUnita({ quantitaFarmaco: 0, quantitaUnita: 'mg', volumeTotaleMl: 50, mlH: 12 })).toThrow(/quantita/i)
+    expect(() => calcolaInfusioneDoseUnita({ quantitaFarmaco: 250, quantitaUnita: 'mg', volumeTotaleMl: 0, mlH: 12 })).toThrow(/volume/i)
   })
 })

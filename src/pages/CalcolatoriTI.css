@@ -78,3 +78,65 @@
   color: var(--text-h);
 }
 
+.scheda-titolo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 16px 0 6px;
+}
+
+.lista-riferimento {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.nota-equivalenze {
+  font-family: var(--mono);
+}
+
+/* ROTEM: una riga per step della sequenza clinica, bordo colorato per categoria (non
+   legato a un significato clinico di colore, solo a distinguere visivamente i 5 step). */
+.lista-rotem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.riga-rotem {
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.riga-rotem-lisi {
+  border-left-color: #0ea5e9;
+}
+.riga-rotem-fibrinogeno {
+  border-left-color: #8b5cf6;
+}
+.riga-rotem-piastrine {
+  border-left-color: #f59e0b;
+}
+.riga-rotem-fattori {
+  border-left-color: #ef4444;
+}
+.riga-rotem-eparina {
+  border-left-color: #10b981;
+}
+
+.riga-rotem-attiva {
+  background: var(--social-bg);
+}
+
+.riferimento-rotem {
+  margin-top: 8px;
+}
+

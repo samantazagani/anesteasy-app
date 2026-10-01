@@ -1,5 +1,4 @@
 {
-  "_stato": "Calcolatori TI: formule standard (basso rischio). Verificare le formule prima dell'uso; verificato=false.",
   "calcolatori": [
     {
       "id": "correzione_sodio",
@@ -62,7 +61,6 @@
         "se overcorrezione: ri-abbassare con glucosata 5% +/- desmopressina (DDAVP)"
       ],
       "esempio": "donna anziana 60 kg, Na 110, ipertonica 3%: ACT = 60*0.45 = 27; deltaNa/L = (513-110)/(27+1) = 14.4; target +6 -> 6/14.4*1000 = 416 ml/24h -> ~17 ml/h",
-      "verificato": false,
       "fonte": "Adrogue-Madias; limiti da linee guida (panel USA 2013 / europee 2014), tetto 6-8/24h",
       "ordine": 4
     },
@@ -107,16 +105,52 @@
     },
     {
       "id": "infusione_da_dose_oraria",
-      "nome": "ml/h da dose oraria e diluizione",
-      "formula": "concentrazione = quantita_farmaco / volume_totale_ml ; ml_h = dose_oraria_desiderata / concentrazione  (equivalente: ml_h = dose_oraria_desiderata * volume_totale_ml / quantita_farmaco)",
+      "nome": "ml/h da dose (mg/mcg)",
+      "categoria": "infusioni",
+      "descrizione": "Conversione bidirezionale dose <-> velocita pompa, con unita di massa selezionabili (mg o mcg) per concentrazione e dose. Mostra le equivalenze pronte.",
       "input": [
-        "quantita_farmaco",
-        "volume_totale_ml",
-        "dose_oraria_desiderata"
+        {
+          "campo": "quantita_farmaco",
+          "label": "Quantita farmaco",
+          "unita": [
+            "mg",
+            "mcg"
+          ]
+        },
+        {
+          "campo": "volume_totale_ml",
+          "label": "Volume totale",
+          "unita": "ml"
+        },
+        {
+          "campo": "dose",
+          "label": "Dose",
+          "unita": [
+            "mg/h",
+            "mg/min",
+            "mcg/h",
+            "mcg/min"
+          ]
+        },
+        {
+          "campo": "velocita_ml_h",
+          "label": "Velocita pompa",
+          "unita": "ml/h"
+        }
       ],
-      "output": "ml/h",
-      "note": "quantita_farmaco e dose_oraria devono usare la stessa unita di massa (mg con mg/h, g convertito in mg, ecc). Esempio: 1 g (=1000 mg) in 50 ml, 125 mg/h -> 20 mg/ml -> 6.25 ml/h",
-      "categoria": "infusioni"
+      "bidirezionale": "impostando la dose si calcola ml/h; impostando ml/h si calcola la dose (nell'unita scelta)",
+      "formula": "conc_mcg_ml = quantita_in_mcg / volume_ml ; dose_mcg_min = converti(dose, unita) ; ml_h = (dose_mcg_min / conc_mcg_ml) * 60 ; inverso: dose_mcg_min = (ml_h / 60) * conc_mcg_ml",
+      "conversioni": {
+        "massa": "mg = mcg / 1000",
+        "tempo": "per min <-> per h (*60 / :60)",
+        "concentrazione_mostrata": "sia mg/ml sia mcg/ml"
+      },
+      "output": [
+        "velocita_ml_h",
+        "equivalenze: ml/h, mg/min, mcg/min, mg/h, mcg/h"
+      ],
+      "note": "NON per kg: per i gamma (mcg/kg/min) usare il calcolatore 'gamma'. Esempio: 250 mg in 50 ml (=5 mg/ml), 1 mg/min -> 12 ml/h.",
+      "data_revisione": "2026-09-30"
     },
     {
       "id": "map",
@@ -175,7 +209,6 @@
       ],
       "output": "ml/min/1.73m2",
       "note": "equazione senza fattore razza (2021); diversa dalla Cockcroft-Gault (che stima la clearance in ml/min per il dosaggio farmaci)",
-      "verificato": false,
       "fonte": "CKD-EPI 2021 (Inker NEJM 2021)",
       "categoria": "renale"
     },
@@ -196,7 +229,6 @@
       ],
       "output": "mmHg",
       "note": "target tipico 60-70 mmHg; MAP misurata a livello del trago",
-      "verificato": false,
       "fonte": "riferimento standard",
       "categoria": "neuro"
     },
@@ -210,10 +242,180 @@
       ],
       "output": "valore convertito",
       "note": "PIA (pressione intra-addominale) misurata in vescica. Normale 5-7 mmHg; ipertensione intra-addominale >12 mmHg; sindrome compartimentale addominale >20 mmHg",
-      "verificato": false,
-      "fonte": "bozza",
       "categoria": "addome"
+    },
+    {
+      "id": "rotem",
+      "nome": "Interpretazione ROTEM",
+      "categoria": "coagulazione",
+      "tipo": "interprete",
+      "descrizione": "Paziente sanguinante: dai valori ROTEM suggerisce l'azione nella sequenza clinica. Modalita interattiva (inserisci i valori -> azione + dose sul peso) e riferimenti statici.",
+      "input": [
+        {
+          "campo": "peso",
+          "label": "Peso",
+          "unita": "kg",
+          "uso": "dose"
+        },
+        {
+          "campo": "extem_ml",
+          "label": "EXTEM ML",
+          "unita": "%"
+        },
+        {
+          "campo": "fibtem_a5",
+          "label": "FIBTEM A5",
+          "unita": "mm"
+        },
+        {
+          "campo": "extem_a5",
+          "label": "EXTEM A5",
+          "unita": "mm"
+        },
+        {
+          "campo": "extem_ct",
+          "label": "EXTEM CT",
+          "unita": "s"
+        },
+        {
+          "campo": "intem_ct",
+          "label": "INTEM CT",
+          "unita": "s"
+        },
+        {
+          "campo": "heptem_ct",
+          "label": "HEPTEM CT",
+          "unita": "s"
+        }
+      ],
+      "sequenza": [
+        "fibrinolisi",
+        "fibrinogeno",
+        "piastrine",
+        "fattori",
+        "eparina"
+      ],
+      "nota_sequenza": "Leggere FIBTEM A5 PRIMA di EXTEM CT: il CT e interpretabile solo se il fibrinogeno e adeguato.",
+      "regole": [
+        {
+          "step": 1,
+          "nome": "Iperfibrinolisi",
+          "colore": "lisi",
+          "condizione": "extem_ml > 15",
+          "interpretazione": "iperfibrinolisi (confermare con APTEM)",
+          "azione": "Acido tranexamico",
+          "dose_mg_kg": [
+            15,
+            20
+          ],
+          "dose_fissa": "1 g"
+        },
+        {
+          "step": 2,
+          "nome": "Fibrinogeno basso",
+          "colore": "fibrinogeno",
+          "condizione": "fibtem_a5 < 10",
+          "nota_condizione": "obiettivo piu alto in ostetricia/cardiochirurgia (A5 < 12)",
+          "interpretazione": "deficit di fibrinogeno",
+          "azione": "Fibrinogeno concentrato (o crioprecipitato)",
+          "dose_mg_kg": [
+            25,
+            50
+          ]
+        },
+        {
+          "step": 3,
+          "nome": "Firmezza bassa (piastrine)",
+          "colore": "piastrine",
+          "condizione": "extem_a5 < 35 AND fibtem_a5 >= 10",
+          "condizione_alt": "se extem_a5 < 35 ma fibtem_a5 < 10 -> correggere PRIMA il fibrinogeno, poi rivalutare le piastrine",
+          "interpretazione": "deficit piastrinico (con fibrinogeno adeguato)",
+          "azione": "Piastrine (1 pool)"
+        },
+        {
+          "step": 4,
+          "nome": "Deficit di fattori",
+          "colore": "fattori",
+          "condizione": "extem_ct > 80",
+          "nota_condizione": "interpretare dopo aver corretto il fibrinogeno",
+          "interpretazione": "deficit di fattori della coagulazione",
+          "azione": "PCC (o plasma)",
+          "dose_ui_kg": 25
+        },
+        {
+          "step": 5,
+          "nome": "Eparina residua",
+          "colore": "eparina",
+          "condizione": "intem_ct > 240 AND (intem_ct / heptem_ct) > 1.25",
+          "interpretazione": "effetto eparinico residuo (HEPTEM corregge INTEM)",
+          "azione": "Protamina (secondo eparina residua)"
+        }
+      ],
+      "riferimenti": {
+        "parametri": [
+          {
+            "sigla": "CT",
+            "significato": "clotting time - avvio del coagulo = fattori (e anticoagulanti)"
+          },
+          {
+            "sigla": "CFT / alpha",
+            "significato": "cinetica di formazione = fibrinogeno + piastrine"
+          },
+          {
+            "sigla": "A5 / A10",
+            "significato": "fermezza precoce - decisione rapida, predice l'MCF"
+          },
+          {
+            "sigla": "MCF",
+            "significato": "fermezza massima = piastrine + fibrinogeno + FXIII"
+          },
+          {
+            "sigla": "ML / LI30",
+            "significato": "lisi del coagulo = fibrinolisi"
+          }
+        ],
+        "test": [
+          {
+            "sigla": "EXTEM",
+            "significato": "via estrinseca - quadro globale"
+          },
+          {
+            "sigla": "INTEM",
+            "significato": "via intrinseca (+ effetto eparina)"
+          },
+          {
+            "sigla": "FIBTEM",
+            "significato": "contributo del fibrinogeno (piastrine inibite)"
+          },
+          {
+            "sigla": "APTEM",
+            "significato": "smaschera l'iperfibrinolisi (confronto con EXTEM)"
+          },
+          {
+            "sigla": "HEPTEM",
+            "significato": "smaschera l'eparina residua (confronto con INTEM)"
+          }
+        ],
+        "valori_normali": [
+          {
+            "test": "EXTEM",
+            "range": "CT 38-79 s; A10 43-65 mm; MCF 50-72 mm; ML <15%"
+          },
+          {
+            "test": "INTEM",
+            "range": "CT 100-240 s; MCF 50-72 mm"
+          },
+          {
+            "test": "FIBTEM",
+            "range": "A10 7-23 mm; MCF 9-25 mm"
+          }
+        ],
+        "_nota_valori": "valori normali indicativi, dipendono dal dispositivo"
+      },
+      "fonte": "algoritmi A5-guidati (Gorlinger et al.) / linee guida sanguinamento perioperatorio",
+      "data_revisione": "2026-09-29",
+      "_soglie_nota": "soglie e dosi modificabili; da confermare col protocollo del reparto"
     }
   ],
-  "_ordine_elettroliti": "La sezione elettroliti segue il flusso di un caso clinico: 1) Na corretto per glicemia -> 2) gap osmolare -> 3) deficit di sodio -> 4) Adrogue-Madias (correzione sicura) -> 5) deficit idrico (ipernatriemia) -> 6) potassio -> 7) calcio. Ordinare per il campo 'ordine'."
+  "_ordine_elettroliti": "La sezione elettroliti segue il flusso di un caso clinico: 1) Na corretto per glicemia -> 2) gap osmolare -> 3) deficit di sodio -> 4) Adrogue-Madias (correzione sicura) -> 5) deficit idrico (ipernatriemia) -> 6) potassio -> 7) calcio. Ordinare per il campo 'ordine'"
 }

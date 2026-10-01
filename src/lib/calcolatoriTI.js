@@ -403,3 +403,76 @@ export function calcolaPIAConversione({ valore, unitaDiPartenza }, { decimali = 
     formula,
   }
 }
+
+const FATTORE_MCG = { mg: 1000, mcg: 1 }
+
+function doseInMcgMin(valore, unita) {
+  const [massa, tempo] = unita.split('/')
+  const mcg = valore * FATTORE_MCG[massa]
+  return tempo === 'h' ? mcg / 60 : mcg
+}
+
+/**
+ * ml/h da dose (data/calcolatori-ti.json > infusione_da_dose_oraria, potenziato): a
+ * differenza di calcolaMlOrariDaConcentrazione (infusionCalculator.js, ancora usato dal
+ * Modulo 1 "Dose oraria -> ml/h", mg impliciti su mg/h), qui concentrazione e dose hanno
+ * unita di massa selezionabili (mg o mcg) indipendenti, la dose puo' essere per minuto o per
+ * ora, ed e' BIDIREZIONALE: passare esattamente uno tra {doseValore,doseUnita} e mlH, l'altro
+ * si ricava. Restituisce sempre tutte le equivalenze (ml/h, mg/min, mcg/min, mg/h, mcg/h) a
+ * vista, non solo il risultato nella singola unita' scelta.
+ *
+ * @param {{ quantitaFarmaco: number, quantitaUnita: 'mg'|'mcg', volumeTotaleMl: number, doseValore?: number, doseUnita?: 'mg/h'|'mg/min'|'mcg/h'|'mcg/min', mlH?: number }} input
+ */
+export function calcolaInfusioneDoseUnita(
+  { quantitaFarmaco, quantitaUnita, volumeTotaleMl, doseValore, doseUnita, mlH },
+  { decimali = 2 } = {},
+) {
+  if (!(quantitaFarmaco > 0)) {
+    throw new Error('calcolaInfusioneDoseUnita: quantita di farmaco mancante o non valida')
+  }
+  if (!(volumeTotaleMl > 0)) {
+    throw new Error('calcolaInfusioneDoseUnita: volume totale mancante o non valido')
+  }
+
+  const concMcgMl = (quantitaFarmaco * FATTORE_MCG[quantitaUnita]) / volumeTotaleMl
+
+  const haDose = doseValore !== undefined && doseValore !== null && doseValore !== ''
+  const haMlH = mlH !== undefined && mlH !== null && mlH !== ''
+  if (haDose === haMlH) {
+    throw new Error('calcolaInfusioneDoseUnita: specificare esattamente uno tra dose e ml/h')
+  }
+
+  let mcgMin
+  let mlHCalcolato
+  let formula
+  if (haDose) {
+    if (!(doseValore > 0)) {
+      throw new Error('calcolaInfusioneDoseUnita: dose mancante o non valida')
+    }
+    mcgMin = doseInMcgMin(doseValore, doseUnita)
+    mlHCalcolato = (mcgMin / concMcgMl) * 60
+    formula =
+      `${formatNumero(quantitaFarmaco, 2)} ${quantitaUnita} ÷ ${formatNumero(volumeTotaleMl, 0)} ml = ${formatNumero(concMcgMl, 1)} mcg/ml; ` +
+      `${formatNumero(doseValore, 2)} ${doseUnita} = ${formatNumero(mcgMin, 1)} mcg/min ÷ conc. × 60 = ${formatNumero(mlHCalcolato, decimali)} ml/h`
+  } else {
+    if (!(mlH > 0)) {
+      throw new Error('calcolaInfusioneDoseUnita: ml/h mancante o non valido')
+    }
+    mlHCalcolato = mlH
+    mcgMin = (mlH / 60) * concMcgMl
+    formula = `${formatNumero(mlH, decimali)} ml/h × ${formatNumero(concMcgMl, 1)} mcg/ml ÷ 60 = ${formatNumero(mcgMin, 1)} mcg/min`
+  }
+
+  return {
+    concMcgMl: round(concMcgMl, 2),
+    concMgMl: round(concMcgMl / 1000, 3),
+    equivalenze: {
+      mlH: round(mlHCalcolato, decimali),
+      mgMin: round(mcgMin / 1000, 4),
+      mcgMin: round(mcgMin, 1),
+      mgH: round((mcgMin * 60) / 1000, 3),
+      mcgH: round(mcgMin * 60, 0),
+    },
+    formula,
+  }
+}

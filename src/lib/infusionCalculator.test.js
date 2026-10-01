@@ -135,8 +135,11 @@ describe('calcolaInfusioneOraria - validazione input', () => {
 })
 
 describe('calcolaMlOrariDaConcentrazione', () => {
-  // Caso reale da data/calcolatori-ti.json > infusione_da_dose_oraria (Modulo 6): 1 g
-  // (=1000 mg) in 50 ml, dose 125 mg/h -> 20 mg/ml -> 6.25 ml/h.
+  // Caso reale del calcolatore "Dose oraria -> ml/h" nel Modulo 1 (γ/ml/h): 1 g (=1000 mg)
+  // in 50 ml, dose 125 mg/h -> 20 mg/ml -> 6.25 ml/h. (Il calcolatore "infusione_da_dose_
+  // oraria" del Modulo 6/Calcolatori TI, che riusava questa stessa funzione, e' stato
+  // sostituito dalla versione potenziata bidirezionale calcolaInfusioneDoseUnita in
+  // calcolatoriTI.js - questa funzione resta pero' in uso qui nel Modulo 1.)
   it('1000 mg in 50 ml (20 mg/ml), dose 125 mg/h -> 6.25 ml/h', () => {
     const r = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 1000 / 50, doseMgOra: 125 })
 
@@ -144,8 +147,8 @@ describe('calcolaMlOrariDaConcentrazione', () => {
     expect(r.formula).toBe('125 mg/h ÷ 20 mg/ml = 6.25 ml/h')
   })
 
-  // Caso reale del calcolatore "Dose oraria -> ml/h" nel Modulo 1 (γ/ml/h), accanto a
-  // γ/kg/min <-> ml/h: 500 mg in 40 ml, dose 2 mg/h -> 12.5 mg/ml -> 0.16 ml/h.
+  // Altro caso reale dello stesso calcolatore: 500 mg in 40 ml, dose 2 mg/h -> 12.5 mg/ml
+  // -> 0.16 ml/h.
   it('500 mg in 40 ml (12.5 mg/ml), dose 2 mg/h -> 0.16 ml/h', () => {
     const r = calcolaMlOrariDaConcentrazione({ concentrazioneMgMl: 500 / 40, doseMgOra: 2 })
 
