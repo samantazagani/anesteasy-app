@@ -10,6 +10,7 @@ import {
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import { TossicitaAdditiva } from '../components/TossicitaAdditiva.jsx'
 import { SezioneLAST } from '../components/SezioneLAST.jsx'
+import { BlocchiCatalogo } from '../components/BlocchiCatalogo.jsx'
 import '../styles/risultato.css'
 import './AnestesiaLocale.css'
 
@@ -371,6 +372,8 @@ export function AnestesiaLocale() {
       <TossicitaAdditiva anestetici={anestetici} pesoKg={pesoKg} />
 
       <SezioneLAST lastData={anesteticiData.last} pesoKg={pesoKg} />
+
+      <BlocchiCatalogo dati={anesteticiData.blocchi_catalogo} />
     </section>
   )
 }

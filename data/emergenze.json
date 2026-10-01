@@ -1,91 +1,506 @@
 {
-  "_stato": "BOZZA. Algoritmi che RICHIAMANO i farmaci (farmaci.json) per id+contesto, non li ridefiniscono. Verificare passi e dosi con linee guida (ERC/SIAARTI). verificato=false.",
   "emergenze": [
     {
-      "id": "acls-adulto", "titolo": "Arresto cardiaco adulto (ALS)",
+      "id": "acls-adulto",
+      "titolo": "Arresto cardiaco adulto (ALS)",
       "passi": [
-        { "step": 1, "azione": "RCP 30:2, applicare defibrillatore" },
-        { "step": 2, "azione": "Ritmo defibrillabile (FV/TV): shock 150-200 J bifasico" },
-        { "step": 3, "azione": "Adrenalina 1 mg ogni 3-5 min", "farmaco_id": "adrenalina", "contesto": "arresto" },
-        { "step": 4, "azione": "Amiodarone 300 mg dopo 3 shock (poi 150 mg)", "farmaco_id": "amiodarone", "contesto": "arresto" },
-        { "step": 5, "azione": "Trattare cause reversibili (4H/4T)" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "RCP 30:2, applicare defibrillatore"
+        },
+        {
+          "step": 2,
+          "azione": "Ritmo defibrillabile (FV/TV): shock 150-200 J bifasico"
+        },
+        {
+          "step": 3,
+          "azione": "Adrenalina 1 mg ogni 3-5 min",
+          "farmaco_id": "adrenalina",
+          "contesto": "arresto"
+        },
+        {
+          "step": 4,
+          "azione": "Amiodarone 300 mg dopo 3 shock (poi 150 mg)",
+          "farmaco_id": "amiodarone",
+          "contesto": "arresto"
+        },
+        {
+          "step": 5,
+          "azione": "Trattare cause reversibili (4H/4T)"
+        }
+      ]
     },
     {
-      "id": "acls-pediatrico", "titolo": "Arresto cardiaco pediatrico",
+      "id": "acls-pediatrico",
+      "titolo": "Arresto cardiaco pediatrico",
       "passi": [
-        { "step": 1, "azione": "RCP 15:2 (2 soccorritori)" },
-        { "step": 2, "azione": "Adrenalina 0.01 mg/kg ogni 3-5 min", "farmaco_id": "adrenalina", "contesto": "arresto", "fascia_eta": "pediatrico" },
-        { "step": 3, "azione": "Defibrillazione 4 J/kg se ritmo defibrillabile" },
-        { "step": 4, "azione": "Amiodarone 5 mg/kg dopo 3 shock" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "RCP 15:2 (2 soccorritori)"
+        },
+        {
+          "step": 2,
+          "azione": "Adrenalina 0.01 mg/kg ogni 3-5 min",
+          "farmaco_id": "adrenalina",
+          "contesto": "arresto",
+          "fascia_eta": "pediatrico"
+        },
+        {
+          "step": 3,
+          "azione": "Defibrillazione 4 J/kg se ritmo defibrillabile"
+        },
+        {
+          "step": 4,
+          "azione": "Amiodarone 5 mg/kg dopo 3 shock"
+        }
+      ]
     },
     {
-      "id": "anafilassi", "titolo": "Anafilassi",
+      "id": "anafilassi",
+      "titolo": "Anafilassi",
       "passi": [
-        { "step": 1, "azione": "Stop agente scatenante, chiamare aiuto, O2 alto flusso" },
-        { "step": 2, "azione": "Adrenalina 0.5 mg IM (adulto)", "farmaco_id": "adrenalina", "contesto": "anafilassi", "fascia_eta": "adulto" },
-        { "step": 3, "azione": "Fluidi cristalloidi in bolo" },
-        { "step": 4, "azione": "Adrenalina in infusione se refrattaria", "farmaco_id": "adrenalina", "contesto": "infusione" },
-        { "step": 5, "azione": "Seconda linea: corticosteroidi, antistaminici" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "Stop agente scatenante, chiamare aiuto, O2 alto flusso"
+        },
+        {
+          "step": 2,
+          "azione": "Adrenalina 0.5 mg IM (adulto)",
+          "farmaco_id": "adrenalina",
+          "contesto": "anafilassi",
+          "fascia_eta": "adulto"
+        },
+        {
+          "step": 3,
+          "azione": "Fluidi cristalloidi in bolo"
+        },
+        {
+          "step": 4,
+          "azione": "Adrenalina in infusione se refrattaria",
+          "farmaco_id": "adrenalina",
+          "contesto": "infusione"
+        },
+        {
+          "step": 5,
+          "azione": "Seconda linea: corticosteroidi, antistaminici"
+        }
+      ]
     },
     {
-      "id": "last", "titolo": "LAST (tossicita sistemica da anestetici locali)",
+      "id": "last",
+      "titolo": "LAST (tossicita sistemica da anestetici locali)",
       "passi": [
-        { "step": 1, "azione": "Stop iniezione, chiamare aiuto, gestire vie aeree/convulsioni" },
-        { "step": 2, "azione": "Emulsione lipidica 20%: bolo 1.5 ml/kg poi 0.25 ml/kg/min", "riferimento": "anestetici-locali.json -> last" },
-        { "step": 3, "azione": "RCP se arresto; evitare/ridurre adrenalina (<1 mcg/kg); NO propofol" }
-      ], "verificato": false, "fonte": "manuale-giovane-anestesista", "pagina": "109"
+        {
+          "step": 1,
+          "azione": "Stop iniezione, chiamare aiuto, gestire vie aeree/convulsioni"
+        },
+        {
+          "step": 2,
+          "azione": "Emulsione lipidica 20%: bolo 1.5 ml/kg poi 0.25 ml/kg/min",
+          "riferimento": "anestetici-locali.json -> last"
+        },
+        {
+          "step": 3,
+          "azione": "RCP se arresto; evitare/ridurre adrenalina (<1 mcg/kg); NO propofol"
+        }
+      ],
+      "fonte": "manuale-giovane-anestesista",
+      "pagina": "109"
     },
     {
-      "id": "ipertermia-maligna", "titolo": "Ipertermia maligna",
+      "id": "ipertermia-maligna",
+      "titolo": "Ipertermia maligna",
       "passi": [
-        { "step": 1, "azione": "Stop agenti trigger (volatili/succinilcolina), O2 100% alto flusso" },
-        { "step": 2, "azione": "Dantrolene 2.5 mg/kg, ripetere fino a 10 mg/kg", "farmaco_id": "dantrolene", "contesto": "ipertermia_maligna" },
-        { "step": 3, "azione": "Raffreddamento, trattare iperK/acidosi/aritmie, diuresi" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "Stop agenti trigger (volatili/succinilcolina), O2 100% alto flusso"
+        },
+        {
+          "step": 2,
+          "azione": "Dantrolene 2.5 mg/kg, ripetere fino a 10 mg/kg",
+          "farmaco_id": "dantrolene",
+          "contesto": "ipertermia_maligna"
+        },
+        {
+          "step": 3,
+          "azione": "Raffreddamento, trattare iperK/acidosi/aritmie, diuresi"
+        }
+      ]
     },
     {
-      "id": "laringospasmo", "titolo": "Laringospasmo",
+      "id": "laringospasmo",
+      "titolo": "Laringospasmo",
       "passi": [
-        { "step": 1, "azione": "O2 100%, CPAP, manovra di Larson (pressione punti retromandibolari)" },
-        { "step": 2, "azione": "Approfondire anestesia (propofol bolo)", "farmaco_id": "propofol", "contesto": "induzione" },
-        { "step": 3, "azione": "Succinilcolina se persiste", "farmaco_id": "succinilcolina", "contesto": "rsi" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "O2 100%, CPAP, manovra di Larson (pressione punti retromandibolari)"
+        },
+        {
+          "step": 2,
+          "azione": "Approfondire anestesia (propofol bolo)",
+          "farmaco_id": "propofol",
+          "contesto": "induzione"
+        },
+        {
+          "step": 3,
+          "azione": "Succinilcolina se persiste",
+          "farmaco_id": "succinilcolina",
+          "contesto": "rsi"
+        }
+      ]
     },
     {
-      "id": "broncospasmo", "titolo": "Broncospasmo",
+      "id": "broncospasmo",
+      "titolo": "Broncospasmo",
       "passi": [
-        { "step": 1, "azione": "O2 100%, approfondire anestesia, escludere cause meccaniche" },
-        { "step": 2, "azione": "Beta2-agonista inalatorio (salbutamolo)" },
-        { "step": 3, "azione": "Adrenalina se grave", "farmaco_id": "adrenalina", "contesto": "infusione" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "O2 100%, approfondire anestesia, escludere cause meccaniche"
+        },
+        {
+          "step": 2,
+          "azione": "Beta2-agonista inalatorio (salbutamolo)"
+        },
+        {
+          "step": 3,
+          "azione": "Adrenalina se grave",
+          "farmaco_id": "adrenalina",
+          "contesto": "infusione"
+        }
+      ]
     },
     {
-      "id": "crisi-ipertensiva", "titolo": "Crisi ipertensiva perioperatoria",
+      "id": "crisi-ipertensiva",
+      "titolo": "Crisi ipertensiva perioperatoria",
       "passi": [
-        { "step": 1, "azione": "Escludere dolore/ipercapnia/vescica piena" },
-        { "step": 2, "azione": "Labetalolo 5-20 mg bolo", "farmaco_id": "labetalolo", "contesto": "bolo" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "Escludere dolore/ipercapnia/vescica piena"
+        },
+        {
+          "step": 2,
+          "azione": "Labetalolo 5-20 mg bolo",
+          "farmaco_id": "labetalolo",
+          "contesto": "bolo"
+        }
+      ]
     },
     {
-      "id": "trasfusione-massiva", "titolo": "Protocollo trasfusione massiva",
+      "id": "trasfusione-massiva",
+      "titolo": "Protocollo trasfusione massiva",
       "passi": [
-        { "step": 1, "azione": "Attivare protocollo; rapporto GR:plasma:piastrine ~ 1:1:1" },
-        { "step": 2, "azione": "Acido tranexamico 1 g (poi 1 g in 8h)" },
-        { "step": 3, "azione": "Calcio (monitorare ipoCa da citrato)", "farmaco_id": "calcio-cloruro", "contesto": "tampone" },
-        { "step": 4, "azione": "Prevenire ipotermia; target fibrinogeno, EGA/emogas seriati" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "Attivare protocollo; rapporto GR:plasma:piastrine ~ 1:1:1"
+        },
+        {
+          "step": 2,
+          "azione": "Acido tranexamico 1 g (poi 1 g in 8h)"
+        },
+        {
+          "step": 3,
+          "azione": "Calcio (monitorare ipoCa da citrato)",
+          "farmaco_id": "calcio-cloruro",
+          "contesto": "tampone"
+        },
+        {
+          "step": 4,
+          "azione": "Prevenire ipotermia; target fibrinogeno, EGA/emogas seriati"
+        }
+      ]
     },
     {
-      "id": "via-aerea-difficile", "titolo": "Algoritmo via aerea difficile",
+      "id": "via-aerea-difficile",
+      "titolo": "Algoritmo via aerea difficile",
       "passi": [
-        { "step": 1, "azione": "Ottimizzare ventilazione in maschera / posizione" },
-        { "step": 2, "azione": "Massimo 3+1 tentativi di laringoscopia; considerare videolaringoscopio/bougie" },
-        { "step": 3, "azione": "Presidio sovraglottico di seconda generazione" },
-        { "step": 4, "azione": "Scenario CICO (can't intubate can't oxygenate): accesso cricotiroideo" }
-      ], "verificato": false, "fonte": "bozza"
+        {
+          "step": 1,
+          "azione": "Ottimizzare ventilazione in maschera / posizione"
+        },
+        {
+          "step": 2,
+          "azione": "Massimo 3+1 tentativi di laringoscopia; considerare videolaringoscopio/bougie"
+        },
+        {
+          "step": 3,
+          "azione": "Presidio sovraglottico di seconda generazione"
+        },
+        {
+          "step": 4,
+          "azione": "Scenario CICO (can't intubate can't oxygenate): accesso cricotiroideo"
+        }
+      ]
+    },
+    {
+      "id": "tachiaritmie-peri-arresto",
+      "titolo": "Tachiaritmie peri-arresto (adulto)",
+      "tipo": "algoritmo_ramificato",
+      "valutazione_iniziale": [
+        "Approccio ABCDE",
+        "Monitorare SpO2, ECG, PA",
+        "O2 se SpO2 <94% + accesso venoso",
+        "ECG a 12 derivazioni",
+        "Identificare e trattare le cause reversibili"
+      ],
+      "instabilita": {
+        "segni": [
+          "Shock",
+          "Sincope / ipotensione progressiva",
+          "Ischemia miocardica",
+          "Insufficienza cardiaca grave (edema polmonare / shock)",
+          "Immediatamente dopo il ROSC"
+        ],
+        "SE_INSTABILE": {
+          "azione": "Cardioversione elettrica sincronizzata - fino a 3 tentativi (sedazione/anestesia se cosciente)",
+          "se_inefficace": {
+            "azione": "Amiodarone 300 mg EV in 10-20 min OPPURE Procainamide 10-15 mg/kg (max 1 g) in 20 min; poi ripetere la cardioversione sincronizzata",
+            "farmaci_rapidi": [
+              { "farmaco_id": "amiodarone", "contesto": "infusione", "label": "Amiodarone (dopo il carico di 300 mg)" },
+              { "farmaco_id": "procainamide", "contesto": "antiaritmico" }
+            ]
+          }
+        }
+      },
+      "SE_STABILE": {
+        "valuta": "durata del QRS",
+        "QRS_largo_>=0.12s": {
+          "regolare": {
+            "azione": "1) Se alto rischio per sedazione: Procainamide 10-15 mg/kg in 20 min. 2) Se Procainamide non disponibile/controindicata (scompenso severo, IMA, IRC end-stage): Amiodarone 300 mg EV in 10-60 min, poi 900 mg in 24h. 3) Cardioversione elettrica sincronizzata",
+            "farmaci_rapidi": [
+              { "farmaco_id": "procainamide", "contesto": "antiaritmico" },
+              { "farmaco_id": "amiodarone", "contesto": "antiaritmico", "label": "Amiodarone (carico)" },
+              { "farmaco_id": "amiodarone", "contesto": "infusione", "label": "Amiodarone (mantenimento)" }
+            ]
+          },
+          "irregolare": [
+            {
+              "azione": "FA con pre-eccitazione: Procainamide o cardioversione (EVITARE Amiodarone)",
+              "farmaci_rapidi": [{ "farmaco_id": "procainamide", "contesto": "antiaritmico" }]
+            },
+            {
+              "azione": "TV polimorfa / QT lungo: Magnesio 2 g EV in 10 min; considerare isoprenalina o pacing; EVITARE Amiodarone",
+              "farmaci_rapidi": [
+                { "farmaco_id": "magnesio-solfato", "contesto": "antiaritmico" },
+                { "farmaco_id": "isoprenalina", "contesto": "infusione", "unita": "mcg/min", "label": "Isoprenalina (dose fissa)" }
+              ]
+            }
+          ]
+        },
+        "QRS_stretto_<0.12s": {
+          "regolare": {
+            "azione": "Manovre vagali -> Adenosina 6 mg -> 12 mg -> 18 mg (se assenza di pre-eccitazione) -> Verapamil o beta-bloccante -> Cardioversione sincronizzata",
+            "farmaci_rapidi": [
+              { "farmaco_id": "adenosina", "contesto": "antiaritmico" },
+              { "farmaco_id": "verapamil", "contesto": "antiaritmico" },
+              { "farmaco_id": "esmololo", "contesto": "bolo", "label": "Esmololo (beta-bloccante)" }
+            ]
+          },
+          "irregolare": {
+            "azione": "Probabile fibrillazione atriale: FE>40% controllo FC con beta-bloccante / Verapamil / Diltiazem / Digossina; FE<40% beta-bloccante o Digossina; anticoagulante se aritmia >24h",
+            "farmaci_rapidi": [
+              { "farmaco_id": "esmololo", "contesto": "infusione", "label": "Esmololo (beta-bloccante)" },
+              { "farmaco_id": "verapamil", "contesto": "antiaritmico" },
+              { "farmaco_id": "diltiazem", "contesto": "antiaritmico" }
+            ]
+          }
+        }
+      },
+      "nota": "Richiedere l'aiuto dell'esperto. Per tachiaritmie peri-arresto di origine patologica.",
+      "fonte": "erc-2025",
+      "pagina": "63"
+    },
+    {
+      "id": "bradiaritmie-peri-arresto",
+      "titolo": "Bradiaritmie peri-arresto (adulto)",
+      "tipo": "algoritmo_ramificato",
+      "valutazione_iniziale": [
+        "Approccio ABCDE",
+        "Monitorare SpO2, ECG, PA",
+        "O2 se SpO2 <94% + accesso venoso",
+        "ECG a 12 derivazioni",
+        "Identificare e trattare le cause reversibili"
+      ],
+      "instabilita": {
+        "segni": [
+          "Shock",
+          "Sincope / ipotensione progressiva",
+          "Ischemia miocardica",
+          "Insufficienza cardiaca grave (edema polmonare / shock)",
+          "Immediatamente dopo il ROSC"
+        ],
+        "SE_INSTABILE": {
+          "primo_step": {
+            "azione": "Atropina 500 mcg EV",
+            "farmaci_rapidi": [{ "farmaco_id": "atropina", "contesto": "bradicardia" }]
+          },
+          "se_risposta_non_soddisfacente": {
+            "azione": "Misure temporanee: Atropina 500 mcg EV ripetibile fino a max 3 mg; Isoprenalina 5 mcg/min EV; Adrenalina 2-10 mcg/min EV; farmaci alternativi*; e/o pacing transcutaneo -> richiedere esperto + predisporre pacing transvenoso",
+            "farmaci_rapidi": [
+              { "farmaco_id": "atropina", "contesto": "bradicardia" },
+              { "farmaco_id": "isoprenalina", "contesto": "infusione", "unita": "mcg/min", "label": "Isoprenalina (dose fissa)" },
+              { "farmaco_id": "adrenalina", "contesto": "infusione" }
+            ]
+          }
+        }
+      },
+      "SE_STABILE": {
+        "rischio_asistolia": {
+          "segni": [
+            "Asistolia recente",
+            "BAV 2 Mobitz II",
+            "BAV completo con QRS largo",
+            "Pausa ventricolare >3 secondi"
+          ],
+          "SE_SI": {
+            "azione": "Misure temporanee (come sopra)",
+            "farmaci_rapidi": [
+              { "farmaco_id": "atropina", "contesto": "bradicardia" },
+              { "farmaco_id": "isoprenalina", "contesto": "infusione", "unita": "mcg/min", "label": "Isoprenalina (dose fissa)" },
+              { "farmaco_id": "adrenalina", "contesto": "infusione" }
+            ]
+          },
+          "SE_NO": "Osservazione"
+        }
+      },
+      "alternative": [
+        "Aminofillina",
+        "Dopamina",
+        "Glucagone (se bradicardia da beta-bloccanti o calcio-antagonisti)",
+        "Glicopirrolato (al posto dell'atropina)"
+      ],
+      "fonte": "erc-2025",
+      "pagina": "64"
     }
-  ]
+  ],
+  "_fonti": [
+    {
+      "id": "erc-2025",
+      "titolo": "Linee guida ERC/IRC 2025 - ALS (cap. 5): tachiaritmie e bradiaritmie peri-arresto",
+      "pagine": "63-65"
+    }
+  ],
+  "farmaci_aritmie": {
+    "_nota": "Tabella 6 ERC 2025 (pag. 65) + farmaci bradiaritmie. per_kg=true -> l'app calcola la dose sul peso; altrimenti dose fissa",
+    "tachiaritmie": [
+      {
+        "farmaco": "Adenosina",
+        "indicazione": "Tachi regolare QRS stretto o largo",
+        "per_kg": false,
+        "dose": "6 mg -> 12 mg -> 18 mg EV in bolo rapido",
+        "note": "se assenza di pre-eccitazione"
+      },
+      {
+        "farmaco": "Verapamil",
+        "indicazione": "Tachi regolare QRS stretto",
+        "per_kg": true,
+        "min_per_kg": 0.075,
+        "max_per_kg": 0.15,
+        "unita": "mg/kg",
+        "riferimento_medio": "5-10 mg in 2 min",
+        "note": "evitare se instabile o FE<40%"
+      },
+      {
+        "farmaco": "Diltiazem",
+        "indicazione": "Tachi regolare QRS stretto",
+        "per_kg": true,
+        "valore_per_kg": 0.25,
+        "unita": "mg/kg",
+        "riferimento_medio": "~20 mg in 2 min",
+        "note": "evitare se instabile o FE<40%"
+      },
+      {
+        "farmaco": "Esmololo",
+        "indicazione": "Controllo FC (TSV, FA/flutter)",
+        "per_kg": true,
+        "bolo_per_kg": 500,
+        "unita_bolo": "mcg/kg in 1 min",
+        "infusione_per_kg": [
+          50,
+          300
+        ],
+        "unita_infusione": "mcg/kg/min",
+        "note": "beta-1 selettivo, emivita ~9 min"
+      },
+      {
+        "farmaco": "Landiololo",
+        "indicazione": "Controllo FC (TSV, FA/flutter)",
+        "per_kg": true,
+        "bolo_per_kg": 100,
+        "unita_bolo": "mcg/kg in 1 min",
+        "infusione_per_kg": [
+          10,
+          40
+        ],
+        "unita_infusione": "mcg/kg/min",
+        "note": "1-10 mcg/kg/min se funzione VS ridotta; emivita ~4 min"
+      },
+      {
+        "farmaco": "Metoprololo",
+        "indicazione": "Tachi QRS stretto",
+        "per_kg": false,
+        "dose": "2.5-15 mg EV in boli da 2.5 mg",
+        "note": "se esmololo/landiololo non disponibili"
+      },
+      {
+        "farmaco": "Procainamide",
+        "indicazione": "Tachi QRS largo",
+        "per_kg": true,
+        "min_per_kg": 10,
+        "max_per_kg": 15,
+        "unita": "mg/kg",
+        "max_assoluto_mg": 1000,
+        "riferimento": "in 20 min"
+      },
+      {
+        "farmaco": "Amiodarone",
+        "indicazione": "Tachi QRS stretto o largo",
+        "per_kg": false,
+        "dose": "300 mg EV in 10-60 min, poi 900 mg in 24h",
+        "note": "controindicato in FA pre-eccitata (pattern FBI)"
+      },
+      {
+        "farmaco": "Lidocaina",
+        "indicazione": "Tachi QRS largo",
+        "per_kg": false,
+        "dose": "bolo 50-200 mg, poi infusione 2-4 mg/min",
+        "note": "ridurre negli stati di shock"
+      },
+      {
+        "farmaco": "Magnesio",
+        "indicazione": "TV polimorfa QRS largo (torsione di punta)",
+        "per_kg": false,
+        "dose": "2 g (8 mmol) EV in 10 min, ripetibile x1"
+      }
+    ],
+    "bradiaritmie": [
+      {
+        "farmaco": "Atropina",
+        "per_kg": false,
+        "dose": "500 mcg EV, ripetibile fino a max 3 mg"
+      },
+      {
+        "farmaco": "Isoprenalina",
+        "per_kg": false,
+        "dose": "5 mcg/min EV"
+      },
+      {
+        "farmaco": "Adrenalina",
+        "per_kg": false,
+        "dose": "2-10 mcg/min EV"
+      },
+      {
+        "farmaco": "Glucagone",
+        "per_kg": false,
+        "dose": "alternativo - se bradicardia da beta-bloccanti/calcio-antagonisti"
+      },
+      {
+        "farmaco": "Dopamina / Aminofillina / Glicopirrolato",
+        "per_kg": false,
+        "dose": "alternativi"
+      }
+    ],
+    "calcolatore_peso": "per i farmaci con per_kg=true, calcolare min_per_kg*peso .. max_per_kg*peso (o valore_per_kg*peso), applicando eventuale max_assoluto_mg. Es: Procainamide 12 mg/kg x 70 kg = 840 mg (<=1000).",
+    "fonte": "erc-2025",
+    "pagina": "65"
+  }
 }

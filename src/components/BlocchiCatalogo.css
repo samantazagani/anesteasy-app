@@ -1,0 +1,61 @@
+.riquadro-blocchi-catalogo {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.riquadro-blocchi-catalogo h2 {
+  margin: 0 0 6px;
+}
+
+.filtri-blocchi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.filtri-blocchi input,
+.filtri-blocchi select {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.tabella-blocchi {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabella-blocchi th,
+.tabella-blocchi td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.tabella-blocchi th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tabella-blocchi td {
+  color: var(--text-h);
+}
+
+.blocco-nome {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nessun-risultato {
+  font-size: 14px;
+  color: var(--text);
+  margin: 10px 0 0;
+}

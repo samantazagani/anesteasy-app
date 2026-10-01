@@ -112,3 +112,38 @@ describe('risolviPassoFarmaco - casi limite', () => {
     expect(r.motore).toBeNull()
   })
 })
+
+describe('risolviPassoFarmaco - passo.unita sceglie tra piu\' candidati dello stesso contesto', () => {
+  // Voci reali da data/farmaci.json > isoprenalina.dosi: stesso contesto "infusione", una
+  // su peso (mcg/kg/min) e una a dose fissa (mcg/min) - gli algoritmi ramificati di
+  // emergenze.json (tachiaritmie/bradiaritmie peri-arresto) vogliono sempre quella fissa.
+  const dosiIsoprenalina = [
+    { contesto: 'infusione', min: 0.01, max: 0.2, unita: 'mcg/kg/min', peso: 'reale' },
+    { contesto: 'infusione', min: 1, max: 20, unita: 'mcg/min', note: 'dose fissa' },
+  ]
+  const farmaciIsoprenalina = [{ id: 'isoprenalina', nome: 'Isoprenalina', dosi: dosiIsoprenalina }]
+
+  it('senza passo.unita, ricade sul primo candidato (comportamento invariato)', () => {
+    const r = risolviPassoFarmaco({ farmaco_id: 'isoprenalina', contesto: 'infusione' }, farmaciIsoprenalina, 'adulto')
+    expect(r.doseScelta).toMatchObject({ unita: 'mcg/kg/min' })
+  })
+
+  it('con passo.unita "mcg/min", sceglie la variante a dose fissa', () => {
+    const r = risolviPassoFarmaco(
+      { farmaco_id: 'isoprenalina', contesto: 'infusione', unita: 'mcg/min' },
+      farmaciIsoprenalina,
+      'adulto',
+    )
+    expect(r.doseScelta).toMatchObject({ min: 1, max: 20, unita: 'mcg/min' })
+    expect(r.motore).toBe('infusione')
+  })
+
+  it('con passo.unita che non corrisponde a nessun candidato, ricade comunque sul primo (non lancia errore)', () => {
+    const r = risolviPassoFarmaco(
+      { farmaco_id: 'isoprenalina', contesto: 'infusione', unita: 'mg/h' },
+      farmaciIsoprenalina,
+      'adulto',
+    )
+    expect(r.doseScelta).toMatchObject({ unita: 'mcg/kg/min' })
+  })
+})

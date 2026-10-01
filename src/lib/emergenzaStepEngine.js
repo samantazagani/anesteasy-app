@@ -30,7 +30,11 @@ export function isInfusione(unita) {
  * assenza di fascia_eta nel passo si ricade sul comportamento di selezionaDose, identico
  * al calcolatore dose bolo.
  *
- * @param {object} passo passo.farmaco_id + passo.contesto (+ passo.fascia_eta opzionale)
+ * @param {object} passo passo.farmaco_id + passo.contesto (+ passo.fascia_eta opzionale,
+ *   + passo.unita opzionale per scegliere tra piu' candidati dello stesso contesto quando
+ *   serve una variante precisa, es. isoprenalina "infusione" ha sia una voce su peso
+ *   (mcg/kg/min) sia una a dose fissa (mcg/min): gli algoritmi ramificati di emergenze.json
+ *   la usano per richiamare esattamente quella citata nel testo clinico)
  * @param {Array<object>} farmaci farmaciData.farmaci
  * @param {'pediatrico' | 'adulto' | 'anziano' | null} categoriaProfilo
  * @returns {{ farmaco: object|null, doseScelta: object|null, fasciaUsata: string|null, fallback: boolean, motore: 'bolo'|'infusione'|null }}
@@ -43,7 +47,7 @@ export function risolviPassoFarmaco(passo, farmaci, categoriaProfilo) {
 
   const fasciaRichiesta = passo.fascia_eta ?? categoriaProfilo
   const selezione = selezionaDose(farmaco.dosi, passo.contesto, fasciaRichiesta)
-  const doseScelta = selezione.candidati[0] ?? null
+  const doseScelta = (passo.unita ? selezione.candidati.find((d) => d.unita === passo.unita) : null) ?? selezione.candidati[0] ?? null
 
   return {
     farmaco,

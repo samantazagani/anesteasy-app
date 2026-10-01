@@ -185,3 +185,89 @@
   background: var(--bg);
   color: var(--text-h);
 }
+
+/* Algoritmo ramificato (tachiaritmie/bradiaritmie peri-arresto) --------------------------- */
+
+.scheda-ramificato {
+  margin: 0 0 20px;
+}
+
+.scheda-ramificato:last-child {
+  margin-bottom: 0;
+}
+
+.scheda-titolo-ramificato {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 8px;
+}
+
+.checklist-ramificato {
+  margin: 0 0 4px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.checklist-ramificato li {
+  margin-bottom: 4px;
+}
+
+.scelta-ramo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.scelta-ramo-sotto {
+  margin-top: 12px;
+}
+
+.ramo-item {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.ramo-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* L'esito di un ramo (dopo aver scelto instabile/stabile, QRS, ritmo...): leggermente
+   rilevato rispetto alle schede di scelta sopra, cosi' si vede a colpo d'occhio dove
+   finisce la navigazione e inizia la raccomandazione. */
+.scheda-ramificato-esito {
+  background: var(--social-bg);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.nodo-ramificato {
+  margin-bottom: 14px;
+}
+
+.nodo-ramificato:last-child {
+  margin-bottom: 0;
+}
+
+.farmaco-rapido {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 8px;
+}
+
+.farmaco-rapido-label {
+  font-weight: 600;
+  margin: 0 0 4px;
+}

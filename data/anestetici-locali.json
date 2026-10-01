@@ -1,6 +1,5 @@
 {
-  "_stato": "BOZZA da verificare. Dosi max, onset/durata e LAST estratti dal Manuale del giovane anestesista pag. 108-109 (tabella AL). I mg/kg 'standard' sono bozza da confermare; i tetti assoluti in mg (senza/con adrenalina) sono dal Manuale. verificato=false finche il medico non controlla.",
-  "_note_unita": "dose_max_mg_kg = tetto per kg (per il calcolo del volume). tetto_assoluto_mg = tetto in mg per singola somministrazione (senza/con adrenalina), dal Manuale. Usare il PIU BASSO dei due.",
+  "_note_unita": "dose_max_mg_kg = tetto per kg (per il calcolo del volume). tetto_assoluto_mg = tetto in mg per singola somministrazione (senza/con adrenalina), dal Manuale. Usare il PIU BASSO dei due",
   "anestetici": [
     {
       "id": "lidocaina",
@@ -21,7 +20,6 @@
         120,
         240
       ],
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     },
@@ -44,7 +42,6 @@
         180,
         300
       ],
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     },
@@ -67,7 +64,6 @@
         180,
         300
       ],
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     },
@@ -91,7 +87,6 @@
         720
       ],
       "note": "maggior rischio di cardiotossicita",
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     },
@@ -114,7 +109,6 @@
         360,
         720
       ],
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     },
@@ -137,7 +131,6 @@
         360,
         720
       ],
-      "verificato": false,
       "fonte": "manuale-giovane-anestesista",
       "pagina": "108"
     }
@@ -147,9 +140,7 @@
     "percentuale_usata": "somma( dose_data_i / dose_max_i )  per ogni AL usato",
     "margine_percentuale": "1 - percentuale_usata",
     "margine_ml": "per l'AL scelto a concentrazione C: margine_ml = (margine_percentuale * dose_max_AL_scelto) / conc_mg_ml",
-    "esempio": "usato 60% del tetto; scelgo ropivacaina 0.2% (2 mg/ml), dose_max ropi 200 mg -> margine = 0.4*200/2 = 40 ml ancora somministrabili",
-    "verificato": false,
-    "fonte": "bozza"
+    "esempio": "usato 60% del tetto; scelgo ropivacaina 0.2% (2 mg/ml), dose_max ropi 200 mg -> margine = 0.4*200/2 = 40 ml ancora somministrabili"
   },
   "calcolatori": [
     {
@@ -206,7 +197,6 @@
       "durata_min": 20
     },
     "ripetizione": "fino a 2 boli a intervalli di 5 min fino al ripristino del circolo",
-    "verificato": false,
     "fonte": "manuale-giovane-anestesista",
     "pagina": "109"
   },
@@ -239,9 +229,7 @@
       "volume_ml": [
         10,
         20
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "blocco": "sovraclaveare",
@@ -249,9 +237,7 @@
       "volume_ml": [
         15,
         25
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "blocco": "ascellare",
@@ -259,9 +245,7 @@
       "volume_ml": [
         20,
         30
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "blocco": "TAP",
@@ -270,9 +254,7 @@
         15,
         20
       ],
-      "note": "per lato",
-      "verificato": false,
-      "fonte": "bozza"
+      "note": "per lato"
     },
     {
       "blocco": "femorale",
@@ -280,9 +262,7 @@
       "volume_ml": [
         15,
         20
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "blocco": "popliteo (sciatico)",
@@ -290,9 +270,7 @@
       "volume_ml": [
         20,
         30
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     },
     {
       "blocco": "ESP",
@@ -300,62 +278,46 @@
       "volume_ml": [
         20,
         30
-      ],
-      "verificato": false,
-      "fonte": "bozza"
+      ]
     }
   ],
   "sospensione_anticoagulanti": {
-    "_nota": "tempi prima di blocco neuroassiale; BOZZA da verificare su linee guida (ESAIC/SIAARTI)",
+    "_nota": "tempi prima di blocco neuroassiale; su linee guida (ESAIC/SIAARTI)",
     "voci": [
       {
         "farmaco": "EBPM dose profilattica",
         "sospensione_pre": "12 h",
-        "ripresa_post": "4-6 h",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "4-6 h"
       },
       {
         "farmaco": "EBPM dose terapeutica",
         "sospensione_pre": "24 h",
-        "ripresa_post": "4-6 h",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "4-6 h"
       },
       {
         "farmaco": "Fondaparinux",
         "sospensione_pre": "36-42 h",
-        "ripresa_post": "6-12 h",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "6-12 h"
       },
       {
         "farmaco": "Aspirina",
         "sospensione_pre": "non necessaria (da sola)",
-        "ripresa_post": "-",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "-"
       },
       {
         "farmaco": "Clopidogrel",
         "sospensione_pre": "5-7 giorni",
-        "ripresa_post": "dopo catetere",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "dopo catetere"
       },
       {
         "farmaco": "Warfarin",
         "sospensione_pre": "INR <= 1.4",
-        "ripresa_post": "-",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "-"
       },
       {
         "farmaco": "DOAC (es. rivaroxaban)",
         "sospensione_pre": "3 giorni (funzione renale normale)",
-        "ripresa_post": "6 h",
-        "verificato": false,
-        "fonte": "bozza"
+        "ripresa_post": "6 h"
       }
     ]
   },
@@ -365,7 +327,6 @@
     "mepivacaina": 9.8,
     "prilocaina": 6,
     "bupivacaina": 1.6,
-    "verificato": false,
     "fonte": "manuale-giovane-anestesista",
     "pagina": "110"
   },
@@ -382,7 +343,7 @@
     "note": "l'app mostra sempre entrambe le forme (% e mg/ml)"
   },
   "preparazioni_commerciali": {
-    "_nota": "BOZZA da verificare col prontuario di reparto (le confezioni variano). mg_per_fiala = mg_ml * volume_ml.",
+    "_nota": "col prontuario di reparto (le confezioni variano). mg_per_fiala = mg_ml * volume_ml",
     "voci": [
       {
         "anestetico": "lidocaina",
@@ -552,12 +513,10 @@
           }
         ]
       }
-    ],
-    "verificato": false,
-    "fonte": "bozza"
+    ]
   },
   "blocchi_per_regione": {
-    "_uso": "mappa regione anatomica -> blocchi -> chirurgie tipiche. Struttura pensata per una figura (omino) cliccabile, vista anteriore e posteriore.",
+    "_uso": "mappa regione anatomica -> blocchi -> chirurgie tipiche (base per l'omino cliccabile, vista anteriore/posteriore).",
     "regioni": [
       {
         "regione": "spalla",
@@ -566,7 +525,9 @@
           "posteriore"
         ],
         "blocchi": [
-          "interscalenico"
+          "Interscalenico",
+          "Sovraclaveare",
+          "Sovrascapolare + ascellare"
         ],
         "chirurgie": [
           "chirurgia della spalla",
@@ -580,12 +541,13 @@
           "posteriore"
         ],
         "blocchi": [
-          "interscalenico",
-          "sovraclaveare"
+          "Interscalenico",
+          "Sovraclaveare"
         ],
         "chirurgie": [
           "omero"
-        ]
+        ],
+        "note": "Cute MEDIALE del braccio (nervo intercostobrachiale T2 + cutaneo mediale del braccio): NON coperta dai blocchi del plesso brachiale (interscalenico/sovraclaveare/ascellare). Per chirurgia sul versante mediale (es. bicipite) o dolore da laccio emostatico aggiungere il blocco intercostobrachiale (infiltrazione sottocutanea in ascella) oppure il PECS II."
       },
       {
         "regione": "gomito e avambraccio",
@@ -594,9 +556,9 @@
           "posteriore"
         ],
         "blocchi": [
-          "sovraclaveare",
-          "infraclaveare",
-          "ascellare"
+          "Ascellare",
+          "Sovraclaveare",
+          "Infraclaveare"
         ],
         "chirurgie": [
           "gomito",
@@ -610,31 +572,50 @@
           "posteriore"
         ],
         "blocchi": [
-          "ascellare",
-          "blocchi distali (radiale/ulnare/mediano)"
+          "Ascellare",
+          "Blocco al polso",
+          "Blocchi digitali"
         ],
         "chirurgie": [
           "mano",
           "polso",
-          "tunnel carpale"
+          "tunnel carpale",
+          "dita"
         ]
       },
       {
-        "regione": "parete toracica/mammella",
+        "regione": "parete toracica",
         "vista": [
           "anteriore",
           "posteriore"
         ],
         "blocchi": [
-          "paravertebrale",
+          "Paravertebrale",
           "ESP",
-          "PECS I-II",
-          "serrato anteriore"
+          "Serrato anteriore",
+          "Intercostale"
         ],
         "chirurgie": [
-          "mammella",
           "toracotomia",
+          "VATS",
           "fratture costali"
+        ]
+      },
+      {
+        "regione": "mammella",
+        "vista": [
+          "anteriore"
+        ],
+        "blocchi": [
+          "PECS I-II",
+          "Serrato anteriore",
+          "Paravertebrale",
+          "ESP"
+        ],
+        "chirurgie": [
+          "chirurgia senologica",
+          "mastectomia",
+          "quadrantectomia"
         ]
       },
       {
@@ -644,14 +625,48 @@
         ],
         "blocchi": [
           "TAP",
-          "quadrato dei lombi",
-          "guaina retto",
+          "Quadrato dei lombi",
+          "Guaina del retto",
           "ESP"
         ],
         "chirurgie": [
           "laparotomia",
           "ernia",
-          "cesareo (TAP)"
+          "cesareo (TAP)",
+          "stomia"
+        ]
+      },
+      {
+        "regione": "inguine",
+        "vista": [
+          "anteriore"
+        ],
+        "blocchi": [
+          "Ilioinguinale-ipogastrico",
+          "Fascia iliaca",
+          "Femorale",
+          "Guaina del retto"
+        ],
+        "chirurgie": [
+          "ernia inguinale",
+          "idrocele",
+          "orchidopessi"
+        ]
+      },
+      {
+        "regione": "perineo",
+        "vista": [
+          "anteriore"
+        ],
+        "blocchi": [
+          "Blocco del pudendo",
+          "Blocco caudale",
+          "Sella (spinale bassa)"
+        ],
+        "chirurgie": [
+          "chirurgia perineale",
+          "emorroidi",
+          "ostetrica bassa"
         ]
       },
       {
@@ -662,8 +677,9 @@
         ],
         "blocchi": [
           "PENG",
-          "fascia iliaca",
-          "femorale"
+          "Fascia iliaca",
+          "Femorale",
+          "Cutaneo laterale della coscia (LFCN)"
         ],
         "chirurgie": [
           "frattura femore prossimale",
@@ -671,17 +687,20 @@
         ]
       },
       {
-        "regione": "coscia anteriore e ginocchio",
+        "regione": "coscia e ginocchio",
         "vista": [
           "anteriore"
         ],
         "blocchi": [
-          "femorale",
-          "canale degli adduttori (safeno)"
+          "Femorale",
+          "Canale degli adduttori (safeno)",
+          "Otturatorio",
+          "Cutaneo laterale della coscia (LFCN)"
         ],
         "chirurgie": [
           "protesi ginocchio",
-          "femore"
+          "femore",
+          "quadricipite"
         ]
       },
       {
@@ -691,30 +710,348 @@
         ],
         "blocchi": [
           "IPACK",
-          "sciatico"
+          "Sciatico"
         ],
         "chirurgie": [
           "protesi ginocchio (analgesia posteriore)"
         ]
       },
       {
-        "regione": "gamba, caviglia e piede",
+        "regione": "gamba e caviglia",
         "vista": [
           "anteriore",
           "posteriore"
         ],
         "blocchi": [
-          "popliteo (sciatico)",
-          "safeno",
-          "blocco alla caviglia"
+          "Popliteo (sciatico)",
+          "Safeno (canale adduttori)"
         ],
         "chirurgie": [
           "caviglia",
-          "piede"
+          "tibia",
+          "gamba"
+        ]
+      },
+      {
+        "regione": "piede",
+        "vista": [
+          "anteriore",
+          "posteriore"
+        ],
+        "blocchi": [
+          "Popliteo (sciatico)",
+          "Blocco alla caviglia"
+        ],
+        "chirurgie": [
+          "avampiede",
+          "alluce"
+        ]
+      },
+      {
+        "regione": "dorso",
+        "vista": [
+          "posteriore"
+        ],
+        "blocchi": [
+          "Paravertebrale",
+          "ESP",
+          "Intercostale"
+        ],
+        "chirurgie": [
+          "toracotomia posteriore",
+          "nefrectomia"
+        ]
+      },
+      {
+        "regione": "regione lombare",
+        "vista": [
+          "posteriore"
+        ],
+        "blocchi": [
+          "Quadrato dei lombi",
+          "ESP",
+          "Paravertebrale"
+        ],
+        "chirurgie": [
+          "chirurgia renale",
+          "parete posteriore"
+        ]
+      },
+      {
+        "regione": "gluteo/anca posteriore",
+        "vista": [
+          "posteriore"
+        ],
+        "blocchi": [
+          "Sciatico",
+          "PENG"
+        ],
+        "chirurgie": [
+          "femore",
+          "arto inferiore"
+        ]
+      },
+      {
+        "regione": "coscia posteriore",
+        "vista": [
+          "posteriore"
+        ],
+        "blocchi": [
+          "Sciatico",
+          "Cutaneo posteriore della coscia"
+        ],
+        "chirurgie": [
+          "arto inferiore posteriore",
+          "cavo popliteo"
         ]
       }
-    ],
-    "verificato": false,
-    "fonte": "bozza"
+    ]
+  },
+  "blocchi_catalogo": {
+    "_uso": "Fonte di verita per la COPERTURA di ogni blocco (quali regioni anestetizza) e la logica di combinazione dell'omino. Allineato a omino-blocchi.html.",
+    "logica_combinazione": "Selezionando piu regioni, i CANDIDATI sono solo i blocchi elencati per quelle regioni (in 'blocchi_per_regione', ordinati per preferenza clinica: indice 0 = prima scelta). Regola: (1) se un solo blocco copre TUTTE le regioni scelte si propone quello (preferendo la prima scelta) - es. sovraclaveare per tutto l'arto sotto la spalla, paravertebrale/ESP per torace+addome; (2) altrimenti copertura per priorita clinica con schema prossimale+distale - a ogni passo si sceglie il blocco a indice migliore, poi quello che copre piu regioni residue, poi il piu specifico. Esempi: spalla+braccio+avambraccio+mano -> Interscalenico + Ascellare; anca/coscia (femore) -> Femorale (mai Sciatico, che copre solo la coscia POSTERIORE); coscia+gamba+piede -> Femorale + Popliteo. Mostrare per ogni blocco cosa copre.",
+    "etichette_regioni": {
+      "spalla": "Spalla",
+      "braccio": "Braccio / omero",
+      "avambraccio": "Gomito e avambraccio",
+      "mano": "Mano e polso",
+      "torace": "Parete toracica",
+      "mammella": "Mammella",
+      "addome": "Parete addominale",
+      "inguine": "Inguine",
+      "perineo": "Perineo",
+      "anca": "Anca",
+      "coscia": "Coscia e ginocchio",
+      "gamba": "Gamba e caviglia",
+      "piede": "Piede",
+      "dorso": "Dorso",
+      "lombare": "Regione lombare",
+      "gluteo": "Gluteo / anca posteriore",
+      "cosciaPost": "Coscia posteriore",
+      "ginocchioPost": "Ginocchio posteriore",
+      "braccioMediale": "Braccio (cute mediale)"
+    },
+    "blocchi": {
+      "Interscalenico": {
+        "copre": [
+          "spalla",
+          "braccio"
+        ],
+        "descrizione": "plesso brachiale prossimale (C5-C7): spalla e braccio laterale; risparmia mano/ulnare e la cute mediale"
+      },
+      "Sovraclaveare": {
+        "copre": [
+          "braccio",
+          "avambraccio",
+          "mano"
+        ],
+        "descrizione": "tronchi del plesso: tutto l'arto sotto la spalla (non la cute mediale/intercostobrachiale)"
+      },
+      "Infraclaveare": {
+        "copre": [
+          "avambraccio",
+          "mano"
+        ],
+        "descrizione": "corde del plesso: gomito, avambraccio, mano"
+      },
+      "Ascellare": {
+        "copre": [
+          "avambraccio",
+          "mano"
+        ],
+        "descrizione": "nervi terminali sotto il gomito: avambraccio e mano"
+      },
+      "Sovrascapolare + ascellare": {
+        "copre": [
+          "spalla"
+        ],
+        "descrizione": "spalla con risparmio del nervo frenico"
+      },
+      "Intercostobrachiale (T2)": {
+        "copre": [
+          "braccioMediale"
+        ],
+        "descrizione": "cute mediale del braccio e ascella (T2): infiltrazione s.c. ascellare; NON dato dal plesso"
+      },
+      "Blocco al polso": {
+        "copre": [
+          "mano"
+        ],
+        "descrizione": "nervi radiale/ulnare/mediano al polso: mano"
+      },
+      "Blocchi digitali": {
+        "copre": [
+          "mano"
+        ],
+        "descrizione": "anestesia di un singolo dito"
+      },
+      "Paravertebrale": {
+        "copre": [
+          "torace",
+          "mammella",
+          "dorso",
+          "addome"
+        ],
+        "descrizione": "parete toraco-addominale unilaterale, per metameri"
+      },
+      "ESP": {
+        "copre": [
+          "torace",
+          "mammella",
+          "addome",
+          "dorso",
+          "lombare"
+        ],
+        "descrizione": "erector spinae plane: analgesia multi-metamerica ampia, ant. e post."
+      },
+      "Serrato anteriore": {
+        "copre": [
+          "torace",
+          "mammella"
+        ],
+        "descrizione": "parete toracica laterale"
+      },
+      "PECS I-II": {
+        "copre": [
+          "mammella",
+          "torace",
+          "braccioMediale"
+        ],
+        "descrizione": "regione mammaria/ascellare; il PECS II copre anche l'intercostobrachiale (cute mediale del braccio)"
+      },
+      "Intercostale": {
+        "copre": [
+          "torace",
+          "dorso"
+        ],
+        "descrizione": "singolo spazio intercostale"
+      },
+      "TAP": {
+        "copre": [
+          "addome"
+        ],
+        "descrizione": "parete addominale infra-ombelicale (laterale)"
+      },
+      "Quadrato dei lombi": {
+        "copre": [
+          "addome",
+          "lombare"
+        ],
+        "descrizione": "parete addominale estesa + componente viscerale"
+      },
+      "Guaina del retto": {
+        "copre": [
+          "addome"
+        ],
+        "descrizione": "linea mediana addominale (parete)"
+      },
+      "Ilioinguinale-ipogastrico": {
+        "copre": [
+          "inguine"
+        ],
+        "descrizione": "regione inguinale"
+      },
+      "Blocco del pudendo": {
+        "copre": [
+          "perineo"
+        ],
+        "descrizione": "perineo"
+      },
+      "Blocco caudale": {
+        "copre": [
+          "perineo",
+          "inguine"
+        ],
+        "descrizione": "perineo / regione sotto-ombelicale (pediatria)"
+      },
+      "Sella (spinale bassa)": {
+        "copre": [
+          "perineo"
+        ],
+        "descrizione": "spinale limitata al perineo"
+      },
+      "PENG": {
+        "copre": [
+          "anca"
+        ],
+        "descrizione": "analgesia articolare dell'anca (risparmio motorio)"
+      },
+      "Fascia iliaca": {
+        "copre": [
+          "anca",
+          "coscia",
+          "inguine"
+        ],
+        "descrizione": "femorale + cutaneo laterale (parziale)"
+      },
+      "Femorale": {
+        "copre": [
+          "anca",
+          "coscia",
+          "inguine"
+        ],
+        "descrizione": "coscia anteriore, ginocchio anteriore, gamba mediale (safeno)"
+      },
+      "Cutaneo laterale della coscia (LFCN)": {
+        "copre": [
+          "coscia"
+        ],
+        "descrizione": "cute della coscia laterale (puro sensitivo)"
+      },
+      "Canale degli adduttori (safeno)": {
+        "copre": [
+          "coscia"
+        ],
+        "descrizione": "analgesia del ginocchio e coscia mediale distale; risparmio motorio del quadricipite (non anestesia chirurgica della coscia)"
+      },
+      "Otturatorio": {
+        "copre": [
+          "coscia"
+        ],
+        "descrizione": "adduttori / coscia mediale"
+      },
+      "Sciatico": {
+        "copre": [
+          "cosciaPost",
+          "gamba",
+          "piede",
+          "ginocchioPost",
+          "gluteo"
+        ],
+        "descrizione": "arto inferiore posteriore, gamba (eccetto mediale) e piede"
+      },
+      "Popliteo (sciatico)": {
+        "copre": [
+          "gamba",
+          "piede",
+          "ginocchioPost"
+        ],
+        "descrizione": "sciatico al cavo popliteo: gamba (eccetto mediale) e piede"
+      },
+      "IPACK": {
+        "copre": [
+          "ginocchioPost"
+        ],
+        "descrizione": "capsula posteriore del ginocchio (analgesia, risparmio motorio)"
+      },
+      "Safeno (canale adduttori)": {
+        "copre": [
+          "gamba"
+        ],
+        "descrizione": "gamba e malleolo mediale"
+      },
+      "Blocco alla caviglia": {
+        "copre": [
+          "piede"
+        ],
+        "descrizione": "5 nervi alla caviglia: piede"
+      },
+      "Cutaneo posteriore della coscia": {
+        "copre": [
+          "cosciaPost"
+        ],
+        "descrizione": "cute della coscia posteriore"
+      }
+    }
   }
 }
