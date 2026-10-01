@@ -6,6 +6,7 @@ import { risolviPeso } from '../lib/pesoResolver'
 import { selezionaDose, etichettaVariante } from '../lib/selezioneDose'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { InfoFonte } from '../components/InfoFonte.jsx'
+import { AvvertenzeFarmaco } from '../components/AvvertenzeFarmaco.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreDoseBolo.css'
@@ -25,6 +26,9 @@ const LABEL_CONTESTO = {
   intubazione: 'Intubazione',
   rsi: 'RSI (sequenza rapida)',
   reversal: 'Reversal',
+  'reversal blocco moderato': 'Reversal · blocco moderato',
+  'reversal blocco profondo': 'Reversal · blocco profondo',
+  'reversal immediato (RSI)': 'Reversal immediato (RSI)',
   arresto: 'Arresto',
   anafilassi: 'Anafilassi',
   bradicardia: 'Bradicardia',
@@ -35,6 +39,9 @@ const LABEL_CONTESTO = {
   ipertermia_maligna: 'Ipertermia maligna',
   antagonista: 'Antagonista',
   neonato: 'Neonato',
+  edema_cerebrale: 'Edema cerebrale',
+  oliguria: 'Oliguria',
+  intossicazione: 'Intossicazione',
 }
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
@@ -140,7 +147,14 @@ export function CalcolatoreDoseBolo() {
               className={f.id === farmacoId ? 'farmaco-item selezionato' : 'farmaco-item'}
               onClick={() => selezionaFarmaco(f)}
             >
-              {f.nome}
+              <span className="farmaco-nome-riga">
+                {f.nome}
+                {f.avvertenze?.length > 0 && (
+                  <span className="farmaco-avvertenza-hint" title="Ha avvertenze">
+                    ⚠️
+                  </span>
+                )}
+              </span>
               <span className="farmaco-classe">{f.classe}</span>
             </button>
           ))}
@@ -150,7 +164,9 @@ export function CalcolatoreDoseBolo() {
 
       {farmacoSelezionato && (
         <div className="dettaglio-farmaco">
-          <h2>{farmacoSelezionato.nome}</h2>
+          <h2>
+            {farmacoSelezionato.nome} <AvvertenzeFarmaco avvertenze={farmacoSelezionato.avvertenze} />
+          </h2>
 
           <div className="contesti" role="tablist" aria-label="Contesto clinico">
             {contesti.map((c) => (

@@ -1,17 +1,13 @@
 {
-  "_stato": "IN REVISIONE. verificato=true = controllato dal medico su Mapar/Manuale. Ipnotici/oppioidi/curari/reversal: verificati. Vasoattivi-emergenza + antagonisti: BOZZA da verificare (naloxone da Mapar p.207).",
   "_schema_dose": {
-    "contesto": "induzione | sedazione | mantenimento | premedicazione | analgesia | neuroassiale | tci_induzione | tci_mantenimento | carico | infusione | bolo | intubazione | rsi | reversal | arresto | anafilassi | bradicardia | crisi_ipertensiva | antiaritmico | infusione_continua | tampone | ipertermia_maligna | antagonista",
+    "contesto": "induzione | sedazione | mantenimento | premedicazione | analgesia | neuroassiale | tci_induzione | tci_mantenimento | carico | infusione | bolo | intubazione | rsi | reversal | arresto | anafilassi | bradicardia | crisi_ipertensiva | antiaritmico | infusione_continua | tampone | ipertermia_maligna | antagonista | edema_cerebrale | oliguria | intossicazione",
     "fascia_eta": "pediatrico | adulto (default se assente) | anziano — l'app sceglie dall'eta del paziente; se manca la variante specifica usa 'adulto' (applicando 'aggiustamento_anziano' se presente) e lo ESPLICITA",
     "aggiustamento_anziano": "modificatore da applicare all'anziano quando NON esiste una voce dedicata, es. '-20..-50%' o testo",
     "valore/min/max": "per range usare min+max; il calcolatore mostra min*peso - max*peso",
     "unita": "mg/kg | mcg/kg | mg/kg/h | mcg/kg/min | mg | mcg | mcg/ml | ng/ml",
     "peso": "stringa ('reale'(=TBW) | IBW | LBW | corretto) OPPURE oggetto condizionale { tipo:'condizionale', default:'reale', eccezione:{ condizione:'BMI>=30', usa:'IBW' } } — in tal caso l'app sceglie in automatico dal BMI e ESPLICITA il peso usato",
     "via": "IV | IM | os | peridurale | intratecale (default IV se assente)",
-    "modello": "solo TCI",
-    "verificato": "false finche non controllato",
-    "fonte": "'bozza' finche non assegnata la fonte reale",
-    "revisione": "AAAA-MM alla verifica"
+    "modello": "solo TCI"
   },
   "farmaci": [
     {
@@ -35,8 +31,6 @@
             },
             "display": "esplicitare il peso usato (es. 'IBW' per obeso)"
           },
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "35, 41, 78"
         },
@@ -47,7 +41,6 @@
           "max": 3,
           "unita": "mg/kg",
           "peso": "reale",
-          "verificato": false,
           "fonte": "manuale-giovane-anestesista",
           "pagina": "78"
         },
@@ -65,8 +58,6 @@
             }
           },
           "note": "con oppioide prima dell'induzione",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "78"
         },
@@ -84,8 +75,6 @@
               "usa": "IBW"
             }
           },
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "35, 41"
         },
@@ -106,8 +95,6 @@
             }
           },
           "note": "TIVA",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "35, 78"
         },
@@ -120,8 +107,6 @@
           "modello": "Marsh (plasmatica) / Schnider (sito d'azione 3-6; correggere se obeso)",
           "aggiustamento_anziano": "ridurre il target 20-50% (anche con premed/oppioide/instabile)",
           "note": "sito d'azione 3-6 mcg/ml",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "212"
         },
@@ -132,8 +117,6 @@
           "max": 8,
           "unita": "mcg/ml",
           "note": "regolare in base a EEG/BIS; risveglio 1.5-2.5 mcg/ml; <2 in cardiochirurgia/ASA III-IV",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "213"
         }
@@ -160,8 +143,6 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "raro da solo; per lo piu co-induzione",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "41"
         },
@@ -172,8 +153,6 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "titolato; boli 1-2.5 mg",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "41"
         },
@@ -184,10 +163,7 @@
           "unita": "mg/kg/h",
           "peso": "reale",
           "note": "infusione sedazione",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "premedicazione",
@@ -196,10 +172,7 @@
           "unita": "mg/kg",
           "via": "IM",
           "note": "premedicazione IM",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -214,11 +187,20 @@
           "max": 3,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "IM 4-6 mg/kg",
-          "verificato": true,
+          "note": "dose EV",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "41",
-          "revisione": "2026-07"
+          "via": "IV"
+        },
+        {
+          "contesto": "induzione",
+          "via": "IM",
+          "min": 4,
+          "max": 6,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "utile nel paziente agitato senza accesso venoso",
+          "fonte": "prontuario"
         },
         {
           "contesto": "sedazione",
@@ -226,10 +208,8 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "dose subanestetica/analgesica",
-          "verificato": true,
           "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "via": "IV"
         },
         {
           "contesto": "mantenimento",
@@ -238,10 +218,17 @@
           "unita": "mg/kg/h",
           "peso": "reale",
           "note": "infusione analgesica 0.1-0.5 mg/kg/h",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
+        },
+        {
+          "contesto": "sedazione",
+          "via": "IM",
+          "min": 2.5,
+          "max": 5,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "sedoanalgesia IM",
+          "fonte": "prontuario"
         }
       ]
     },
@@ -257,10 +244,7 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "stabilita emodinamica",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "sedazione",
@@ -290,10 +274,7 @@
           "unita": "mcg/kg/h",
           "peso": "reale",
           "note": "dose iniziale; titolare in base al livello di sedazione desiderato",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "mantenimento",
@@ -301,10 +282,7 @@
           "unita": "mcg/kg/h",
           "peso": "reale",
           "note": "= sedazione, titolare",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -320,10 +298,7 @@
           "unita": "mcg/kg",
           "peso": "reale",
           "note": "fino a 5-10 per attenuare la risposta alla laringoscopia",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "sedazione",
@@ -332,10 +307,7 @@
           "unita": "mcg/kg",
           "peso": "reale",
           "note": "analgesia procedurale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "mantenimento",
@@ -344,10 +316,7 @@
           "unita": "mcg/kg",
           "peso": "reale",
           "note": "boli ripetuti a domanda",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "neuroassiale",
@@ -356,10 +325,7 @@
           "max": 50,
           "unita": "mcg",
           "note": "subaracnoidea",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "neuroassiale",
@@ -368,10 +334,7 @@
           "max": 1,
           "unita": "mcg/kg",
           "note": "bolo iniziale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -386,8 +349,6 @@
           "unita": "mcg/kg",
           "peso": "IBW",
           "note": "in 30 s",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "78"
         },
@@ -397,8 +358,6 @@
           "max": 0.5,
           "unita": "mcg/kg/min",
           "peso": "IBW",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "58",
           "fascia_eta": "adulto"
@@ -411,7 +370,6 @@
           "unita": "mcg/kg/min",
           "peso": "reale",
           "note": "il bambino richiede rate piu alti (clearance rapida); avvio tipico ~0.25; range fino a 1.3",
-          "verificato": false,
           "fonte": "FDA Ultiva / Drugs.com",
           "pagina": ""
         },
@@ -422,8 +380,6 @@
           "unita": "ng/ml",
           "modello": "Minto",
           "note": "velocita 0.5-1 poi 0.1-0.3 mcg/kg/min",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "214"
         },
@@ -433,8 +389,6 @@
           "max": 8,
           "unita": "ng/ml",
           "modello": "Minto",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "214"
         }
@@ -451,8 +405,6 @@
           "max": 0.3,
           "unita": "mcg/kg",
           "peso": "reale",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "56"
         },
@@ -462,8 +414,6 @@
           "max": 1,
           "unita": "mcg/kg/h",
           "peso": "reale",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "56"
         },
@@ -471,8 +421,6 @@
           "contesto": "infusione",
           "unita": "mcg/kg/h",
           "note": "bolo iniziale 0.5 mcg/kg poi infusione 0.5 mcg/kg/h",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "manuale-giovane-anestesista",
           "pagina": "56"
         },
@@ -482,8 +430,6 @@
           "max": 0.4,
           "unita": "ng/ml",
           "modello": "Gepts",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "214"
         },
@@ -494,10 +440,7 @@
           "max": 10,
           "unita": "mcg",
           "note": "subaracnoidea",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "neuroassiale",
@@ -505,10 +448,7 @@
           "valore": 0.1,
           "unita": "mcg/kg",
           "note": "bolo iniziale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -530,10 +470,7 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "titolata",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "neuroassiale",
@@ -542,10 +479,7 @@
           "max": 100,
           "unita": "mcg",
           "note": "subaracnoidea",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "neuroassiale",
@@ -554,10 +488,7 @@
           "max": 5,
           "unita": "mg",
           "note": "bolo iniziale, poi boli 1-2 mg; dose max 10 mg/24h",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -578,10 +509,7 @@
               "usa": "IBW"
             }
           },
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "rsi",
@@ -596,10 +524,7 @@
             }
           },
           "note": "sequenza rapida",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "mantenimento",
@@ -614,10 +539,7 @@
             }
           },
           "note": "bolo di richiamo",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "infusione",
@@ -632,10 +554,7 @@
               "usa": "IBW"
             }
           },
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -650,10 +569,7 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "intubazione a sequenza rapida",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "intubazione",
@@ -663,10 +579,7 @@
           "via": "IM",
           "peso": "reale",
           "note": "se accesso EV non disponibile",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -680,10 +593,7 @@
           "valore": 0.15,
           "unita": "mg/kg",
           "peso": "reale",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "mantenimento",
@@ -691,10 +601,7 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "bolo di richiamo",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "infusione",
@@ -702,10 +609,7 @@
           "max": 3,
           "unita": "mcg/kg/min",
           "peso": "reale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -720,10 +624,7 @@
           "max": 0.4,
           "unita": "mg/kg",
           "peso": "reale",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "mantenimento",
@@ -731,10 +632,7 @@
           "max": 0.2,
           "unita": "mg/kg",
           "peso": "reale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "infusione",
@@ -742,10 +640,7 @@
           "max": 10,
           "unita": "mcg/kg/min",
           "peso": "reale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -760,10 +655,7 @@
           "max": 0.25,
           "unita": "mg/kg",
           "peso": "reale",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         },
         {
           "contesto": "infusione",
@@ -771,10 +663,7 @@
           "max": 15,
           "unita": "mcg/kg/min",
           "peso": "reale",
-          "verificato": true,
-          "fonte": "revisione-medico",
-          "revisione": "2026-07",
-          "pagina": "da precisare"
+          "fonte": "revisione-medico"
         }
       ]
     },
@@ -784,38 +673,36 @@
       "classe": "reversal (rocuronio/vecuronio)",
       "dosi": [
         {
-          "contesto": "reversal",
+          "contesto": "reversal blocco moderato",
           "valore": 2,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "blocco moderato (TOF 3-4)",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "note": "ricomparsa di T2 (TOF count >=2). Peso REALE anche nell'obeso. Pediatrico 2-17 anni: stessa dose.",
+          "fonte": "revisione-medico"
         },
         {
-          "contesto": "reversal",
+          "contesto": "reversal blocco profondo",
           "valore": 4,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "blocco profondo (PTC 1-2 o TOF <=2)",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "note": "nessuna risposta al TOF, PTC 1-2. Peso reale.",
+          "fonte": "revisione-medico"
         },
         {
-          "contesto": "reversal",
+          "contesto": "reversal immediato (RSI)",
           "valore": 16,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "reversal immediato dopo RSI con rocuronio",
-          "verificato": true,
-          "revisione": "2026-07",
-          "fonte": "revisione-medico",
-          "pagina": "da precisare"
+          "note": "~3 min dopo rocuronio 1.2 mg/kg. Peso reale.",
+          "fonte": "revisione-medico"
         }
+      ],
+      "avvertenze": [
+        "Solo rocuronio/vecuronio (NO cisatracurio/atracurio -> neostigmina)",
+        "Dose sul peso REALE (non IBW)",
+        "Ri-curarizzazione se sottodosato -> controlla il TOF",
+        "Riduce l'efficacia della contraccezione ormonale -> barriera 7 gg",
+        "Possibili bradicardia / anafilassi"
       ]
     },
     {
@@ -829,8 +716,6 @@
           "unita": "mcg/kg",
           "peso": "IBW",
           "note": "+ atropina 20 mcg/kg (0.02 mg/kg); 1/2 dose (20+10) se decurarizzazione quasi completa; onset <10 min",
-          "verificato": true,
-          "revisione": "2026-07",
           "fonte": "mapar",
           "pagina": "207"
         }
@@ -847,9 +732,7 @@
           "max": 0.5,
           "unita": "mcg/kg/min",
           "peso": "reale",
-          "note": "titolare su PA; dosi maggiori nello shock refrattario",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "titolare su PA; dosi maggiori nello shock refrattario"
         }
       ]
     },
@@ -863,27 +746,21 @@
           "min": 0.01,
           "max": 0.5,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         },
         {
           "contesto": "arresto",
           "fascia_eta": "adulto",
           "valore": 1,
           "unita": "mg",
-          "note": "ogni 3-5 min",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "ogni 3-5 min"
         },
         {
           "contesto": "arresto",
           "fascia_eta": "pediatrico",
           "valore": 0.01,
           "unita": "mg/kg",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         },
         {
           "contesto": "anafilassi",
@@ -891,9 +768,7 @@
           "valore": 0.5,
           "unita": "mg",
           "via": "IM",
-          "note": "500 mcg; ripetibile",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "500 mcg; ripetibile"
         },
         {
           "contesto": "anafilassi",
@@ -901,20 +776,27 @@
           "valore": 0.01,
           "unita": "mg/kg",
           "via": "IM",
-          "note": "max 0.5 mg",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "max 0.5 mg"
         },
         {
           "contesto": "neonato",
           "min": 0.01,
           "max": 0.03,
           "unita": "mg/kg",
-          "note": "rianimazione neonatale",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "rianimazione neonatale"
+        },
+        {
+          "contesto": "anafilassi",
+          "via": "EV",
+          "fascia_eta": "adulto",
+          "min": 0.05,
+          "max": 0.1,
+          "unita": "mg",
+          "note": "boli titolati 50-100 mcg (anafilassi refrattaria/peri-arresto). DILUIZIONE per 0,1 mg/ml (100 mcg/ml): 1 mg (1 fiala 1:1000) in 9 ml di fisiologica = 10 ml",
+          "fonte": "prontuario"
         }
-      ]
+      ],
+      "diluizione_anafilassi": "per 0,1 mg/ml (100 mcg/ml): 1 mg (1 fiala 1:1000) in 9 ml di fisiologica = 10 ml totali"
     },
     {
       "id": "dopamina",
@@ -926,9 +808,7 @@
           "min": 2,
           "max": 20,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         }
       ]
     },
@@ -942,9 +822,7 @@
           "min": 2,
           "max": 20,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         }
       ]
     },
@@ -958,9 +836,7 @@
           "min": 0.01,
           "max": 0.04,
           "unita": "U/min",
-          "note": "dose fissa, non su peso",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "dose fissa, non su peso"
         }
       ]
     },
@@ -973,18 +849,14 @@
           "contesto": "carico",
           "valore": 50,
           "unita": "mcg/kg",
-          "note": "in 10 min, spesso omesso",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "in 10 min, spesso omesso"
         },
         {
           "contesto": "infusione",
           "min": 0.375,
           "max": 0.75,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         }
       ]
     },
@@ -998,11 +870,18 @@
           "min": 0.01,
           "max": 0.2,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
+        },
+        {
+          "contesto": "infusione",
+          "min": 1,
+          "max": 20,
+          "unita": "mcg/min",
+          "note": "dose fissa (non peso-dipendente). DILUIZIONE: 4 mg in 50 ml glucosata 5% = 80 mcg/ml (es. 1 mcg/min = 0,75 ml/h)",
+          "fonte": "prontuario"
         }
-      ]
+      ],
+      "diluizione": "4 mg in 50 ml di glucosata 5% = 80 mcg/ml (es. 1 mcg/min = 0,75 ml/h)"
     },
     {
       "id": "efedrina",
@@ -1014,9 +893,7 @@
           "min": 5,
           "max": 10,
           "unita": "mg",
-          "note": "ripetibile; ipotensione",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "ripetibile; ipotensione"
         }
       ]
     },
@@ -1030,18 +907,14 @@
           "min": 50,
           "max": 100,
           "unita": "mcg",
-          "note": "ripetibile",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "ripetibile"
         },
         {
           "contesto": "infusione",
           "min": 0.1,
           "max": 0.5,
           "unita": "mcg/kg/min",
-          "peso": "reale",
-          "verificato": false,
-          "fonte": "bozza"
+          "peso": "reale"
         }
       ]
     },
@@ -1055,9 +928,7 @@
           "min": 5,
           "max": 20,
           "unita": "mg",
-          "note": "crisi ipertensiva; ripetibile",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "crisi ipertensiva; ripetibile"
         }
       ]
     },
@@ -1070,25 +941,20 @@
           "contesto": "arresto",
           "valore": 300,
           "unita": "mg",
-          "note": "FV/TV senza polso; poi 150 mg",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "FV/TV senza polso; poi 150 mg"
         },
         {
           "contesto": "antiaritmico",
           "valore": 5,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "carico in 20-60 min",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "carico in 20-60 min"
         },
         {
           "contesto": "infusione",
           "valore": 900,
           "unita": "mg/24h",
           "note": "mantenimento dopo la dose di carico (300 mg)",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1105,9 +971,7 @@
           "max": 1.5,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "come AL vedi anestetici-locali",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "come AL vedi anestetici-locali"
         }
       ]
     },
@@ -1120,9 +984,7 @@
           "contesto": "antiaritmico",
           "valore": 6,
           "unita": "mg",
-          "note": "bolo rapido; poi 12 mg (TPSV)",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "bolo rapido; poi 12 mg (TPSV)"
         }
       ]
     },
@@ -1136,9 +998,7 @@
           "min": 1,
           "max": 2,
           "unita": "g",
-          "note": "torsione di punta / ipomagnesemia; vedi anche eclampsia (ostetricia)",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "torsione di punta / ipomagnesemia; vedi anche eclampsia (ostetricia)"
         }
       ]
     },
@@ -1152,9 +1012,7 @@
           "fascia_eta": "adulto",
           "valore": 0.5,
           "unita": "mg",
-          "note": "ripetibile; max 3 mg",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "ripetibile; max 3 mg"
         },
         {
           "contesto": "bradicardia",
@@ -1162,9 +1020,7 @@
           "valore": 0.02,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "min 0.1 mg",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "min 0.1 mg"
         }
       ]
     },
@@ -1178,9 +1034,7 @@
           "min": 5,
           "max": 10,
           "unita": "ml",
-          "note": "10% EV lenta; iperK/ipoCa/tossicita Ca-antagonisti",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "10% EV lenta; iperK/ipoCa/tossicita Ca-antagonisti"
         }
       ]
     },
@@ -1194,9 +1048,7 @@
           "valore": 1,
           "unita": "mEq/kg",
           "peso": "reale",
-          "note": "acidosi grave/iperK",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "acidosi grave/iperK"
         }
       ]
     },
@@ -1210,9 +1062,7 @@
           "min": 10,
           "max": 20,
           "unita": "mEq/h",
-          "note": "velocita max periferica ~10, centrale ~20 mEq/h",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "velocita max periferica ~10, centrale ~20 mEq/h"
         }
       ]
     },
@@ -1227,7 +1077,6 @@
           "max": 0.08,
           "unita": "mg",
           "note": "diluire 0.4 mg in 9 ml SF; boli 0.08 mg/3 min fino a FR>10",
-          "verificato": false,
           "fonte": "mapar",
           "pagina": "207"
         },
@@ -1236,7 +1085,6 @@
           "valore": 0.2,
           "unita": "mg/h",
           "note": "se rischio re-impregnazione (1-3h EV, 6-18h peri/IT)",
-          "verificato": false,
           "fonte": "mapar",
           "pagina": "207"
         }
@@ -1251,9 +1099,7 @@
           "contesto": "antagonista",
           "valore": 0.2,
           "unita": "mg",
-          "note": "poi 0.1 mg ogni 60 s; max ~1 mg",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "poi 0.1 mg ogni 60 s; max ~1 mg"
         }
       ]
     },
@@ -1268,9 +1114,7 @@
           "max": 10,
           "unita": "mg/kg",
           "peso": "reale",
-          "note": "2.5 mg/kg ripetibile fino a 10 mg/kg totali",
-          "verificato": false,
-          "fonte": "bozza"
+          "note": "2.5 mg/kg ripetibile fino a 10 mg/kg totali"
         }
       ]
     },
@@ -1286,7 +1130,6 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "media 5-10 mg in 2 min; tachi regolare QRS stretto; evitare se instabile o FE<40%",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1303,7 +1146,6 @@
           "unita": "mg/kg",
           "peso": "reale",
           "note": "media ~20 mg in 2 min; evitare se instabile o FE<40%",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1319,8 +1161,7 @@
           "valore": 500,
           "unita": "mcg/kg",
           "peso": "reale",
-          "note": "in 1 min (opzionale)",
-          "verificato": false,
+          "note": "CARICO (opzionale), in 1 min",
           "fonte": "erc-2025",
           "pagina": "65"
         },
@@ -1330,8 +1171,7 @@
           "max": 300,
           "unita": "mcg/kg/min",
           "peso": "reale",
-          "note": "controllo FC (TSV, FA/flutter); beta-1 selettivo, emivita ~9 min",
-          "verificato": false,
+          "note": "MANTENIMENTO - controllo FC (TSV, FA/flutter); beta-1 selettivo, emivita ~9 min",
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1348,7 +1188,6 @@
           "unita": "mcg/kg",
           "peso": "reale",
           "note": "in 1 min (opzionale)",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         },
@@ -1359,7 +1198,6 @@
           "unita": "mcg/kg/min",
           "peso": "reale",
           "note": "1-10 mcg/kg/min se funzione VS ridotta; emivita ~4 min",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1376,7 +1214,6 @@
           "max": 15,
           "unita": "mg",
           "note": "boli da 2.5 mg EV; se esmololo/landiololo non disponibili",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
         }
@@ -1395,9 +1232,75 @@
           "peso": "reale",
           "max_assoluto_mg": 1000,
           "note": "in 20 min; tachi QRS largo",
-          "verificato": false,
           "fonte": "erc-2025",
           "pagina": "65"
+        }
+      ]
+    },
+    {
+      "id": "thiopental",
+      "nome": "Tiopentale sodico",
+      "classe": "ipnotico/barbiturico",
+      "dosi": [
+        {
+          "contesto": "induzione",
+          "fascia_eta": "adulto",
+          "min": 3,
+          "max": 5,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "note": "induzione; antiepilettico; riduzione PIC",
+          "fonte": "prontuario"
+        },
+        {
+          "contesto": "induzione",
+          "fascia_eta": "pediatrico",
+          "min": 2,
+          "max": 6,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "fonte": "prontuario"
+        },
+        {
+          "contesto": "induzione",
+          "fascia_eta": "anziano",
+          "min": 2,
+          "max": 3,
+          "unita": "mg/kg",
+          "peso": "reale",
+          "fonte": "prontuario"
+        }
+      ]
+    },
+    {
+      "id": "mannitolo",
+      "nome": "Mannitolo",
+      "classe": "diuretico osmotico",
+      "dosi": [
+        {
+          "contesto": "edema_cerebrale",
+          "min": 1,
+          "max": 2,
+          "unita": "g/kg",
+          "peso": "reale",
+          "note": "EV in 30-60 min, ripetibile ogni 4-6h; riduce la PIC",
+          "fonte": "prontuario"
+        },
+        {
+          "contesto": "oliguria",
+          "valore": 0.25,
+          "unita": "g/kg",
+          "peso": "reale",
+          "note": "EV in 1h",
+          "fonte": "prontuario"
+        },
+        {
+          "contesto": "intossicazione",
+          "valore": 0.5,
+          "unita": "g/kg",
+          "peso": "reale",
+          "note": "EV in 15 min",
+          "fonte": "prontuario"
         }
       ]
     }

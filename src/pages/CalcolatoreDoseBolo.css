@@ -56,6 +56,16 @@
   color: var(--accent);
 }
 
+.farmaco-nome-riga {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.farmaco-avvertenza-hint {
+  font-size: 11px;
+}
+
 .farmaco-classe {
   font-size: 12px;
   color: var(--text);

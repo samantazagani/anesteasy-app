@@ -45,6 +45,21 @@
   margin-bottom: 16px;
 }
 
+/* Vt su PBW: unico calcolatore "in evidenza" del modulo (data/ventilazione.json >
+   calcolatori[vt_pbw].display: "il dato piu' cercato in ventilazione"). Stesso trattamento
+   visivo del pannello condiviso sopra, cosi' risalta subito rispetto agli altri calcolatori. */
+.riquadro-vent-evidenza {
+  border: 2px solid var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.chip-evidenza {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-weight: 600;
+}
+
 .riquadro-vent > .riga-meta {
   margin-bottom: 10px;
 }

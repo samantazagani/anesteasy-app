@@ -456,14 +456,15 @@ function CalcRASS({ dati }) {
         <select value={indice} onChange={(e) => setIndice(Number(e.target.value))}>
           {dati.scala.map((o, i) => (
             <option key={i} value={i}>
-              {o.p >= 0 ? `+${o.p}` : o.p} — {o.d}
+              {o.p >= 0 ? `+${o.p}` : o.p} — {o.termine ?? o.d}
             </option>
           ))}
         </select>
       </label>
       <p className="risultato-primario">
-        RASS {opzione.p >= 0 ? `+${opzione.p}` : opzione.p}: {opzione.d}
+        RASS {opzione.p >= 0 ? `+${opzione.p}` : opzione.p}: {opzione.termine ?? opzione.d}
       </p>
+      {opzione.termine && <p className="nota">{opzione.d}</p>}
       {dati.nota && <p className="nota">{dati.nota}</p>}
     </Punteggio>
   )

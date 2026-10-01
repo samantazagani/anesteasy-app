@@ -66,11 +66,16 @@ function IndicatoreLimite({ valore, limite }) {
   )
 }
 
-function Calcolatore({ titolo, badge, children }) {
+// evidenza: data/ventilazione.json > calcolatori[vt_pbw].in_evidenza — il Vt su PBW e' il
+// dato PIU' CERCATO del modulo (display: "MOSTRARE PER PRIMO e in evidenza"), quindi
+// l'unico calcolatore con questo trattamento grafico distinto dagli altri, non solo il
+// primo nell'ordine di rendering (che da solo non lo renderebbe "in evidenza").
+function Calcolatore({ titolo, badge, evidenza, children }) {
   return (
-    <div className="riquadro-vent">
+    <div className={evidenza ? 'riquadro-vent riquadro-vent-evidenza' : 'riquadro-vent'}>
       <div className="riga-meta">
         <p className="vent-titolo">{titolo}</p>
+        {evidenza && <span className="chip chip-evidenza">Dato primario</span>}
         {badge}
       </div>
       {children}
@@ -196,7 +201,7 @@ function CalcVtPbw({ sesso, vtN, pbw }) {
   }
 
   return (
-    <Calcolatore titolo="Vt su peso ideale (PBW)">
+    <Calcolatore titolo="Vt su peso ideale (PBW)" evidenza>
       {!pbw && <p className="avviso">Inserisci altezza (e sesso) nel pannello condiviso.</p>}
       {pbw && (
         <>
