@@ -40,11 +40,11 @@ const MAPPA_EMERGENZE_PEDIATRICHE = {
 }
 
 export function Pediatria() {
-  const { profile, bmi, ibw, lbw } = usePatientProfile()
+  const { profile, bmi, ibw, lbw, abw } = usePatientProfile()
   const categoria = categoriaEta(profile.eta)
   const etaAnni = profile.eta
   const pesoKg = profile.pesoKg
-  const derivati = { pesoKg, ibw, lbw, bmi, categoria }
+  const derivati = { pesoKg, ibw, lbw, abw, bmi, categoria }
 
   if (categoria !== 'pediatrico') {
     return (

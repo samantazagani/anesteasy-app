@@ -27,7 +27,7 @@ const LABEL_CAMPO_TERAPIA = {
 const CAMPI_TERAPIA_ESCLUSI = new Set(['id', 'nome', 'classe', 'verificato', 'fonte'])
 
 export function CalcolatoreAntibiotici() {
-  const { profile, bmi, ibw, lbw } = usePatientProfile()
+  const { profile, bmi, ibw, lbw, abw } = usePatientProfile()
   const antibiotici = antibioticiData.antibiotici
 
   const [antibioticoId, setAntibioticoId] = useState(antibiotici[0]?.id ?? null)
@@ -38,7 +38,7 @@ export function CalcolatoreAntibiotici() {
   const nonCompilato = antibiotico ? !antibiotico.fonte : true
 
   const categoria = categoriaEta(profile.eta)
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, abw, bmi, categoria }
 
   let peso = null
   let risultato = null

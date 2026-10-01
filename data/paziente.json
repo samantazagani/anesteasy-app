@@ -1,0 +1,52 @@
+{
+  "_uso": "Stato PAZIENTE condiviso (punti 6 e 7). Si inserisce UNA volta e si propaga a tutti i moduli: farmaci, ventilazione, calcolatori renali/elettroliti, nutrizione, volume max anestetici locali. Ogni modulo mostra QUALE peso usa e i kg calcolati (trasparenza, punto 7).",
+  "input": [
+    { "campo": "sesso", "valori": ["uomo", "donna"], "obbligatorio": true },
+    { "campo": "eta", "unita": "anni", "obbligatorio": true, "note": "fascia_eta: pediatrico / adulto / anziano (>=65)" },
+    { "campo": "peso_reale", "unita": "kg", "obbligatorio": true, "note": "TBW - total body weight" },
+    { "campo": "altezza_cm", "unita": "cm", "obbligatorio": true }
+  ],
+  "pesi_derivati": {
+    "_nota": "calcolati automaticamente dagli input; mostrarli sul profilo paziente cosi il clinico vede subito reale/IBW/ABW/PBW e BMI",
+    "BMI": {
+      "nome": "Indice di massa corporea",
+      "formula": "peso_reale / (altezza_cm/100)^2",
+      "unita": "kg/m2"
+    },
+    "IBW": {
+      "nome": "Peso ideale (Devine)",
+      "formula": "uomo: 50 + 0.91*(altezza_cm - 152.4); donna: 45.5 + 0.91*(altezza_cm - 152.4)",
+      "equivalente_pollici": "(50 uomo / 45.5 donna) + 2.3*(altezza_cm/2.54 - 60)",
+      "unita": "kg"
+    },
+    "PBW": {
+      "nome": "Peso corporeo previsto (per il Vt)",
+      "formula": "= IBW (Devine)",
+      "unita": "kg",
+      "note": "usato per il volume corrente in ventilazione (Vt = 6-8 ml/kg PBW)"
+    },
+    "ABW": {
+      "nome": "Peso corretto (adjusted body weight)",
+      "formula": "IBW + 0.4*(peso_reale - IBW)",
+      "unita": "kg",
+      "note": "usato in alcuni dosaggi e in nutrizione nell'obeso"
+    }
+  },
+  "peso_per_modulo": {
+    "_nota": "quale peso usare e MOSTRARE in ogni modulo (punto 7). Dove il singolo dato ha un campo 'peso' proprio, quello ha priorita.",
+    "farmaci": "campo 'peso' della singola dose: reale | IBW | ABW | condizionale (default reale, BMI>=30 -> IBW). Il sugammadex e' sempre su peso REALE; il rocuronio nell'obeso su IBW. Mostrare sempre peso usato + kg.",
+    "ventilazione_vt": "PBW (da altezza) - vedi ventilazione.json (vt_pbw)",
+    "clearance_creatinina": "peso reale (Cockcroft-Gault); nell'obeso valutare ABW",
+    "egfr_ckdepi": "non usa il peso (solo eta, sesso, creatinina)",
+    "elettroliti": "peso reale per l'acqua corporea totale (deficit Na, Adrogue-Madias, deficit idrico)",
+    "nutrizione": "peso_nutrizionale: BMI<18.5 -> reale; 18.5-30 -> IBW; >30 -> ABW (vedi nutrizione.json)",
+    "anestetici_locali_volume_max": "peso reale (tetto mg/kg)"
+  },
+  "propagazione": {
+    "_nota": "obiettivo punto 6: il profilo paziente pre-compila gli input di tutti i calcolatori",
+    "campi_condivisi": ["sesso", "eta", "peso_reale", "altezza_cm"],
+    "derivati_condivisi": ["BMI", "IBW", "PBW", "ABW"],
+    "regola": "ogni calcolatore legge dagli input/derivati del paziente; il clinico puo comunque sovrascrivere il valore nel singolo calcolatore senza modificare il profilo."
+  },
+  "fonte": "IBW Devine; PBW ARDSnet; ABW e regola peso nutrizionale come in nutrizione.json"
+}

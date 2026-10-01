@@ -4,7 +4,7 @@ import { calcolaEtaDecimale } from '../lib/etaConversione'
 import '../App.css'
 
 export function ProfiloPaziente() {
-  const { profile, setProfile, resetProfile, bmi, ibw, lbw } = usePatientProfile()
+  const { profile, setProfile, resetProfile, bmi, ibw, lbw, pbw, abw } = usePatientProfile()
 
   // Il profilo lavora sempre in anni decimali (profile.eta): anni e mesi qui sono due
   // campi sempre disponibili e sommati (mesi vuoto conta come 0), utile per un'eta sotto
@@ -125,6 +125,14 @@ export function ProfiloPaziente() {
         <div>
           <dt>LBW (peso magro)</dt>
           <dd>{lbw ?? '—'} kg</dd>
+        </div>
+        <div>
+          <dt>PBW (peso previsto, per il Vt)</dt>
+          <dd>{pbw ?? '—'} kg</dd>
+        </div>
+        <div>
+          <dt>ABW (peso corretto)</dt>
+          <dd>{abw ?? '—'} kg</dd>
         </div>
       </dl>
     </section>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { risolviPeso } from './pesoResolver'
+import { calcPBW } from './anthropometrics'
 
 describe('risolviPeso', () => {
   it('usa il peso reale quando la specifica e\' assente', () => {
@@ -99,5 +100,50 @@ describe('risolviPeso - paziente pediatrico: IBW/LBW non sono formule valide, si
   it('categoria non nota (null/assente): comportamento invariato, IBW/LBW restano applicabili', () => {
     const r = risolviPeso('IBW', { pesoKg: 70, ibw: 65, lbw: 60, bmi: 24, categoria: null })
     expect(r.chiave).toBe('IBW')
+  })
+
+  // ABW (Blocco P): stesso guard di IBW/LBW, estensione forward-looking - nessun farmaco in
+  // data/farmaci.json lo usa ancora oggi, ma paziente.json > peso_per_modulo.farmaci lo
+  // documenta come valore possibile del campo "peso" di una dose.
+  it('stringa semplice "ABW" su paziente pediatrico ricade su reale', () => {
+    const r = risolviPeso('ABW', { pesoKg: 18, ibw: 16, lbw: 15, abw: 17, bmi: 17, categoria: 'pediatrico' })
+
+    expect(r.chiave).toBe('reale')
+    expect(r.valoreKg).toBe(18)
+    expect(r.pesoPediatricoEscluso).toBe('ABW')
+  })
+
+  it('la stessa stringa semplice "ABW" su un adulto risolve regolarmente', () => {
+    const r = risolviPeso('ABW', { pesoKg: 120, ibw: 70, lbw: 80, abw: 90, bmi: 34, categoria: 'adulto' })
+    expect(r).toEqual({ chiave: 'ABW', valoreKg: 90, condizioneApplicata: null })
+  })
+})
+
+describe('PBW (ventilazione) e il guard pediatrico dei farmaci: percorsi indipendenti', () => {
+  // Esplicitamente richiesto nel Blocco P: un profilo pediatrico deve ottenere comunque un
+  // PBW calcolabile per il Vt in ventilazione, mentre LO STESSO identico profilo in un
+  // contesto farmaco a peso condizionale (es. propofol, BMI>=30 -> IBW) continua a usare il
+  // peso reale. Le due funzioni (calcPBW e risolviPeso) non condividono alcun guard.
+  it('bambino di 8 anni, 25 kg, 120 cm, BMI 17.4 (non >=30): PBW calcolabile, farmaco su reale', () => {
+    const profiloPediatrico = { pesoKg: 25, ibw: 17.8, lbw: 16, abw: 20.9, bmi: 17.4, categoria: 'pediatrico' }
+
+    // Ventilazione: PBW sempre calcolabile, a qualunque eta' (qui coincide con l'IBW pieno,
+    // per costruzione - vedi calcPBW in anthropometrics.js).
+    const pbw = calcPBW(120, 'F')
+    expect(pbw).not.toBeNull()
+    expect(Number.isFinite(pbw)).toBe(true)
+
+    // Farmaco (es. propofol, peso condizionale "BMI>=30 -> IBW"): a questo BMI il default
+    // (reale) si applicherebbe comunque; forziamo qui un BMI>=30 fittizio sullo stesso
+    // paziente per dimostrare che anche in quel caso il guard pediatrico tiene il reale.
+    const pesoSpecCondizionale = { tipo: 'condizionale', default: 'reale', eccezione: { condizione: 'BMI>=30', usa: 'IBW' } }
+    const pesoFarmaco = risolviPeso(pesoSpecCondizionale, { ...profiloPediatrico, bmi: 32 })
+
+    expect(pesoFarmaco.chiave).toBe('reale')
+    expect(pesoFarmaco.valoreKg).toBe(25)
+    expect(pesoFarmaco.pesoPediatricoEscluso).toBe('IBW')
+
+    // Le due cose restano scorrelate: cambiare il risultato del farmaco non tocca ne' usa pbw.
+    expect(pbw).not.toBe(pesoFarmaco.valoreKg)
   })
 })

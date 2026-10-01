@@ -818,8 +818,12 @@ function CalcClearanceCreatinina({ profile }) {
       {errore && <p className="avviso avviso-errore">{errore}</p>}
       {risultato && (
         <>
+          <div className="riga-meta">
+            <span className="chip">Peso usato: peso reale ({pesoN} kg)</span>
+          </div>
           <p className="risultato-primario">{risultato.clcrMlMin} ml/min</p>
           <p className="formula">{risultato.formula}</p>
+          <p className="nota">Nel paziente obeso, valutare l'uso dell'ABW al posto del peso reale.</p>
         </>
       )}
     </Calcolatore>

@@ -52,7 +52,7 @@ function contestiDisponibili(dosi) {
 }
 
 export function CalcolatoreDoseBolo() {
-  const { profile, bmi, ibw, lbw } = usePatientProfile()
+  const { profile, bmi, ibw, lbw, abw } = usePatientProfile()
   const farmaci = farmaciData.farmaci
 
   const [ricerca, setRicerca] = useState('')
@@ -88,7 +88,7 @@ export function CalcolatoreDoseBolo() {
 
   const doseScelta = selezione.candidati[varianteIndice] ?? selezione.candidati[0] ?? null
 
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, abw, bmi, categoria }
 
   let peso = null
   let risultato = null

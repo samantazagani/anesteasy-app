@@ -16,7 +16,7 @@ import './Emergenze.css'
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
 
 export function Emergenze() {
-  const { profile, bmi, ibw, lbw } = usePatientProfile()
+  const { profile, bmi, ibw, lbw, abw } = usePatientProfile()
   const emergenze = emergenzeData.emergenze
   const farmaci = farmaciData.farmaci
 
@@ -33,7 +33,7 @@ export function Emergenze() {
   }
 
   const categoria = categoriaEta(profile.eta)
-  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, bmi, categoria }
+  const derivati = { pesoKg: profile.pesoKg, ibw, lbw, abw, bmi, categoria }
 
   return (
     <section id="emergenze">

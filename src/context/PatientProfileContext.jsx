@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { calcBMI, calcIBW, calcLBW, round1 } from '../lib/anthropometrics'
+import { calcBMI, calcIBW, calcLBW, calcPBW, calcABW, round1 } from '../lib/anthropometrics'
 
 const PatientProfileContext = createContext(null)
 
@@ -21,10 +21,17 @@ export function PatientProfileProvider({ children }) {
 
   const derived = useMemo(() => {
     const { sesso, pesoKg, altezzaCm } = profile
+    // ibw non arrotondato: serve "pieno" per calcABW, che somma una frazione del reale ad
+    // esso. L'IBW esposto nel contesto resta arrotondato a 1 decimale come gli altri.
+    const ibwPieno = calcIBW(altezzaCm, sesso)
     return {
       bmi: round1(calcBMI(pesoKg, altezzaCm)),
-      ibw: round1(calcIBW(altezzaCm, sesso)),
+      ibw: round1(ibwPieno),
       lbw: round1(calcLBW(pesoKg, altezzaCm, sesso)),
+      // pbw e' un percorso indipendente da ibw (vedi calcPBW in anthropometrics.js): non va
+      // mai fatto dipendere dal guard pediatrico di pesoResolver.js pensato per i farmaci.
+      pbw: round1(calcPBW(altezzaCm, sesso)),
+      abw: round1(calcABW(pesoKg, ibwPieno)),
     }
   }, [profile])
 
