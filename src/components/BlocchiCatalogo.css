@@ -3,6 +3,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
+  background: var(--surface);
 }
 
 .riquadro-blocchi-catalogo h2 {
@@ -21,9 +22,9 @@
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .tabella-blocchi {
@@ -41,12 +42,12 @@
 }
 
 .tabella-blocchi th {
-  color: var(--text);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .tabella-blocchi td {
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .blocco-nome {
@@ -56,6 +57,6 @@
 
 .nessun-risultato {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 10px 0 0;
 }

@@ -7,7 +7,7 @@
 
 #punteggi .sottotitolo {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 8px 0 20px;
 }
 
@@ -23,16 +23,16 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .categoria-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .riquadro-punteggio {
@@ -40,6 +40,7 @@
   border-radius: 12px;
   padding: 18px 20px;
   margin-bottom: 16px;
+  background: var(--surface);
 }
 
 .riquadro-punteggio > .riga-meta {
@@ -49,7 +50,7 @@
 .punteggio-titolo {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0;
 }
 
@@ -58,7 +59,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: var(--text-h);
+  color: var(--text);
   margin-bottom: 10px;
 }
 
@@ -67,9 +68,9 @@
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .griglia-campi-p {
@@ -90,27 +91,28 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
+  background: var(--surface);
 }
 
 .voce-attiva {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
+  background: var(--accent-soft);
 }
 
 .risultato-positivo {
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .lista-riferimenti {
   margin: 0 0 10px;
   padding-left: 20px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .lista-riferimenti li {
@@ -120,7 +122,7 @@
 .scheda-titolo-p {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 12px 0 6px;
 }
 

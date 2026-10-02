@@ -14,16 +14,16 @@
 
 .ricerca-farmaco label {
   font-size: 15px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .ricerca-farmaco input {
   font: inherit;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .lista-farmaci {
@@ -43,17 +43,17 @@
   gap: 2px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
   text-align: left;
 }
 
 .farmaco-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .farmaco-nome-riga {
@@ -68,12 +68,12 @@
 
 .farmaco-classe {
   font-size: 12px;
-  color: var(--text);
+  color: var(--text-secondary);
 }
 
 .nessun-risultato {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
 }
 
 .dettaglio-farmaco h2 {
@@ -92,16 +92,16 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .contesto-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .varianti {
@@ -116,9 +116,9 @@
   font-size: 13px;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px dashed var(--border);
-  background: var(--bg);
-  color: var(--text);
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text-secondary);
   cursor: pointer;
   max-width: 260px;
   text-align: left;
@@ -127,12 +127,13 @@
 .variante-item.selezionato {
   border: 1px solid var(--accent-border);
   border-style: solid;
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .risultato-dose {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+  background: var(--surface);
 }

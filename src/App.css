@@ -19,14 +19,14 @@
   border: none;
   border-bottom: 2px solid transparent;
   background: none;
-  color: var(--text);
+  color: var(--text-secondary);
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .tab-item.selezionato {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--accent-text);
+  border-bottom-color: var(--accent-text);
 }
 
 #profilo-paziente {
@@ -38,11 +38,12 @@
 
 .disclaimer {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 14px;
   margin: 16px 0 24px;
+  background: var(--surface);
 }
 
 form {
@@ -56,7 +57,7 @@ label {
   flex-direction: column;
   gap: 6px;
   font-size: 15px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 input,
@@ -64,9 +65,16 @@ select {
   font: inherit;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  accent-color: var(--accent);
 }
 
 .eta-input {
@@ -83,9 +91,10 @@ button {
   font: inherit;
   padding: 10px 16px;
   border-radius: 8px;
-  border: 2px solid var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -101,16 +110,17 @@ button {
   border-radius: 8px;
   padding: 12px;
   text-align: center;
+  background: var(--surface);
 }
 
 #derivati dt {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
 }
 
 #derivati dd {
   margin: 4px 0 0;
   font-size: 20px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
 }

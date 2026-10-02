@@ -9,8 +9,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 2px solid #d97706;
-  background: #fef3c7;
+  border: 2px solid var(--warn);
+  background: var(--warn-soft);
   border-radius: 10px;
   padding: 10px 14px;
   margin-bottom: 20px;
@@ -21,17 +21,15 @@
 
 .banner-emergenza p {
   font-size: 13px;
-  color: #78350f;
+  color: var(--warn-text);
 }
 
-@media (prefers-color-scheme: dark) {
-  .banner-emergenza {
-    background: rgba(217, 119, 6, 0.14);
-  }
+.banner-emergenza {
+  background: rgba(217, 119, 6, 0.14);
+}
 
-  .banner-emergenza p {
-    color: #fde68a;
-  }
+.banner-emergenza p {
+  color: var(--warn-text);
 }
 
 .badge-emergenza {
@@ -44,7 +42,7 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #fff;
-  background: #d97706;
+  background: var(--warn);
   border-radius: 999px;
   padding: 3px 10px;
 }
@@ -61,22 +59,23 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .emergenza-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .stepper {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+  background: var(--surface);
 }
 
 .stepper h2 {
@@ -96,9 +95,9 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -109,7 +108,7 @@
 
 .stepper-indice {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -125,8 +124,8 @@
   height: 10px;
   padding: 0;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
   cursor: pointer;
 }
 
@@ -138,7 +137,7 @@
 .passo-azione {
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 16px;
 }
 
@@ -154,7 +153,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   flex: 1;
   /* Senza questo, i figli flex non si restringono oltre la larghezza "naturale" del loro
      contenuto (qui l'input): su schermi stretti la riga va in overflow orizzontale. */
@@ -163,7 +162,7 @@
 
 .diluizione-in {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   padding-bottom: 10px;
 }
 
@@ -172,7 +171,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   max-width: 220px;
   margin-bottom: 12px;
 }
@@ -181,9 +180,9 @@
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 /* Algoritmo ramificato (tachiaritmie/bradiaritmie peri-arresto) --------------------------- */
@@ -199,7 +198,7 @@
 .scheda-titolo-ramificato {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 8px;
 }
 
@@ -207,7 +206,7 @@
   margin: 0 0 4px;
   padding-left: 20px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .checklist-ramificato li {
@@ -230,23 +229,23 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .ramo-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 /* L'esito di un ramo (dopo aver scelto instabile/stabile, QRS, ritmo...): leggermente
    rilevato rispetto alle schede di scelta sopra, cosi' si vede a colpo d'occhio dove
    finisce la navigazione e inizia la raccomandazione. */
 .scheda-ramificato-esito {
-  background: var(--social-bg);
+  background: var(--surface-2);
   border-radius: 10px;
   padding: 14px 16px;
   margin-top: 14px;
@@ -265,6 +264,7 @@
   border-radius: 8px;
   padding: 10px 12px;
   margin-top: 8px;
+  background: var(--surface);
 }
 
 .farmaco-rapido-label {

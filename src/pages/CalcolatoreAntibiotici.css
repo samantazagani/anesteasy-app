@@ -7,7 +7,7 @@
 
 #calcolatore-antibiotici .sottotitolo {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 8px 0 20px;
 }
 
@@ -26,28 +26,29 @@
   gap: 2px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
   text-align: left;
 }
 
 .antibiotico-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .antibiotico-indicazione {
   font-size: 12px;
-  color: var(--text);
+  color: var(--text-secondary);
 }
 
 .risultato-antibiotico {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+  background: var(--surface);
 }
 
 .dettagli-antibiotico {
@@ -77,9 +78,9 @@
   font-size: 13px;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px dashed var(--border);
-  background: var(--bg);
-  color: var(--accent);
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-2);
+  color: var(--accent-text);
   cursor: pointer;
 }
 
@@ -98,12 +99,13 @@
   border-radius: 12px;
   padding: 16px 18px;
   margin-top: 12px;
+  background: var(--surface);
 }
 
 .scheda-titolo-antibiotico {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 6px;
 }
 

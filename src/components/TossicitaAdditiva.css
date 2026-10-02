@@ -1,6 +1,6 @@
 #tossicita-additiva .sottotitolo {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 0 0 16px;
 }
 
@@ -19,12 +19,13 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
+  background: var(--surface);
 }
 
 .voce-nome {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   min-width: 140px;
 }
 
@@ -47,12 +48,12 @@
 }
 
 .tabella-tossicita th {
-  color: var(--text);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .tabella-tossicita td {
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .riga-totale td {
@@ -62,7 +63,7 @@
 }
 
 .riga-totale.supera td {
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .scheda-margine {
@@ -74,7 +75,7 @@
 .scheda-titolo-margine {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 8px;
 }
 

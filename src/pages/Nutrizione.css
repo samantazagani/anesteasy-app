@@ -14,6 +14,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
+  background: var(--surface);
 }
 
 .riquadro-nutrizione h2 {
@@ -43,7 +44,7 @@
 .scheda-titolo {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 6px;
 }
 
@@ -59,16 +60,16 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .fase-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .campo-numerico {
@@ -76,7 +77,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .campo-numerico input,
@@ -84,9 +85,9 @@
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .campo-target {
@@ -118,11 +119,12 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
+  background: var(--surface);
 }
 
 .criterio-riga input[type='checkbox'] {
@@ -134,25 +136,21 @@
 }
 
 .criterio-attivo {
-  border-color: #d97706;
-  background: #fef3c7;
+  border-color: var(--warn);
+  background: var(--warn-soft);
 }
 
-@media (prefers-color-scheme: dark) {
-  .criterio-attivo {
-    background: rgba(217, 119, 6, 0.14);
-  }
+.criterio-attivo {
+  background: rgba(217, 119, 6, 0.14);
 }
 
 .avviso-refeeding {
-  border: 1px solid #d97706;
-  color: #92400e;
+  border: 1px solid var(--warn);
+  color: var(--warn-text);
 }
 
-@media (prefers-color-scheme: dark) {
-  .avviso-refeeding {
-    color: #fde68a;
-  }
+.avviso-refeeding {
+  color: var(--warn-text);
 }
 
 .lista-voci-nutrizione {
@@ -166,6 +164,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
+  background: var(--surface);
 }
 
 .chip-capitalizza {
@@ -175,7 +174,7 @@
 /* Infusioni: box "prima/dopo" della sottrazione, distinto dalle altre schede per
    richiamare l'attenzione sul fatto che il target netto e' quello da usare nella NPT. */
 .scheda-sottrazione {
-  background: var(--social-bg);
+  background: var(--surface-2);
   border-radius: 8px;
   padding: 12px;
 }
@@ -187,18 +186,18 @@
 }
 
 .semaforo-verde {
-  border-color: #16a34a;
-  color: #16a34a;
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .semaforo-giallo {
-  border-color: #d97706;
-  color: #d97706;
+  border-color: var(--warn);
+  color: var(--warn);
 }
 
 .semaforo-rosso {
-  border-color: #dc2626;
-  color: #dc2626;
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 .tabella-prodotti {
@@ -218,12 +217,12 @@
 }
 
 .tabella-prodotti th {
-  color: var(--text);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .tabella-prodotti td {
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .tabella-prodotti td:first-child,
@@ -236,11 +235,11 @@
 }
 
 .riga-cliccabile:hover {
-  background: var(--social-bg);
+  background: var(--surface-2);
 }
 
 /* Riga del prodotto attualmente selezionato nel confronto, stesso trattamento della
    "prima scelta" nella tabella uterotonici di Ostetricia. */
 .riga-prima-scelta {
-  background: var(--accent-bg);
+  background: var(--accent-soft);
 }

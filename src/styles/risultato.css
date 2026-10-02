@@ -18,16 +18,17 @@
 
 .chip {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px 10px;
+  background: transparent;
 }
 
 .avviso {
   font-size: 14px;
-  color: var(--text-h);
-  background: var(--social-bg);
+  color: var(--text);
+  background: var(--surface-2);
   border-radius: 8px;
   padding: 10px 12px;
   margin: 0 0 12px;
@@ -36,7 +37,7 @@
 .avviso-anziano,
 .avviso-pediatrico,
 .avviso-sicurezza {
-  border: 1px solid #d97706;
+  border: 1px solid var(--warn);
 }
 
 /* Blocco di sicurezza sempre visibile (non una nota in fondo): piu' paragrafi, quindi
@@ -50,15 +51,15 @@
 }
 
 .avviso-errore {
-  border: 1px solid #dc2626;
-  color: #dc2626;
+  border: 1px solid var(--danger);
+  color: var(--danger);
 }
 
 /* Variante di .risultato-primario per un valore che segnala il superamento di un limite
    (es. residuo negativo, margine di tossicita' esaurito): stesso peso visivo, colore
    d'allarme invece del contrasto neutro. */
 .risultato-errore {
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .formula-a-vista {
@@ -68,10 +69,10 @@
 /* Risultato finale del calcolo (es. "150–250 mg"): l'elemento primario, grande e ad alto
    contrasto — quello che si legge al volo. */
 .risultato-primario {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 26px;
   font-weight: 700;
-  color: var(--text-h);
+  color: var(--text);
   margin: 2px 0 6px;
   word-break: break-word;
   display: flex;
@@ -84,16 +85,16 @@
    al risultato primario, piu' piccola e in grigio. Resta comunque sempre a vista (mai
    nascosta) per la trasparenza del calcolo richiesta da PROGETTO.md. */
 .formula {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 14px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 0 0 8px;
   word-break: break-word;
 }
 
 .nota {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 0 0 6px;
 }

@@ -12,8 +12,8 @@
   height: 24px;
   padding: 0;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -22,15 +22,13 @@
 
 .avvertenze-farmaco-bottone:hover,
 .avvertenze-farmaco-bottone[aria-expanded='true'] {
-  border-color: #d97706;
-  background: #fef3c7;
+  border-color: var(--warn);
+  background: var(--warn-soft);
 }
 
-@media (prefers-color-scheme: dark) {
-  .avvertenze-farmaco-bottone:hover,
-  .avvertenze-farmaco-bottone[aria-expanded='true'] {
-    background: rgba(217, 119, 6, 0.14);
-  }
+.avvertenze-farmaco-bottone:hover,
+.avvertenze-farmaco-bottone[aria-expanded='true'] {
+  background: rgba(217, 119, 6, 0.14);
 }
 
 .avvertenze-farmaco-popover {
@@ -44,12 +42,11 @@
   font-size: 13px;
   font-weight: 400;
   line-height: 1.4;
-  color: var(--text-h);
-  background: var(--bg);
-  border: 1px solid #d97706;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--warn);
   border-radius: 8px;
   padding: 10px 12px 10px 24px;
-  box-shadow: var(--shadow);
   white-space: normal;
   margin: 0;
 }

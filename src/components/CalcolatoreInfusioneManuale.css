@@ -3,17 +3,18 @@
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
+  background: var(--surface);
 }
 
 .infusione-manuale h3 {
   margin: 0 0 4px;
   font-size: 18px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .infusione-manuale .sottotitolo {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 0 0 16px;
 }
 
@@ -22,7 +23,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 15px;
-  color: var(--text-h);
+  color: var(--text);
   max-width: 200px;
   margin-bottom: 12px;
 }
@@ -31,9 +32,9 @@
   font: inherit;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .colonne-concentrazione {
@@ -48,6 +49,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
+  background: var(--surface);
 }
 
 .colonna-concentrazione .risultato-primario {

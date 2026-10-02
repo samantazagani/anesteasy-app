@@ -14,6 +14,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
+  background: var(--surface);
 }
 
 .riquadro-pediatria h2 {
@@ -39,7 +40,7 @@
 .presidio-titolo {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0 0 6px;
 }
 
@@ -54,7 +55,7 @@
 
 .presidio-riga .presidio-titolo {
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -74,18 +75,19 @@
   border-radius: 8px;
   padding: 10px;
   text-align: center;
+  background: var(--surface);
 }
 
 .griglia-parametri dt {
   font-size: 12px;
-  color: var(--text);
+  color: var(--text-secondary);
 }
 
 .griglia-parametri dd {
   margin: 4px 0 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .griglia-campi-piccola {
@@ -100,16 +102,16 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .campo-numerico input {
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .lista-voci-pediatria {
@@ -122,6 +124,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
+  background: var(--surface);
 }
 
 .chip-capitalizza {
@@ -139,13 +142,14 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px;
+  background: var(--surface);
 }
 
 /* Cuffiato e' il piu' usato in pratica (presidi.tubo_iot._ordine nel JSON): evidenziato
    rispetto al non cuffiato, che resta secondario. */
 .scelta-tubo-principale {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
+  background: var(--accent-soft);
 }
 
 .scelta-tubo .presidio-titolo {
@@ -158,7 +162,7 @@
   margin: 0 0 12px;
   padding-left: 20px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .lista-riferimento li {
@@ -174,9 +178,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  color: var(--accent);
+  color: var(--accent-text);
   border-color: var(--accent-border);
-  background: var(--accent-bg);
+  background: var(--accent-soft);
 }
 
 .chip-scelte {
@@ -193,6 +197,6 @@
 
 .chip-bottone.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }

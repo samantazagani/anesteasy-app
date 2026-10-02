@@ -7,7 +7,7 @@
 
 #anestesia-locale .sottotitolo {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 8px 0 20px;
 }
 
@@ -23,16 +23,16 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .anestetico-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .controlli-comuni {
@@ -48,7 +48,7 @@
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -57,6 +57,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
+  background: var(--surface);
 }
 
 .riquadro-calcolatore h2 {
@@ -68,16 +69,16 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .campo-numerico input {
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .griglia-campi {

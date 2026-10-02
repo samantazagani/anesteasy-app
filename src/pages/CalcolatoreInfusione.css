@@ -13,7 +13,7 @@
 
 .sottotitolo {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 8px 0 20px;
 }
 
@@ -22,6 +22,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
+  background: var(--surface);
 }
 
 .riquadro-calcolatore h2 {
@@ -37,7 +38,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 15px;
-  color: var(--text-h);
+  color: var(--text);
   max-width: 220px;
   margin-bottom: 12px;
 }
@@ -54,7 +55,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
   flex: 1;
   /* Senza questo, i figli flex non si restringono oltre la larghezza "naturale" del loro
      contenuto (qui l'input): su schermi stretti la riga va in overflow orizzontale. */
@@ -63,7 +64,7 @@
 
 .diluizione-in {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   padding-bottom: 10px;
 }
 
@@ -72,7 +73,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 15px;
-  color: var(--text-h);
+  color: var(--text);
   margin-bottom: 16px;
 }
 
@@ -80,9 +81,9 @@
   font: inherit;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .concentrazione-chip {
@@ -102,21 +103,22 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .modalita-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .risultato-infusione {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+  background: var(--surface);
 }
 

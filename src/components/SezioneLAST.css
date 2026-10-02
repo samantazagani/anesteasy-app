@@ -1,35 +1,35 @@
 .riquadro-last {
-  border: 2px solid #d97706;
-  background: #fef3c7;
+  border: 2px solid var(--warn);
+  background: var(--warn-soft);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
 }
 
 .riquadro-last h2 {
-  color: #92400e;
+  color: var(--warn-text);
   margin: 8px 0 4px;
 }
 
 .riquadro-last .sottotitolo {
   font-size: 13px;
-  color: #92400e;
+  color: var(--warn-text);
   margin: 0 0 12px;
 }
 
 .riquadro-last .formula,
 .riquadro-last .nota {
-  color: #78350f;
+  color: var(--warn-text);
 }
 
 .riquadro-last .risultato-primario {
-  color: #b45309;
+  color: var(--warn-strong);
 }
 
 .riquadro-last .info-fonte-bottone {
-  border-color: #d97706;
+  border-color: var(--warn);
   background: transparent;
-  color: #92400e;
+  color: var(--warn-text);
 }
 
 .badge-emergenza {
@@ -41,7 +41,7 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #fff;
-  background: #d97706;
+  background: var(--warn);
   border-radius: 999px;
   padding: 3px 10px;
 }
@@ -49,7 +49,7 @@
 .etichetta-last {
   font-size: 13px;
   font-weight: 600;
-  color: #92400e;
+  color: var(--warn-text);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   margin: 12px 0 2px;
@@ -59,26 +59,24 @@
   margin-top: 4px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .riquadro-last {
-    background: rgba(217, 119, 6, 0.12);
-    border-color: #d97706;
-  }
+.riquadro-last {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: var(--warn);
+}
 
-  .riquadro-last h2,
-  .riquadro-last .sottotitolo,
-  .riquadro-last .formula,
-  .riquadro-last .nota,
-  .etichetta-last {
-    color: #fde68a;
-  }
+.riquadro-last h2,
+.riquadro-last .sottotitolo,
+.riquadro-last .formula,
+.riquadro-last .nota,
+.etichetta-last {
+  color: var(--warn-text);
+}
 
-  .riquadro-last .risultato-primario {
-    color: #fbbf24;
-  }
+.riquadro-last .risultato-primario {
+  color: var(--warn-strong);
+}
 
-  .riquadro-last .info-fonte-bottone {
-    border-color: #d97706;
-    color: #fde68a;
-  }
+.riquadro-last .info-fonte-bottone {
+  border-color: var(--warn);
+  color: var(--warn-text);
 }

@@ -7,7 +7,7 @@
 
 #calcolatori-ti .sottotitolo {
   font-size: 14px;
-  color: var(--text);
+  color: var(--text-secondary);
   margin: 8px 0 20px;
 }
 
@@ -23,16 +23,16 @@
   font-size: 14px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
 }
 
 .categoria-item.selezionato {
   border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 .riquadro-calcolatore-ti {
@@ -40,6 +40,7 @@
   border-radius: 12px;
   padding: 18px 20px;
   margin-bottom: 16px;
+  background: var(--surface);
 }
 
 .riquadro-calcolatore-ti > .riga-meta {
@@ -49,7 +50,7 @@
 .calcolatore-titolo {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 0;
 }
 
@@ -65,7 +66,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .campo-numerico input,
@@ -73,15 +74,15 @@
   font: inherit;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .scheda-titolo {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
   margin: 16px 0 6px;
 }
 
@@ -93,11 +94,11 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .nota-equivalenze {
-  font-family: var(--mono);
+  font-family: var(--sans);
 }
 
 /* ROTEM: una riga per step della sequenza clinica, bordo colorato per categoria (non
@@ -114,6 +115,7 @@
   border-left-width: 4px;
   border-radius: 8px;
   padding: 10px 14px;
+  background: var(--surface);
 }
 
 .riga-rotem-lisi {
@@ -133,7 +135,7 @@
 }
 
 .riga-rotem-attiva {
-  background: var(--social-bg);
+  background: var(--surface-2);
 }
 
 .riferimento-rotem {
