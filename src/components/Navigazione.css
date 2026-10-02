@@ -370,3 +370,24 @@
     padding: 0;
   }
 }
+
+/* ---------- Badge del profilo (pagina Profilo paziente) ---------- */
+
+.badge-profilo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.badge-neutro {
+  background: var(--surface-2);
+  color: var(--text-secondary);
+}

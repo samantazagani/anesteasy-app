@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { calcolaEtaDecimale } from '../lib/etaConversione'
+import { categoriaEta } from '../lib/categoriaEta'
+import { etaFertileEuristica } from '../lib/ostetriciaSblocco'
+import { BadgeProfilo } from '../components/BadgeProfilo.jsx'
 import '../App.css'
 
 export function ProfiloPaziente() {
@@ -107,6 +110,11 @@ export function ProfiloPaziente() {
             onChange={(e) => setProfile({ altezzaCm: e.target.value === '' ? null : Number(e.target.value) })}
           />
         </label>
+
+        <BadgeProfilo
+          categoria={categoriaEta(profile.eta)}
+          ostetricia={etaFertileEuristica(profile.sesso, profile.eta)}
+        />
 
         <button type="button" onClick={handleReset}>
           Azzera profilo
