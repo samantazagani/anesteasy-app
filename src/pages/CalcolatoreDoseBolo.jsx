@@ -128,162 +128,171 @@ export function CalcolatoreDoseBolo() {
     <section id="calcolatore-dose">
       <h1>Farmaci · Calcolatore dose</h1>
 
-      <div className="ricerca-farmaco">
-        <label htmlFor="ricerca-farmaco-input">Cerca farmaco</label>
-        <input
-          id="ricerca-farmaco-input"
-          type="search"
-          placeholder="es. propofol"
-          value={ricerca}
-          onChange={(e) => setRicerca(e.target.value)}
-        />
-        <div className="lista-farmaci" role="listbox" aria-label="Farmaci">
-          {risultatiRicerca.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              role="option"
-              aria-selected={f.id === farmacoId}
-              className={f.id === farmacoId ? 'farmaco-item selezionato' : 'farmaco-item'}
-              onClick={() => selezionaFarmaco(f)}
-            >
-              <span className="farmaco-nome-riga">
-                {f.nome}
-                {f.avvertenze?.length > 0 && (
-                  <span className="farmaco-avvertenza-hint" title="Ha avvertenze">
-                    ⚠️
-                  </span>
-                )}
-              </span>
-              <span className="farmaco-classe">{f.classe}</span>
-            </button>
-          ))}
-          {risultatiRicerca.length === 0 && <p className="nessun-risultato">Nessun farmaco trovato.</p>}
-        </div>
-      </div>
-
-      {farmacoSelezionato && (
-        <div className="dettaglio-farmaco">
-          <h2>
-            {farmacoSelezionato.nome} <AvvertenzeFarmaco avvertenze={farmacoSelezionato.avvertenze} />
-          </h2>
-
-          <div className="contesti" role="tablist" aria-label="Contesto clinico">
-            {contesti.map((c) => (
-              <button
-                key={c}
-                type="button"
-                role="tab"
-                aria-selected={c === contesto}
-                className={c === contesto ? 'contesto-item selezionato' : 'contesto-item'}
-                onClick={() => setContesto(c)}
-              >
-                {LABEL_CONTESTO[c] ?? c}
-              </button>
-            ))}
-          </div>
-
-          {selezione.candidati.length > 1 && (
-            <div className="varianti" role="tablist" aria-label="Variante">
-              {selezione.candidati.map((d, i) => (
+      <div className="farmaci-layout">
+        <div className="farmaci-col-scelta">
+          <div className="ricerca-farmaco">
+            <label htmlFor="ricerca-farmaco-input">Cerca farmaco</label>
+            <input
+              id="ricerca-farmaco-input"
+              type="search"
+              placeholder="es. propofol"
+              value={ricerca}
+              onChange={(e) => setRicerca(e.target.value)}
+            />
+            <div className="lista-farmaci" role="listbox" aria-label="Farmaci">
+              {risultatiRicerca.map((f) => (
                 <button
-                  key={i}
+                  key={f.id}
                   type="button"
-                  role="tab"
-                  aria-selected={i === varianteIndice}
-                  className={i === varianteIndice ? 'variante-item selezionato' : 'variante-item'}
-                  onClick={() => setVarianteIndice(i)}
+                  role="option"
+                  aria-selected={f.id === farmacoId}
+                  className={f.id === farmacoId ? 'farmaco-item selezionato' : 'farmaco-item'}
+                  onClick={() => selezionaFarmaco(f)}
                 >
-                  {etichettaVariante(d, i)}
+                  <span className="farmaco-nome-riga">
+                    {f.nome}
+                    {f.avvertenze?.length > 0 && (
+                      <span className="farmaco-avvertenza-hint" title="Ha avvertenze">
+                        ⚠️
+                      </span>
+                    )}
+                  </span>
+                  <span className="farmaco-classe">{f.classe}</span>
                 </button>
               ))}
+              {risultatiRicerca.length === 0 && <p className="nessun-risultato">Nessun farmaco trovato.</p>}
             </div>
-          )}
-
-          <div className="risultato-dose">
-            {!doseScelta && <p className="avviso">Nessun dosaggio disponibile per questo contesto.</p>}
-
-            {doseScelta?.non_applicabile && (
-              <p className="avviso">Non applicabile{doseScelta.motivo ? `: ${doseScelta.motivo}` : '.'}</p>
-            )}
-
-            {nessunValoreNumerico && (
-              <p className="avviso">
-                Nessun valore numerico per questo contesto{doseScelta.note ? `: ${doseScelta.note}` : '.'}
-              </p>
-            )}
-
-            {doseScelta && !doseScelta.non_applicabile && !nessunValoreNumerico && (
-              <>
-                <div className="riga-meta">
-                  <span className="chip">
-                    Fascia età: {selezione.fasciaUsata}
-                    {!categoria && ' (età non inserita, uso adulto)'}
-                  </span>
-                  {peso?.chiave && (
-                    <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
-                  )}
-                  {doseScelta.via && <span className="chip">Via: {doseScelta.via}</span>}
-                </div>
-
-                {selezione.fallback && categoria === 'anziano' && doseScelta.aggiustamento_anziano && (
-                  <p className="avviso avviso-anziano">
-                    Nessuna voce dedicata per l'anziano in questo contesto: mostrato il dosaggio adulto.
-                    Aggiustamento suggerito: {doseScelta.aggiustamento_anziano}
-                  </p>
-                )}
-
-                {selezione.fallback && categoria === 'pediatrico' && (
-                  <p className="avviso avviso-pediatrico">
-                    Nessuna voce pediatrica dedicata per questo contesto (Modulo pediatria non ancora
-                    disponibile): mostrato il dosaggio adulto come riferimento, non idoneo per la
-                    prescrizione pediatrica senza verifica clinica.
-                    {doseScelta.note ? ` Nota: ${doseScelta.note}` : ''}
-                  </p>
-                )}
-
-                {peso?.pesoPediatricoEscluso && (
-                  <p className="avviso avviso-pediatrico">
-                    Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
-                    paziente pediatrico (formula per adulti): usato il peso reale.
-                  </p>
-                )}
-
-                {erroreCalcolo && <p className="avviso avviso-errore">{erroreCalcolo}</p>}
-
-                {risultato && (
-                  <div className="formula-a-vista">
-                    <p className="risultato-primario">
-                      {formatoRisultato(risultato)}
-                      <InfoFonte fonte={doseScelta.fonte} pagina={doseScelta.pagina} revisione={doseScelta.revisione} />
-                    </p>
-                    <p className="formula">{risultato.formula}</p>
-                    {/* se la nota e' gia' mostrata come etichetta della variante (sugammadex ecc.), non ripeterla */}
-                    {doseScelta.note && !(selezione.candidati.length > 1 && !doseScelta.via) && (
-                      <p className="nota">{doseScelta.note}</p>
-                    )}
-                  </div>
-                )}
-
-                {profiloIncompleto && (
-                  <p className="avviso">
-                    Completa il profilo paziente (peso
-                    {peso?.chiave !== 'reale' ? ', altezza e sesso' : ''}) per calcolare la dose:
-                    serve il {LABEL_PESO[peso?.chiave] ?? peso?.chiave}.
-                  </p>
-                )}
-              </>
-            )}
           </div>
 
-          {farmacoSelezionato.calcolatore_infusione && (
-            <CalcolatoreInfusioneManuale
-              config={farmacoSelezionato.calcolatore_infusione}
-              pesoKg={profile.pesoKg}
-            />
+          {farmacoSelezionato && (
+            <div className="dettaglio-farmaco">
+              <h2>
+                {farmacoSelezionato.nome} <AvvertenzeFarmaco avvertenze={farmacoSelezionato.avvertenze} />
+              </h2>
+
+              <div className="contesti" role="tablist" aria-label="Contesto clinico">
+                {contesti.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    role="tab"
+                    aria-selected={c === contesto}
+                    className={c === contesto ? 'contesto-item selezionato' : 'contesto-item'}
+                    onClick={() => setContesto(c)}
+                  >
+                    {LABEL_CONTESTO[c] ?? c}
+                  </button>
+                ))}
+              </div>
+
+              {selezione.candidati.length > 1 && (
+                <div className="varianti" role="tablist" aria-label="Variante">
+                  {selezione.candidati.map((d, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === varianteIndice}
+                      className={i === varianteIndice ? 'variante-item selezionato' : 'variante-item'}
+                      onClick={() => setVarianteIndice(i)}
+                    >
+                      {etichettaVariante(d, i)}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+            </div>
           )}
         </div>
-      )}
+
+        {farmacoSelezionato && (
+          <div className="farmaci-col-risultato">
+            <div className="risultato-dose">
+              {!doseScelta && <p className="avviso">Nessun dosaggio disponibile per questo contesto.</p>}
+
+              {doseScelta?.non_applicabile && (
+                <p className="avviso">Non applicabile{doseScelta.motivo ? `: ${doseScelta.motivo}` : '.'}</p>
+              )}
+
+              {nessunValoreNumerico && (
+                <p className="avviso">
+                  Nessun valore numerico per questo contesto{doseScelta.note ? `: ${doseScelta.note}` : '.'}
+                </p>
+              )}
+
+              {doseScelta && !doseScelta.non_applicabile && !nessunValoreNumerico && (
+                <>
+                  <div className="riga-meta">
+                    <span className="chip">
+                      Fascia età: {selezione.fasciaUsata}
+                      {!categoria && ' (età non inserita, uso adulto)'}
+                    </span>
+                    {peso?.chiave && (
+                      <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
+                    )}
+                    {doseScelta.via && <span className="chip">Via: {doseScelta.via}</span>}
+                  </div>
+
+                  {selezione.fallback && categoria === 'anziano' && doseScelta.aggiustamento_anziano && (
+                    <p className="avviso avviso-anziano">
+                      Nessuna voce dedicata per l'anziano in questo contesto: mostrato il dosaggio adulto.
+                      Aggiustamento suggerito: {doseScelta.aggiustamento_anziano}
+                    </p>
+                  )}
+
+                  {selezione.fallback && categoria === 'pediatrico' && (
+                    <p className="avviso avviso-pediatrico">
+                      Nessuna voce pediatrica dedicata per questo contesto (Modulo pediatria non ancora
+                      disponibile): mostrato il dosaggio adulto come riferimento, non idoneo per la
+                      prescrizione pediatrica senza verifica clinica.
+                      {doseScelta.note ? ` Nota: ${doseScelta.note}` : ''}
+                    </p>
+                  )}
+
+                  {peso?.pesoPediatricoEscluso && (
+                    <p className="avviso avviso-pediatrico">
+                      Questo farmaco richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido su un
+                      paziente pediatrico (formula per adulti): usato il peso reale.
+                    </p>
+                  )}
+
+                  {erroreCalcolo && <p className="avviso avviso-errore">{erroreCalcolo}</p>}
+
+                  {risultato && (
+                    <div className="formula-a-vista">
+                      <p className="risultato-primario">
+                        {formatoRisultato(risultato)}
+                        <InfoFonte fonte={doseScelta.fonte} pagina={doseScelta.pagina} revisione={doseScelta.revisione} />
+                      </p>
+                      <p className="formula">{risultato.formula}</p>
+                      {/* se la nota e' gia' mostrata come etichetta della variante (sugammadex ecc.), non ripeterla */}
+                      {doseScelta.note && !(selezione.candidati.length > 1 && !doseScelta.via) && (
+                        <p className="nota">{doseScelta.note}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {profiloIncompleto && (
+                    <p className="avviso">
+                      Completa il profilo paziente (peso
+                      {peso?.chiave !== 'reale' ? ', altezza e sesso' : ''}) per calcolare la dose:
+                      serve il {LABEL_PESO[peso?.chiave] ?? peso?.chiave}.
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+
+            {farmacoSelezionato.calcolatore_infusione && (
+              <CalcolatoreInfusioneManuale
+                config={farmacoSelezionato.calcolatore_infusione}
+                pesoKg={profile.pesoKg}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </section>
   )
 }

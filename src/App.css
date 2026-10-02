@@ -1,34 +1,3 @@
-#tab-nav {
-  display: flex;
-  gap: 8px;
-  /* flex-start, non center: con molte schede la barra va spesso in overflow (non solo su
-     mobile, anche su una finestra desktop piu' stretta di #root), e "center" su un
-     contenitore scrollabile in overflow rende la prima scheda irraggiungibile in alcuni
-     browser. La barra scorre solo lei stessa (contenuta), mai la pagina. */
-  justify-content: flex-start;
-  padding: 16px 20px 0;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.tab-item {
-  font: inherit;
-  font-size: 15px;
-  padding: 10px 16px;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.tab-item.selezionato {
-  color: var(--accent-text);
-  border-bottom-color: var(--accent-text);
-}
-
 #profilo-paziente {
   padding: 32px 20px;
   max-width: 480px;

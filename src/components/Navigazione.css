@@ -1,0 +1,372 @@
+/* ---------- Shell: sidebar fissa (desktop) / drawer (sotto 1024px) + contenuto ---------- */
+
+.app-shell {
+  min-height: 100svh;
+}
+
+.app-main {
+  /* Container query: le pagine passano a due colonne in base alla larghezza reale
+     disponibile (sidebar esclusa), non a quella della finestra. */
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  width: min(300px, 86vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%);
+  transition: transform 0.2s ease, visibility 0s linear 0.2s;
+  visibility: hidden;
+}
+
+.sidebar.aperta {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.2s ease, visibility 0s;
+}
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 14px;
+  flex-shrink: 0;
+}
+
+.sidebar-nome {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.icona-bottone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--nav-inactive);
+}
+
+.icona-bottone:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* ---------- Pannello paziente ---------- */
+
+.pannello-paziente {
+  flex-shrink: 0;
+  margin: 0 12px 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.paziente-riga {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.paziente-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+}
+
+.paziente-testi {
+  flex: 1;
+  min-width: 0;
+}
+
+.paziente-riga1 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.paziente-riga2 {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.link-bottone {
+  padding: 4px 6px;
+  border: none;
+  background: transparent;
+  color: var(--accent-text);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.link-bottone:hover {
+  background: var(--accent-soft);
+}
+
+.paziente-azioni {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.paziente-azioni .link-bottone {
+  margin-left: auto;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 5px 9px;
+  border-radius: 999px;
+}
+
+.badge-accent {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.badge-success {
+  background: var(--success-soft);
+  color: var(--success-text);
+}
+
+/* ---------- Lista moduli ---------- */
+
+.nav-moduli {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 12px 16px;
+  border-top: 1px solid var(--border);
+}
+
+.nav-gruppo + .nav-gruppo {
+  margin-top: 10px;
+}
+
+.nav-gruppo-etichetta {
+  margin: 0 0 4px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.nav-gruppo ul,
+.ricerca-moduli-risultati {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-voce {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--nav-inactive);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.nav-voce:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.nav-voce.attiva {
+  background: var(--accent-soft);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.nav-voce.attiva svg {
+  color: var(--accent-text);
+}
+
+/* ---------- Barra superiore ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-riga {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.topbar-titolo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topbar-titolo svg {
+  flex-shrink: 0;
+  color: var(--accent-text);
+}
+
+.topbar-titolo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-ricerca {
+  display: none;
+  padding: 0 12px 12px;
+}
+
+.topbar-ricerca.aperta {
+  display: block;
+}
+
+.ricerca-moduli {
+  position: relative;
+}
+
+.ricerca-moduli-campo {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+}
+
+.ricerca-moduli-campo input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+}
+
+.ricerca-moduli-campo:focus-within {
+  border-color: var(--accent);
+}
+
+.ricerca-moduli-risultati {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.ricerca-moduli-vuoto {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.contenuto {
+  display: block;
+}
+
+/* ---------- Desktop: sidebar sempre visibile ---------- */
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 264px;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  .app-main {
+    margin-left: 264px;
+  }
+
+  .sidebar-chiudi,
+  .topbar-hamburger,
+  .topbar-cerca-toggle {
+    display: none;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 28px;
+    height: 64px;
+  }
+
+  .topbar-riga {
+    flex: 1;
+    padding: 0;
+  }
+
+  .topbar-titolo {
+    font-size: 20px;
+  }
+
+  .topbar-ricerca {
+    display: block;
+    width: 320px;
+    padding: 0;
+  }
+}

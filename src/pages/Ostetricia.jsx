@@ -2,19 +2,13 @@ import ostetriciaData from '../../data/ostetricia.json'
 import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
+import { etaFertileEuristica, SOGLIA_ETA_FERTILE_MIN, SOGLIA_ETA_FERTILE_MAX } from '../lib/ostetriciaSblocco'
 import '../styles/risultato.css'
 import './Ostetricia.css'
-
-const SOGLIA_ETA_FERTILE_MIN = 12
-const SOGLIA_ETA_FERTILE_MAX = 50
 
 function intervallo(valori, unita) {
   const [min, max] = valori
   return `${min}-${max}${unita ? ` ${unita}` : ''}`
-}
-
-function etaFertileEuristica(sesso, eta) {
-  return sesso === 'F' && eta !== null && eta !== undefined && eta >= SOGLIA_ETA_FERTILE_MIN && eta <= SOGLIA_ETA_FERTILE_MAX
 }
 
 export function Ostetricia() {
