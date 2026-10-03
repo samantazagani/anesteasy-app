@@ -10,7 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       // App 100% offline: nessuna chiamata di rete a servizi esterni.
       // Precache di tutto il bundle (JS/CSS/HTML/icone) + dati clinici in data/.
-      includeAssets: ['favicon.svg', 'icons.svg'],
+      includeAssets: ['favicon.svg', 'icons.svg', 'apple-touch-icon.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,json,woff,woff2}'],
         // Nessun runtimeCaching verso rete esterna: tutto viene servito dalla cache
