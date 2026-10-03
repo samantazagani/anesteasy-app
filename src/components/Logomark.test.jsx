@@ -5,9 +5,9 @@ import { Logomark } from './Logomark.jsx'
 describe('Logomark', () => {
   const html = renderToStaticMarkup(<Logomark />)
 
-  it('e un quadrato arrotondato viola pieno con tracciato ECG bianco non riempito', () => {
+  it('e un quadrato arrotondato arancione pieno con tracciato ECG bianco non riempito', () => {
     expect(html).toContain('rx="8"')
-    expect(html).toContain('fill="#8b5cf6"')
+    expect(html).toContain('fill="#f97316"')
     expect(html).toContain('stroke="#ffffff"')
     expect(html).toContain('fill="none"')
   })
