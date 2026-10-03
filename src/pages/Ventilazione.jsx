@@ -118,60 +118,66 @@ export function Ventilazione() {
   }
 
   return (
-    <section id="ventilazione">
+    <section id="ventilazione" className="pagina-griglia">
       <h1>Ventilazione</h1>
       <p className="sottotitolo">
         Riferimento rapido: calcolatori e valori limite (data/ventilazione.json). I
         parametri qui sotto alimentano più calcolatori insieme.
       </p>
 
-      <div className="pannello-condiviso">
-        <h2>Parametri condivisi</h2>
-        <div className="griglia-campi-vent">
-          <label className="campo-numerico">
-            Sesso
-            <select value={sesso} onChange={(e) => setSesso(e.target.value)}>
-              <option value="M">M</option>
-              <option value="F">F</option>
-            </select>
-          </label>
-          <Campo etichetta="Altezza (cm)" valore={altezzaCm} onChange={setAltezzaCm} />
-          <Campo etichetta="Vt (ml)" valore={vt} onChange={setVt} />
-          <Campo etichetta="Pplat (cmH2O)" valore={pplat} onChange={setPplat} />
-          <Campo etichetta="Ppeak (cmH2O)" valore={ppeak} onChange={setPpeak} />
-          <Campo etichetta="PEEP (cmH2O)" valore={peep} onChange={setPeep} />
-          <Campo etichetta="RR (atti/min)" valore={rr} onChange={setRr} />
+      <div className="layout-2col">
+        <div className="col-input">
+          <div className="pannello-condiviso">
+            <h2>Parametri condivisi</h2>
+            <div className="griglia-campi-vent">
+              <label className="campo-numerico">
+                Sesso
+                <select value={sesso} onChange={(e) => setSesso(e.target.value)}>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                </select>
+              </label>
+              <Campo etichetta="Altezza (cm)" valore={altezzaCm} onChange={setAltezzaCm} />
+              <Campo etichetta="Vt (ml)" valore={vt} onChange={setVt} />
+              <Campo etichetta="Pplat (cmH2O)" valore={pplat} onChange={setPplat} />
+              <Campo etichetta="Ppeak (cmH2O)" valore={ppeak} onChange={setPpeak} />
+              <Campo etichetta="PEEP (cmH2O)" valore={peep} onChange={setPeep} />
+              <Campo etichetta="RR (atti/min)" valore={rr} onChange={setRr} />
+            </div>
+            <div className="indicatori-condivisi">
+              {pplatN !== null && (
+                <span className="indicatore-riga">
+                  Pplat: <IndicatoreLimite valore={pplatN} limite={trovaLimite('pplat')} />
+                </span>
+              )}
+              {peepN !== null && (
+                <span className="indicatore-riga">
+                  PEEP: <IndicatoreLimite valore={peepN} limite={trovaLimite('peep')} />
+                </span>
+              )}
+              {ppeakN !== null && (
+                <span className="indicatore-riga">
+                  Ppeak: <IndicatoreLimite valore={ppeakN} limite={trovaLimite('ppeak')} />
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="indicatori-condivisi">
-          {pplatN !== null && (
-            <span className="indicatore-riga">
-              Pplat: <IndicatoreLimite valore={pplatN} limite={trovaLimite('pplat')} />
-            </span>
-          )}
-          {peepN !== null && (
-            <span className="indicatore-riga">
-              PEEP: <IndicatoreLimite valore={peepN} limite={trovaLimite('peep')} />
-            </span>
-          )}
-          {ppeakN !== null && (
-            <span className="indicatore-riga">
-              Ppeak: <IndicatoreLimite valore={ppeakN} limite={trovaLimite('ppeak')} />
-            </span>
-          )}
+
+        <div className="col-output">
+          <CalcVtPbw sesso={sesso} vtN={vtN} pbw={pbw} />
+          <CalcComplianceStatica vtN={vtN} pplatN={pplatN} peepN={peepN} />
+          <CalcComplianceDinamica vtN={vtN} ppeakN={ppeakN} peepN={peepN} />
+          <CalcDrivingPressure pplatN={pplatN} peepN={peepN} />
+          <CalcMechanicalPower rrN={rrN} vtN={vtN} ppeakN={ppeakN} pplatN={pplatN} peepN={peepN} />
+          <CalcSpazioMorto />
+          <CalcPF />
+          <CalcOxygenationIndex />
+          <CalcO2ER />
+          <CalcVO2 />
+          <CalcAutonomiaBombola />
         </div>
       </div>
-
-      <CalcVtPbw sesso={sesso} vtN={vtN} pbw={pbw} />
-      <CalcComplianceStatica vtN={vtN} pplatN={pplatN} peepN={peepN} />
-      <CalcComplianceDinamica vtN={vtN} ppeakN={ppeakN} peepN={peepN} />
-      <CalcDrivingPressure pplatN={pplatN} peepN={peepN} />
-      <CalcMechanicalPower rrN={rrN} vtN={vtN} ppeakN={ppeakN} pplatN={pplatN} peepN={peepN} />
-      <CalcSpazioMorto />
-      <CalcPF />
-      <CalcOxygenationIndex />
-      <CalcO2ER />
-      <CalcVO2 />
-      <CalcAutonomiaBombola />
     </section>
   )
 }
