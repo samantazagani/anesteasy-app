@@ -116,79 +116,85 @@ export function CalcolatoriTI() {
   const [categoria, setCategoria] = useState('elettroliti')
 
   return (
-    <section id="calcolatori-ti">
+    <section id="calcolatori-ti" className="pagina-griglia">
       <h1>Calcolatori TI</h1>
       <p className="sottotitolo">
         19 calcolatori indipendenti (data/calcolatori-ti.json): valori di laboratorio da
         inserire manualmente ogni volta, tranne peso/età/sesso già noti dal profilo.
       </p>
 
-      <nav className="categorie-ti" role="tablist" aria-label="Categoria">
-        {CATEGORIE.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            role="tab"
-            aria-selected={c.id === categoria}
-            className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
-            onClick={() => setCategoria(c.id)}
-          >
-            {c.label}
-          </button>
-        ))}
-      </nav>
+      <div className="layout-2col">
+        <div className="col-input">
+          <nav className="categorie-ti" role="tablist" aria-label="Categoria">
+            {CATEGORIE.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="tab"
+                aria-selected={c.id === categoria}
+                className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
+                onClick={() => setCategoria(c.id)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </nav>
+        </div>
 
-      {/* Ordine come da data/calcolatori-ti.json > _ordine_elettroliti: segue il flusso di
-          un caso clinico (Na corretto -> gap osmolare -> deficit sodio -> Adrogue-Madias
-          -> deficit idrico -> potassio -> calcio). */}
-      <div hidden={categoria !== 'elettroliti'}>
-        <CalcSodioCorretto />
-        <CalcGapOsmolare />
-        <CalcDeficitSodio profile={profile} />
-        <CalcCorrezioneSodioAdrogue profile={profile} />
-        <CalcDeficitIdrico profile={profile} />
-        <CalcDeficitPotassio />
-        <CalcCalcioCorretto />
-      </div>
+        <div className="col-output">
+          {/* Ordine come da data/calcolatori-ti.json > _ordine_elettroliti: segue il flusso di
+              un caso clinico (Na corretto -> gap osmolare -> deficit sodio -> Adrogue-Madias
+              -> deficit idrico -> potassio -> calcio). */}
+          <div hidden={categoria !== 'elettroliti'}>
+            <CalcSodioCorretto />
+            <CalcGapOsmolare />
+            <CalcDeficitSodio profile={profile} />
+            <CalcCorrezioneSodioAdrogue profile={profile} />
+            <CalcDeficitIdrico profile={profile} />
+            <CalcDeficitPotassio />
+            <CalcCalcioCorretto />
+          </div>
 
-      <div hidden={categoria !== 'equilibrio-acido-base'}>
-        <CalcAnionGap />
-        <CalcWinter />
-      </div>
+          <div hidden={categoria !== 'equilibrio-acido-base'}>
+            <CalcAnionGap />
+            <CalcWinter />
+          </div>
 
-      <div hidden={categoria !== 'respiratorio'}>
-        <CalcAaGradient />
-      </div>
+          <div hidden={categoria !== 'respiratorio'}>
+            <CalcAaGradient />
+          </div>
 
-      <div hidden={categoria !== 'emodinamica'}>
-        <CalcMAP />
-        <CalcShockIndex />
-      </div>
+          <div hidden={categoria !== 'emodinamica'}>
+            <CalcMAP />
+            <CalcShockIndex />
+          </div>
 
-      <div hidden={categoria !== 'neuro'}>
-        <CalcCPP />
-      </div>
+          <div hidden={categoria !== 'neuro'}>
+            <CalcCPP />
+          </div>
 
-      <div hidden={categoria !== 'addome'}>
-        <CalcPIAConversione />
-      </div>
+          <div hidden={categoria !== 'addome'}>
+            <CalcPIAConversione />
+          </div>
 
-      <div hidden={categoria !== 'renale'}>
-        <CalcClearanceCreatinina profile={profile} />
-        <CalcEGFR profile={profile} />
-      </div>
+          <div hidden={categoria !== 'renale'}>
+            <CalcClearanceCreatinina profile={profile} />
+            <CalcEGFR profile={profile} />
+          </div>
 
-      <div hidden={categoria !== 'cardiologia'}>
-        <CalcQTc />
-      </div>
+          <div hidden={categoria !== 'cardiologia'}>
+            <CalcQTc />
+          </div>
 
-      <div hidden={categoria !== 'coagulazione'}>
-        <CalcRotem profile={profile} />
-      </div>
+          <div hidden={categoria !== 'coagulazione'}>
+            <CalcRotem profile={profile} />
+          </div>
 
-      <div hidden={categoria !== 'infusioni'}>
-        <CalcGamma profile={profile} />
-        <CalcInfusioneOraria />
+          <div hidden={categoria !== 'infusioni'}>
+            <CalcGamma profile={profile} />
+            <CalcInfusioneOraria />
+          </div>
+        </div>
       </div>
     </section>
   )
