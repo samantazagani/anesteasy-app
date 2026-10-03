@@ -170,75 +170,81 @@ export function Nutrizione() {
     proteineTarget?.grammiDie > 0 && pesoRifProteico.valoreKg > 0 ? proteineTarget.grammiDie / pesoRifProteico.valoreKg : null
 
   return (
-    <section id="nutrizione">
+    <section id="nutrizione" className="pagina-griglia">
       <h1>Nutrizione</h1>
       <div className="riga-meta">
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
         <span className="chip">BMI: {bmi !== null && bmi !== undefined ? bmi : 'non disponibile'}</span>
       </div>
 
-      <SezioneFabbisognoCalorico
-        fabbisognoCalorico={fabbisognoCalorico}
-        pesoNutrizionale={pesoNutrizionale}
-        errorePesoNutrizionale={errorePesoNutrizionale}
-        percentualeFaseData={percentualeFaseData}
-        faseIndice={faseIndice}
-        onFaseChange={selezionaFase}
-        percentualeInput={percentualeInput}
-        onPercentualeChange={setPercentualeInput}
-        targetCalorico={targetCalorico}
-        erroreTargetCalorico={erroreTargetCalorico}
-        profile={profile}
-        pesoKg={pesoKg}
-      />
+      <div className="layout-2col colonne-uguali">
+        <div className="col-input">
+          <SezioneFabbisognoCalorico
+            fabbisognoCalorico={fabbisognoCalorico}
+            pesoNutrizionale={pesoNutrizionale}
+            errorePesoNutrizionale={errorePesoNutrizionale}
+            percentualeFaseData={percentualeFaseData}
+            faseIndice={faseIndice}
+            onFaseChange={selezionaFase}
+            percentualeInput={percentualeInput}
+            onPercentualeChange={setPercentualeInput}
+            targetCalorico={targetCalorico}
+            erroreTargetCalorico={erroreTargetCalorico}
+            profile={profile}
+            pesoKg={pesoKg}
+          />
 
-      <SezioneInfusioni
-        propofolCalorie={propofolCalorie}
-        glucosataCalorie={glucosataCalorie}
-        mlHPropofoloInput={mlHPropofoloInput}
-        onMlHPropofoloChange={setMlHPropofoloInput}
-        caloriePropofol={caloriePropofol}
-        errorePropofol={errorePropofol}
-        mlHGlucosataInput={mlHGlucosataInput}
-        onMlHGlucosataChange={setMlHGlucosataInput}
-        concentrazioneGlucosataInput={concentrazioneGlucosataInput}
-        onConcentrazioneGlucosataChange={setConcentrazioneGlucosataInput}
-        calorieGlucosata={calorieGlucosata}
-        erroreGlucosata={erroreGlucosata}
-        targetCalorico={targetCalorico}
-        targetNetto={targetNetto}
-        semaforo={semaforo}
-      />
+          <SezioneInfusioni
+            propofolCalorie={propofolCalorie}
+            glucosataCalorie={glucosataCalorie}
+            mlHPropofoloInput={mlHPropofoloInput}
+            onMlHPropofoloChange={setMlHPropofoloInput}
+            caloriePropofol={caloriePropofol}
+            errorePropofol={errorePropofol}
+            mlHGlucosataInput={mlHGlucosataInput}
+            onMlHGlucosataChange={setMlHGlucosataInput}
+            concentrazioneGlucosataInput={concentrazioneGlucosataInput}
+            onConcentrazioneGlucosataChange={setConcentrazioneGlucosataInput}
+            calorieGlucosata={calorieGlucosata}
+            erroreGlucosata={erroreGlucosata}
+            targetCalorico={targetCalorico}
+            targetNetto={targetNetto}
+            semaforo={semaforo}
+          />
 
-      <SezioneProteine
-        regimeProteico={regimeProteico}
-        pesoRifProteico={pesoRifProteico}
-        proteineTarget={proteineTarget}
-        erroreProteine={erroreProteine}
-      />
+          <SezioneProteine
+            regimeProteico={regimeProteico}
+            pesoRifProteico={pesoRifProteico}
+            proteineTarget={proteineTarget}
+            erroreProteine={erroreProteine}
+          />
 
-      <SezioneFabbisognoIdrico dati={fabbisognoIdrico} pesoKg={pesoKg} />
+          <SezioneFabbisognoIdrico dati={fabbisognoIdrico} pesoKg={pesoKg} />
 
-      <SezioneRefeeding dati={nutrizioneData.refeeding_syndrome} bmi={bmi} />
+          <SezioneRefeeding dati={nutrizioneData.refeeding_syndrome} bmi={bmi} />
+        </div>
 
-      <SezioneNPT
-        dati={nutrizioneData.npt_calcolatore}
-        pesoKg={pesoKg}
-        targetNetto={targetNetto}
-        proteineTarget={proteineTarget}
-        lipidiPropofolG={caloriePropofol?.lipidiGDie ?? 0}
-      />
+        <div className="col-output">
+          <SezioneNPT
+            dati={nutrizioneData.npt_calcolatore}
+            pesoKg={pesoKg}
+            targetNetto={targetNetto}
+            proteineTarget={proteineTarget}
+            lipidiPropofolG={caloriePropofol?.lipidiGDie ?? 0}
+          />
 
-      <SezioneBilancioAzotato proteineTarget={proteineTarget} />
+          <SezioneBilancioAzotato proteineTarget={proteineTarget} />
 
-      <SezioneProdottoCommerciale
-        prodottiEnterali={nutrizioneData.prodotti_enterali}
-        prodottiParenterali={nutrizioneData.prodotti_parenterali}
-        filtriEnterale={nutrizioneData.filtri_paziente_enterale}
-        targetNetto={targetNetto}
-        pesoRiferimentoKg={pesoNutrizionale?.valoreKg ?? null}
-        targetProteineGKg={targetProteineGKg}
-      />
+          <SezioneProdottoCommerciale
+            prodottiEnterali={nutrizioneData.prodotti_enterali}
+            prodottiParenterali={nutrizioneData.prodotti_parenterali}
+            filtriEnterale={nutrizioneData.filtri_paziente_enterale}
+            targetNetto={targetNetto}
+            pesoRiferimentoKg={pesoNutrizionale?.valoreKg ?? null}
+            targetProteineGKg={targetProteineGKg}
+          />
+        </div>
+      </div>
     </section>
   )
 }

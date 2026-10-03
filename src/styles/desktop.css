@@ -26,6 +26,18 @@
     gap: 16px;
   }
 
+  /* pagine lunghe di sezioni indipendenti: due colonne di pari larghezza, ciascuna con le sue
+     card impilate. Al contrario di una griglia a righe, le altezze diverse non lasciano buchi,
+     e una card che cresce non sposta le card dell'altra colonna. */
+  .layout-2col.colonne-uguali {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout-2col > .col-input > [class*='riquadro'],
+  .layout-2col > .col-output > [class*='riquadro'] {
+    margin: 0;
+  }
+
   .pagina-griglia {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

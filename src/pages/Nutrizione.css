@@ -243,3 +243,9 @@
 .riga-prima-scelta {
   background: var(--accent-soft);
 }
+
+@media (min-width: 1024px) {
+  #nutrizione {
+    max-width: 1120px;
+  }
+}
