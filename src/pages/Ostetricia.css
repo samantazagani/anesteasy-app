@@ -186,3 +186,9 @@
   border-radius: 999px;
   padding: 2px 8px;
 }
+
+@media (min-width: 1024px) {
+  #ostetricia {
+    max-width: 1120px;
+  }
+}

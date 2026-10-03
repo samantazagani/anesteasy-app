@@ -34,31 +34,38 @@ export function Ostetricia() {
     ?.dosi.find((d) => d.contesto === 'neonato')
 
   return (
-    <section id="ostetricia">
+    <section id="ostetricia" className="pagina-griglia">
       <h1>Ostetricia</h1>
       <p className="nota">
         Modulo attivo per euristica "età fertile" (sesso F, {SOGLIA_ETA_FERTILE_MIN}-
         {SOGLIA_ETA_FERTILE_MAX} anni): un promemoria, non una diagnosi.
       </p>
 
-      <SezioneParotoAnalgesia dati={ostetriciaData.parto_analgesia} />
-      <SezioneTaglioCesareo taglioCesareo={ostetriciaData.taglio_cesareo} doseMaxPeridurale={ostetriciaData.dose_max_peridurale} />
-      <SezioneOppioidiNeuroassiali lista={ostetriciaData.oppioidi_neuroassiali} />
-      <SezioneIpotensione dati={ostetriciaData.profilassi_ipotensione_post_spinale} />
-      <SezioneDiagnosiPPH dati={ostetriciaData.diagnosi_pph} />
-      <SezioneBundlePrimaRisposta dati={ostetriciaData.emorragia_postpartum.bundle_prima_risposta} />
-      <SezioneOssitocinaTXA
-        ossitocina={ostetriciaData.emorragia_postpartum.ossitocina}
-        acidoTranexamico={ostetriciaData.emorragia_postpartum.acido_tranexamico}
-        secondaLinea={ostetriciaData.emorragia_postpartum.seconda_linea_uterotonici}
-        fluidi={ostetriciaData.emorragia_postpartum.fluidi}
-      />
-      <SezionePrevenzioneTerzoStadio dati={ostetriciaData.prevenzione_terzo_stadio} />
-      <SezionePPHRefrattaria dati={ostetriciaData.pph_refrattaria} />
-      <SezioneTrasfusioneMassiva dati={ostetriciaData.trasfusione_massiva} />
-      <SezioneCalcolatorePesoPPH dati={ostetriciaData.calcolatore_peso_pph} pesoKg={profile.pesoKg} />
-      <SezionePreeclampsia dati={ostetriciaData.preeclampsia_eclampsia} />
-      <SezioneRianimazioneNeonatale dati={ostetriciaData.rianimazione_neonatale} adrenalina={adrenalinaNeonato} />
+      <div className="layout-2col colonne-uguali">
+        <div className="col-input">
+          <SezioneParotoAnalgesia dati={ostetriciaData.parto_analgesia} />
+          <SezioneTaglioCesareo taglioCesareo={ostetriciaData.taglio_cesareo} doseMaxPeridurale={ostetriciaData.dose_max_peridurale} />
+          <SezioneOppioidiNeuroassiali lista={ostetriciaData.oppioidi_neuroassiali} />
+          <SezioneIpotensione dati={ostetriciaData.profilassi_ipotensione_post_spinale} />
+          <SezioneDiagnosiPPH dati={ostetriciaData.diagnosi_pph} />
+          <SezioneBundlePrimaRisposta dati={ostetriciaData.emorragia_postpartum.bundle_prima_risposta} />
+          <SezioneOssitocinaTXA
+            ossitocina={ostetriciaData.emorragia_postpartum.ossitocina}
+            acidoTranexamico={ostetriciaData.emorragia_postpartum.acido_tranexamico}
+            secondaLinea={ostetriciaData.emorragia_postpartum.seconda_linea_uterotonici}
+            fluidi={ostetriciaData.emorragia_postpartum.fluidi}
+          />
+        </div>
+
+        <div className="col-output">
+          <SezionePrevenzioneTerzoStadio dati={ostetriciaData.prevenzione_terzo_stadio} />
+          <SezionePPHRefrattaria dati={ostetriciaData.pph_refrattaria} />
+          <SezioneTrasfusioneMassiva dati={ostetriciaData.trasfusione_massiva} />
+          <SezioneCalcolatorePesoPPH dati={ostetriciaData.calcolatore_peso_pph} pesoKg={profile.pesoKg} />
+          <SezionePreeclampsia dati={ostetriciaData.preeclampsia_eclampsia} />
+          <SezioneRianimazioneNeonatale dati={ostetriciaData.rianimazione_neonatale} adrenalina={adrenalinaNeonato} />
+        </div>
+      </div>
     </section>
   )
 }
