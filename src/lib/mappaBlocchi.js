@@ -57,6 +57,13 @@ export const REGIONE_PER_PARTE = {
   },
 }
 
+/** Sesso della figura dal profilo paziente ('M' | 'F'); null se il profilo non lo indica. */
+export function sessoDaProfilo(sesso) {
+  if (sesso === 'F') return 'donna'
+  if (sesso === 'M') return 'uomo'
+  return null
+}
+
 /** La zona esiste per questo paziente/vista? (mammella solo donna-anteriore; inguine/perineo solo anteriore) */
 export function zonaVisibile(zona, sesso, vista) {
   if (zona.solo === 'donna-anteriore') return sesso === 'donna' && vista === 'anteriore'

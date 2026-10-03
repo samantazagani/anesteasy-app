@@ -39,6 +39,11 @@
   color: #fff;
 }
 
+.mappa-nota-profilo {
+  margin: -6px 0 14px;
+  font-size: 13px;
+}
+
 .mappa-layout {
   display: grid;
   gap: 16px;

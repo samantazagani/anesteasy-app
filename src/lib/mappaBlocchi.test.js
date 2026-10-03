@@ -8,6 +8,7 @@ import {
   noteRegioni,
   regioneDellaZona,
   regioniRaggiungibili,
+  sessoDaProfilo,
   suggerisciBlocchi,
   testoCopertura,
   zonaVisibile,
@@ -51,6 +52,16 @@ describe('coerenza dei dati (data/anestetici-locali.json)', () => {
       const attese = Object.values(mappa.regioni).filter((r) => r.vista.includes(vista)).map((r) => r.id).sort()
       expect([...regioniRaggiungibili('donna', vista)].sort()).toEqual(attese)
     }
+  })
+})
+
+describe('sesso della figura dal profilo', () => {
+  it('F -> donna, M -> uomo, profilo senza sesso -> nessuna indicazione', () => {
+    expect(sessoDaProfilo('F')).toBe('donna')
+    expect(sessoDaProfilo('M')).toBe('uomo')
+    expect(sessoDaProfilo(null)).toBeNull()
+    expect(sessoDaProfilo(undefined)).toBeNull()
+    expect(sessoDaProfilo('')).toBeNull()
   })
 })
 

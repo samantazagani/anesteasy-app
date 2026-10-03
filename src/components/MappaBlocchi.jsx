@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import {
   FIGURA,
   RITAGLIO_FIGURA,
@@ -9,6 +10,7 @@ import {
   noteRegioni,
   regioneDellaZona,
   regioniRaggiungibili,
+  sessoDaProfilo,
   suggerisciBlocchi,
   testoCopertura,
 } from '../lib/mappaBlocchi'
@@ -130,10 +132,21 @@ function Risultato({ mappa, selezione }) {
 // che le copre o la combinazione minima. Dati e logica: data/anestetici-locali.json e
 // lib/mappaBlocchi.js. Qui solo l'interfaccia.
 export function MappaBlocchi({ dati }) {
+  const { profile } = usePatientProfile()
   const mappa = useMemo(() => costruisciMappa(dati), [dati])
-  const [sesso, setSesso] = useState('uomo')
+  const sessoProfilo = sessoDaProfilo(profile.sesso)
+  const [sesso, setSesso] = useState(sessoProfilo ?? 'uomo')
   const [vista, setVista] = useState('anteriore')
   const [selezione, setSelezione] = useState([])
+
+  // La figura segue il sesso del profilo paziente; resta modificabile qui sopra senza toccare il
+  // profilo (come nei calcolatori di Ventilazione). Si riallinea solo quando il profilo cambia.
+  useEffect(() => {
+    if (!sessoProfilo) return
+    setSesso(sessoProfilo)
+    setSelezione((s) => s.filter((r) => regioniRaggiungibili(sessoProfilo, vista).has(r)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessoProfilo])
 
   function cambia(nuovoSesso, nuovaVista) {
     setSesso(nuovoSesso)
@@ -154,6 +167,11 @@ export function MappaBlocchi({ dati }) {
         <Segmentato etichetta="Paziente" opzioni={SESSI} valore={sesso} onCambia={(s) => cambia(s, vista)} />
         <Segmentato etichetta="Vista" opzioni={VISTE} valore={vista} onCambia={(v) => cambia(sesso, v)} />
       </div>
+      {sessoProfilo && (
+        <p className="nota mappa-nota-profilo">
+          La figura segue il sesso del profilo paziente. Puoi cambiarla qui senza modificare il profilo.
+        </p>
+      )}
 
       <div className="mappa-layout">
         <figure className="mappa-figura">
