@@ -34,17 +34,12 @@ describe('coerenza dei dati (data/anestetici-locali.json)', () => {
   })
 
   // Coppie "blocco elencato per la regione, ma il catalogo dice che non la copre": ereditate
-  // dal prototipo v8 (stessi dati), da rivedere clinicamente. Il test ammette solo queste: una
-  // nuova incoerenza nei dati fallisce, risolverne una no.
-  const INCOERENZE_NOTE = [
-    'spalla|Sovraclaveare',
-    'inguine|Guaina del retto',
-    'anca|Cutaneo laterale della coscia (LFCN)',
-    'lombare|Paravertebrale',
-    'gluteo|PENG',
-  ]
+  // dal prototipo v8. Spalla/Sovraclaveare, Inguine/Guaina del retto e Gluteo/PENG sono state
+  // tolte dai dati (revisione clinica); restano due voci in attesa di decisione. Il test ammette
+  // solo queste: una nuova incoerenza fallisce, risolverne una no.
+  const INCOERENZE_NOTE = ['anca|Cutaneo laterale della coscia (LFCN)', 'lombare|Paravertebrale']
 
-  it('i blocchi elencati per una regione la coprono, salvo le incoerenze note del prototipo', () => {
+  it('i blocchi elencati per una regione la coprono, salvo le due incoerenze ancora aperte', () => {
     const trovate = []
     for (const r of Object.values(mappa.regioni)) {
       for (const b of r.blocchi) if (!mappa.blocchi[b].copre.includes(r.id)) trovate.push(`${r.id}|${b}`)

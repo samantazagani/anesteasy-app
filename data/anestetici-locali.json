@@ -527,7 +527,6 @@
         ],
         "blocchi": [
           "Interscalenico",
-          "Sovraclaveare",
           "Sovrascapolare + ascellare"
         ],
         "chirurgie": [
@@ -651,8 +650,7 @@
         "blocchi": [
           "Ilioinguinale-ipogastrico",
           "Fascia iliaca",
-          "Femorale",
-          "Guaina del retto"
+          "Femorale"
         ],
         "chirurgie": [
           "Ernia inguinale",
@@ -798,8 +796,7 @@
           "posteriore"
         ],
         "blocchi": [
-          "Sciatico",
-          "PENG"
+          "Sciatico"
         ],
         "chirurgie": [
           "Femore",
