@@ -47,7 +47,7 @@ export function Emergenze() {
   const ramificato = emergenza.tipo === 'algoritmo_ramificato'
 
   return (
-    <section id="emergenze">
+    <section id="emergenze" className="pagina-griglia">
       <div className="banner-emergenza">
         <span className="badge-emergenza">EMERGENZA</span>
         <p>
@@ -59,79 +59,85 @@ export function Emergenze() {
 
       <h1>Emergenze</h1>
 
-      <div className="lista-emergenze" role="listbox" aria-label="Emergenza">
-        {emergenze.map((e) => (
-          <button
-            key={e.id}
-            type="button"
-            role="option"
-            aria-selected={e.id === emergenzaId}
-            className={e.id === emergenzaId ? 'emergenza-item selezionato' : 'emergenza-item'}
-            onClick={() => selezionaEmergenza(e.id)}
-          >
-            {e.titolo}
-          </button>
-        ))}
-      </div>
-
-      {ramificato ? (
-        <AlgoritmoRamificato
-          key={emergenzaId}
-          emergenza={emergenza}
-          farmaci={farmaci}
-          categoria={categoria}
-          derivati={derivati}
-        />
-      ) : (
-        <div className="stepper">
-          <div className="riga-meta">
-            <h2>{emergenza.titolo}</h2>
-          </div>
-
-          <div className="stepper-nav">
-            <button type="button" disabled={stepIndex === 0} onClick={() => setStepIndex((i) => i - 1)}>
-              ← Precedente
-            </button>
-            <span className="stepper-indice">
-              Passo {stepIndex + 1} di {passi.length}
-            </span>
-            <button
-              type="button"
-              disabled={stepIndex === passi.length - 1}
-              onClick={() => setStepIndex((i) => i + 1)}
-            >
-              Successivo →
-            </button>
-          </div>
-
-          <div className="stepper-dots">
-            {passi.map((p, i) => (
+      <div className="layout-2col">
+        <div className="col-input">
+          <div className="lista-emergenze" role="listbox" aria-label="Emergenza">
+            {emergenze.map((e) => (
               <button
-                key={p.step}
+                key={e.id}
                 type="button"
-                aria-label={`Vai al passo ${p.step}`}
-                aria-current={i === stepIndex}
-                className={i === stepIndex ? 'dot selezionato' : 'dot'}
-                onClick={() => setStepIndex(i)}
-              />
+                role="option"
+                aria-selected={e.id === emergenzaId}
+                className={e.id === emergenzaId ? 'emergenza-item selezionato' : 'emergenza-item'}
+                onClick={() => selezionaEmergenza(e.id)}
+              >
+                {e.titolo}
+              </button>
             ))}
-          </div>
-
-          {/* key sull'intero blocco: entrando in un nuovo passo, gli stati locali dei
-              sotto-componenti (es. diluizione dell'infusione) ripartono puliti. */}
-          <div className="passo-corrente" key={`${emergenzaId}-${stepIndex}`}>
-            <p className="passo-azione">{passo.azione}</p>
-
-            {tipoPasso(passo) === 'last' && (
-              <PassoLAST lastData={anesteticiData.last} pesoKg={profile.pesoKg} />
-            )}
-
-            {tipoPasso(passo) === 'farmaco' && (
-              <PassoFarmaco passo={passo} farmaci={farmaci} categoria={categoria} derivati={derivati} />
-            )}
-          </div>
         </div>
-      )}
+        </div>
+
+        <div className="col-output">
+          {ramificato ? (
+            <AlgoritmoRamificato
+              key={emergenzaId}
+              emergenza={emergenza}
+              farmaci={farmaci}
+              categoria={categoria}
+              derivati={derivati}
+            />
+          ) : (
+            <div className="stepper">
+              <div className="riga-meta">
+                <h2>{emergenza.titolo}</h2>
+              </div>
+
+              <div className="stepper-nav">
+                <button type="button" disabled={stepIndex === 0} onClick={() => setStepIndex((i) => i - 1)}>
+                  ← Precedente
+                </button>
+                <span className="stepper-indice">
+                  Passo {stepIndex + 1} di {passi.length}
+                </span>
+                <button
+                  type="button"
+                  disabled={stepIndex === passi.length - 1}
+                  onClick={() => setStepIndex((i) => i + 1)}
+                >
+                  Successivo →
+                </button>
+              </div>
+
+              <div className="stepper-dots">
+                {passi.map((p, i) => (
+                  <button
+                    key={p.step}
+                    type="button"
+                    aria-label={`Vai al passo ${p.step}`}
+                    aria-current={i === stepIndex}
+                    className={i === stepIndex ? 'dot selezionato' : 'dot'}
+                    onClick={() => setStepIndex(i)}
+                  />
+                ))}
+              </div>
+
+              {/* key sull'intero blocco: entrando in un nuovo passo, gli stati locali dei
+                  sotto-componenti (es. diluizione dell'infusione) ripartono puliti. */}
+              <div className="passo-corrente" key={`${emergenzaId}-${stepIndex}`}>
+                <p className="passo-azione">{passo.azione}</p>
+
+                {tipoPasso(passo) === 'last' && (
+                  <PassoLAST lastData={anesteticiData.last} pesoKg={profile.pesoKg} />
+                )}
+
+                {tipoPasso(passo) === 'farmaco' && (
+                  <PassoFarmaco passo={passo} farmaci={farmaci} categoria={categoria} derivati={derivati} />
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   )
 }

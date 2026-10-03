@@ -271,3 +271,29 @@
   font-weight: 600;
   margin: 0 0 4px;
 }
+
+@media (min-width: 1024px) {
+  #emergenze {
+    max-width: 1120px;
+  }
+
+  /* elenco dei protocolli: lista verticale sempre a portata mentre si scorre il protocollo */
+  #emergenze .col-input {
+    position: sticky;
+    top: 88px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+  }
+
+  #emergenze .lista-emergenze {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  #emergenze .emergenza-item {
+    width: 100%;
+    text-align: left;
+    border-radius: 10px;
+  }
+}
