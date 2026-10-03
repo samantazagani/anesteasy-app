@@ -36,7 +36,7 @@
 
 .mappa-seg button[aria-pressed='true'] {
   background: var(--accent);
-  color: var(--on-accent);
+  color: #fff;
 }
 
 .mappa-nota-profilo {
@@ -68,11 +68,6 @@
   background: #ffffff;
 }
 
-.mappa-figura image {
-  /* le figure sono viola: il filtro le porta all'arancione dell'app senza toccare i file */
-  filter: hue-rotate(129deg) saturate(1.7);
-}
-
 .mappa-figura svg {
   width: 100%;
   max-width: 280px;
@@ -100,19 +95,19 @@
 }
 
 .mappa-zona:hover {
-  fill: rgba(194, 65, 12, 0.3);
+  fill: rgba(139, 92, 246, 0.3);
 }
 
 .mappa-zona:focus-visible {
-  fill: rgba(194, 65, 12, 0.3);
-  stroke: #9a3412;
+  fill: rgba(139, 92, 246, 0.3);
+  stroke: #4c1d95;
   stroke-width: 3;
 }
 
-/* contorno arancione scuro: su sfondo bianco quello chiaro (--accent-text) non si vedrebbe */
+/* contorno viola scuro: su sfondo bianco quello chiaro (--accent-text) non si vedrebbe */
 .mappa-zona.attiva {
-  fill: rgba(194, 65, 12, 0.6);
-  stroke: #9a3412;
+  fill: rgba(139, 92, 246, 0.55);
+  stroke: #4c1d95;
 }
 
 .mappa-pannello {

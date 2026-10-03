@@ -62,7 +62,7 @@ button {
   border-radius: 8px;
   border: none;
   background: var(--accent);
-  color: var(--on-accent);
+  color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
