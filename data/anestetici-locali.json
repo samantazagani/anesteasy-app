@@ -516,9 +516,10 @@
     ]
   },
   "blocchi_per_regione": {
-    "_uso": "mappa regione anatomica -> blocchi -> chirurgie tipiche (base per l'omino cliccabile, vista anteriore/posteriore).",
+    "_uso": "mappa regione anatomica -> blocchi (in ordine di preferenza clinica: indice 0 = prima scelta) -> chirurgie tipiche. 'id' e' la chiave stabile della regione (la stessa usata in blocchi_catalogo.blocchi[].copre e in etichette_regioni); 'vista' dice in quali viste dell'omino la regione e' selezionabile. Fonte unica per la UI 'Mappa dei blocchi' (omino-blocchi v8).",
     "regioni": [
       {
+        "id": "spalla",
         "regione": "spalla",
         "vista": [
           "anteriore",
@@ -530,11 +531,12 @@
           "Sovrascapolare + ascellare"
         ],
         "chirurgie": [
-          "chirurgia della spalla",
-          "clavicola"
+          "Chirurgia della spalla",
+          "Clavicola"
         ]
       },
       {
+        "id": "braccio",
         "regione": "braccio/omero",
         "vista": [
           "anteriore",
@@ -545,11 +547,12 @@
           "Sovraclaveare"
         ],
         "chirurgie": [
-          "omero"
+          "Omero"
         ],
-        "note": "Cute MEDIALE del braccio (nervo intercostobrachiale T2 + cutaneo mediale del braccio): NON coperta dai blocchi del plesso brachiale (interscalenico/sovraclaveare/ascellare). Per chirurgia sul versante mediale (es. bicipite) o dolore da laccio emostatico aggiungere il blocco intercostobrachiale (infiltrazione sottocutanea in ascella) oppure il PECS II."
+        "note": "Cute MEDIALE del braccio (nervo intercostobrachiale T2 + cutaneo mediale): NON coperta dai blocchi del plesso (interscalenico/sovraclaveare/ascellare). Per chirurgia mediale (es. bicipite) o dolore da laccio aggiungi il blocco intercostobrachiale (infiltrazione s.c. ascellare) o il PECS II."
       },
       {
+        "id": "avambraccio",
         "regione": "gomito e avambraccio",
         "vista": [
           "anteriore",
@@ -561,11 +564,12 @@
           "Infraclaveare"
         ],
         "chirurgie": [
-          "gomito",
-          "avambraccio"
+          "Gomito",
+          "Avambraccio"
         ]
       },
       {
+        "id": "mano",
         "regione": "mano e polso",
         "vista": [
           "anteriore",
@@ -577,17 +581,17 @@
           "Blocchi digitali"
         ],
         "chirurgie": [
-          "mano",
-          "polso",
-          "tunnel carpale",
-          "dita"
+          "Mano",
+          "Polso",
+          "Tunnel carpale",
+          "Dita"
         ]
       },
       {
+        "id": "torace",
         "regione": "parete toracica",
         "vista": [
-          "anteriore",
-          "posteriore"
+          "anteriore"
         ],
         "blocchi": [
           "Paravertebrale",
@@ -596,12 +600,13 @@
           "Intercostale"
         ],
         "chirurgie": [
-          "toracotomia",
+          "Toracotomia",
           "VATS",
-          "fratture costali"
+          "Fratture costali"
         ]
       },
       {
+        "id": "mammella",
         "regione": "mammella",
         "vista": [
           "anteriore"
@@ -613,12 +618,13 @@
           "ESP"
         ],
         "chirurgie": [
-          "chirurgia senologica",
-          "mastectomia",
-          "quadrantectomia"
+          "Chirurgia senologica",
+          "Mastectomia",
+          "Quadrantectomia"
         ]
       },
       {
+        "id": "addome",
         "regione": "parete addominale",
         "vista": [
           "anteriore"
@@ -630,13 +636,14 @@
           "ESP"
         ],
         "chirurgie": [
-          "laparotomia",
-          "ernia",
-          "cesareo (TAP)",
-          "stomia"
+          "Laparotomia",
+          "Ernia",
+          "Cesareo (TAP)",
+          "Stomia"
         ]
       },
       {
+        "id": "inguine",
         "regione": "inguine",
         "vista": [
           "anteriore"
@@ -648,12 +655,13 @@
           "Guaina del retto"
         ],
         "chirurgie": [
-          "ernia inguinale",
-          "idrocele",
-          "orchidopessi"
+          "Ernia inguinale",
+          "Idrocele",
+          "Orchidopessi"
         ]
       },
       {
+        "id": "perineo",
         "regione": "perineo",
         "vista": [
           "anteriore"
@@ -664,16 +672,16 @@
           "Sella (spinale bassa)"
         ],
         "chirurgie": [
-          "chirurgia perineale",
-          "emorroidi",
-          "ostetrica bassa"
+          "Chirurgia perineale",
+          "Emorroidi",
+          "Ostetrica bassa"
         ]
       },
       {
+        "id": "anca",
         "regione": "anca",
         "vista": [
-          "anteriore",
-          "posteriore"
+          "anteriore"
         ],
         "blocchi": [
           "PENG",
@@ -682,11 +690,12 @@
           "Cutaneo laterale della coscia (LFCN)"
         ],
         "chirurgie": [
-          "frattura femore prossimale",
-          "protesi anca"
+          "Frattura femore prossimale",
+          "Protesi d'anca"
         ]
       },
       {
+        "id": "coscia",
         "regione": "coscia e ginocchio",
         "vista": [
           "anteriore"
@@ -698,12 +707,13 @@
           "Cutaneo laterale della coscia (LFCN)"
         ],
         "chirurgie": [
-          "protesi ginocchio",
-          "femore",
-          "quadricipite"
+          "Protesi di ginocchio",
+          "Femore",
+          "Quadricipite"
         ]
       },
       {
+        "id": "ginocchioPost",
         "regione": "ginocchio posteriore",
         "vista": [
           "posteriore"
@@ -713,10 +723,11 @@
           "Sciatico"
         ],
         "chirurgie": [
-          "protesi ginocchio (analgesia posteriore)"
+          "Protesi ginocchio (analgesia posteriore)"
         ]
       },
       {
+        "id": "gamba",
         "regione": "gamba e caviglia",
         "vista": [
           "anteriore",
@@ -727,12 +738,13 @@
           "Safeno (canale adduttori)"
         ],
         "chirurgie": [
-          "caviglia",
-          "tibia",
-          "gamba"
+          "Caviglia",
+          "Tibia",
+          "Gamba"
         ]
       },
       {
+        "id": "piede",
         "regione": "piede",
         "vista": [
           "anteriore",
@@ -743,11 +755,12 @@
           "Blocco alla caviglia"
         ],
         "chirurgie": [
-          "avampiede",
-          "alluce"
+          "Avampiede",
+          "Alluce"
         ]
       },
       {
+        "id": "dorso",
         "regione": "dorso",
         "vista": [
           "posteriore"
@@ -758,11 +771,12 @@
           "Intercostale"
         ],
         "chirurgie": [
-          "toracotomia posteriore",
-          "nefrectomia"
+          "Toracotomia posteriore",
+          "Nefrectomia"
         ]
       },
       {
+        "id": "lombare",
         "regione": "regione lombare",
         "vista": [
           "posteriore"
@@ -773,11 +787,12 @@
           "Paravertebrale"
         ],
         "chirurgie": [
-          "chirurgia renale",
-          "parete posteriore"
+          "Chirurgia renale",
+          "Parete posteriore"
         ]
       },
       {
+        "id": "gluteo",
         "regione": "gluteo/anca posteriore",
         "vista": [
           "posteriore"
@@ -787,11 +802,12 @@
           "PENG"
         ],
         "chirurgie": [
-          "femore",
-          "arto inferiore"
+          "Femore",
+          "Arto inferiore"
         ]
       },
       {
+        "id": "cosciaPost",
         "regione": "coscia posteriore",
         "vista": [
           "posteriore"
@@ -801,14 +817,14 @@
           "Cutaneo posteriore della coscia"
         ],
         "chirurgie": [
-          "arto inferiore posteriore",
-          "cavo popliteo"
+          "Arto inferiore posteriore",
+          "Cavo popliteo"
         ]
       }
     ]
   },
   "blocchi_catalogo": {
-    "_uso": "Fonte di verita per la COPERTURA di ogni blocco (quali regioni anestetizza) e la logica di combinazione dell'omino. Allineato a omino-blocchi.html.",
+    "_uso": "Fonte di verita per la COPERTURA di ogni blocco (quali regioni anestetizza) e la logica di combinazione dell'omino. Allineato a omino-blocchi v8.",
     "logica_combinazione": "Selezionando piu regioni, i CANDIDATI sono solo i blocchi elencati per quelle regioni (in 'blocchi_per_regione', ordinati per preferenza clinica: indice 0 = prima scelta). Regola: (1) se un solo blocco copre TUTTE le regioni scelte si propone quello (preferendo la prima scelta) - es. sovraclaveare per tutto l'arto sotto la spalla, paravertebrale/ESP per torace+addome; (2) altrimenti copertura per priorita clinica con schema prossimale+distale - a ogni passo si sceglie il blocco a indice migliore, poi quello che copre piu regioni residue, poi il piu specifico. Esempi: spalla+braccio+avambraccio+mano -> Interscalenico + Ascellare; anca/coscia (femore) -> Femorale (mai Sciatico, che copre solo la coscia POSTERIORE); coscia+gamba+piede -> Femorale + Popliteo. Mostrare per ogni blocco cosa copre.",
     "etichette_regioni": {
       "spalla": "Spalla",
