@@ -129,3 +129,39 @@
 .scheda-titolo-p:first-child {
   margin-top: 0;
 }
+
+@media (min-width: 1024px) {
+  #punteggi {
+    max-width: 1120px;
+  }
+
+  /* categorie: lista verticale sticky; i punteggi della categoria scelta a destra */
+  #punteggi .col-input {
+    position: sticky;
+    top: 88px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+  }
+
+  #punteggi .col-input .categorie-p {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  #punteggi .col-input .categorie-p .categoria-item {
+    width: 100%;
+    text-align: left;
+    border-radius: 10px;
+  }
+
+  #punteggi .col-output > div:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  #punteggi .riquadro-punteggio {
+    margin-bottom: 0;
+  }
+}

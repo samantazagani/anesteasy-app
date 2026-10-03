@@ -72,62 +72,68 @@ export function Punteggi() {
   const [categoria, setCategoria] = useState('vie_aeree')
 
   return (
-    <section id="punteggi">
+    <section id="punteggi" className="pagina-griglia">
       <h1>Punteggi</h1>
       <p className="sottotitolo">
         Vie aeree, preoperatorio/perioperatorio, terapia intensiva, neonatale e ustioni
         (data/punteggi.json).
       </p>
 
-      <nav className="categorie-p" role="tablist" aria-label="Categoria">
-        {CATEGORIE.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            role="tab"
-            aria-selected={c.id === categoria}
-            className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
-            onClick={() => setCategoria(c.id)}
-          >
-            {c.label}
-          </button>
-        ))}
-      </nav>
+      <div className="layout-2col">
+        <div className="col-input">
+          <nav className="categorie-p" role="tablist" aria-label="Categoria">
+            {CATEGORIE.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="tab"
+                aria-selected={c.id === categoria}
+                className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
+                onClick={() => setCategoria(c.id)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </nav>
+        </div>
 
-      <div hidden={categoria !== 'vie_aeree'}>
-        <CalcClassificazione dati={trova('mallampati')} opzioni={trova('mallampati').classi} chiaveLabel="classe" chiaveDescrizione="descrizione" />
-        <CalcElGanzouri dati={trova('el-ganzouri')} />
-        <ChecklistPunteggio dati={trova('stop-bang')} calcola={calcolaStopBang} />
-      </div>
+        <div className="col-output">
+          <div hidden={categoria !== 'vie_aeree'}>
+            <CalcClassificazione dati={trova('mallampati')} opzioni={trova('mallampati').classi} chiaveLabel="classe" chiaveDescrizione="descrizione" />
+            <CalcElGanzouri dati={trova('el-ganzouri')} />
+            <ChecklistPunteggio dati={trova('stop-bang')} calcola={calcolaStopBang} />
+          </div>
 
-      <div hidden={categoria !== 'preop_perioperatorio'}>
-        <CalcClassificazione dati={trova('mrc-dispnea')} opzioni={trova('mrc-dispnea').gradi} chiaveLabel="grado" chiaveDescrizione="descrizione" />
-        <ChecklistPunteggio dati={trova('rcri')} calcola={calcolaRCRI} />
-        <CalcAriscat dati={trova('ariscat')} />
-        <CalcMets dati={trova('mets')} />
-        <ChecklistPunteggio dati={trova('apfel')} calcola={calcolaApfel} />
-        <CalcAldrete dati={trova('aldrete')} />
-        <CalcBromage dati={trova('bromage')} />
-      </div>
+          <div hidden={categoria !== 'preop_perioperatorio'}>
+            <CalcClassificazione dati={trova('mrc-dispnea')} opzioni={trova('mrc-dispnea').gradi} chiaveLabel="grado" chiaveDescrizione="descrizione" />
+            <ChecklistPunteggio dati={trova('rcri')} calcola={calcolaRCRI} />
+            <CalcAriscat dati={trova('ariscat')} />
+            <CalcMets dati={trova('mets')} />
+            <ChecklistPunteggio dati={trova('apfel')} calcola={calcolaApfel} />
+            <CalcAldrete dati={trova('aldrete')} />
+            <CalcBromage dati={trova('bromage')} />
+          </div>
 
-      <div hidden={categoria !== 'terapia_intensiva'}>
-        <CalcGCS dati={trova('gcs')} />
-        <CalcRASS dati={trova('rass')} />
-        <CalcCamIcu dati={trova('cam-icu')} />
-        <CalcSofa dati={trova('sofa')} />
-        <CalcFour dati={trova('four')} />
-        <CalcHacor dati={trova('hacor')} />
-        <CalcROX dati={trova('rox')} />
-        <CalcRSBI dati={trova('rsbi')} />
-        <CalcMacocha dati={trova('macocha')} />
-      </div>
+          <div hidden={categoria !== 'terapia_intensiva'}>
+            <CalcGCS dati={trova('gcs')} />
+            <CalcRASS dati={trova('rass')} />
+            <CalcCamIcu dati={trova('cam-icu')} />
+            <CalcSofa dati={trova('sofa')} />
+            <CalcFour dati={trova('four')} />
+            <CalcHacor dati={trova('hacor')} />
+            <CalcROX dati={trova('rox')} />
+            <CalcRSBI dati={trova('rsbi')} />
+            <CalcMacocha dati={trova('macocha')} />
+          </div>
 
-      <div hidden={categoria !== 'neonatale'}>
-        <CalcApgar dati={trova('apgar')} />
-      </div>
+          <div hidden={categoria !== 'neonatale'}>
+            <CalcApgar dati={trova('apgar')} />
+          </div>
 
-      <div hidden={categoria !== 'ustioni'}>
-        <CalcSuperficieUstionata dati={trova('superficie_ustionata')} pesoKg={profile.pesoKg} />
+          <div hidden={categoria !== 'ustioni'}>
+            <CalcSuperficieUstionata dati={trova('superficie_ustionata')} pesoKg={profile.pesoKg} />
+          </div>
+        </div>
       </div>
     </section>
   )
