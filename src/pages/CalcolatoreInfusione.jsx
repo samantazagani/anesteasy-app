@@ -68,7 +68,7 @@ export function CalcolatoreInfusione() {
   }
 
   return (
-    <section id="calcolatore-infusione">
+    <section id="calcolatore-infusione" className="pagina-griglia">
       <h1>Infusioni</h1>
       <p className="sottotitolo">
         Due modi per arrivare alla velocità di infusione (ml/h): da una dose target per kg

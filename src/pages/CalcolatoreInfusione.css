@@ -122,3 +122,9 @@
   background: var(--surface);
 }
 
+
+@media (min-width: 1024px) {
+  #calcolatore-infusione {
+    max-width: 1120px;
+  }
+}

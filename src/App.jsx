@@ -20,6 +20,7 @@ import { trovaModulo } from './lib/moduli'
 import { useMediaQuery } from './lib/useMediaQuery'
 import './App.css'
 import './components/Navigazione.css'
+import './styles/desktop.css'
 
 function App() {
   const [vista, setVista] = useState('profilo')

@@ -128,8 +128,8 @@ export function CalcolatoreDoseBolo() {
     <section id="calcolatore-dose">
       <h1>Farmaci · Calcolatore dose</h1>
 
-      <div className="farmaci-layout">
-        <div className="farmaci-col-scelta">
+      <div className="layout-2col">
+        <div className="col-input">
           <div className="ricerca-farmaco">
             <label htmlFor="ricerca-farmaco-input">Cerca farmaco</label>
             <input
@@ -207,7 +207,7 @@ export function CalcolatoreDoseBolo() {
         </div>
 
         {farmacoSelezionato && (
-          <div className="farmaci-col-risultato">
+          <div className="col-output">
             <div className="risultato-dose">
               {!doseScelta && <p className="avviso">Nessun dosaggio disponibile per questo contesto.</p>}
 

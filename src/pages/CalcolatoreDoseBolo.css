@@ -138,22 +138,10 @@
   background: var(--surface);
 }
 
-/* Mobile: una colonna (scelta, poi risultato). Con spazio sufficiente nel contenitore
-   (desktop, tablet in orizzontale): a sinistra la scelta farmaco/contesto, a destra il
-   risultato e l'infusione. */
-.farmaci-layout {
-  display: block;
-}
-
-@container (min-width: 820px) {
+/* Mobile e tablet: una colonna (scelta, poi risultato). Da 1024px: a sinistra la scelta
+   farmaco/contesto, a destra il risultato e l'infusione (vedi styles/desktop.css). */
+@media (min-width: 1024px) {
   #calcolatore-dose {
     max-width: 1120px;
-  }
-
-  .farmaci-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 32px;
-    align-items: start;
   }
 }
