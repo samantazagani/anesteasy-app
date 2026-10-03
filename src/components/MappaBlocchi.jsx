@@ -163,7 +163,7 @@ export function MappaBlocchi({ dati }) {
             aria-label={`Paziente ${sesso}, vista ${vista}: regioni selezionabili`}
           >
             <image
-              href={`${import.meta.env.BASE_URL}fig/${sesso}-${vista}.png`}
+              href={`${import.meta.env.BASE_URL}fig/${sesso}-${vista}.webp`}
               x="0"
               y="0"
               width={FIGURA.larghezza}

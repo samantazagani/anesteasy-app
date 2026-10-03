@@ -3,7 +3,10 @@
 // data/anestetici-locali.json (blocchi_per_regione + blocchi_catalogo): qui ci sono la
 // geometria delle zone sulla figura e gli algoritmi, mai una copia dei dati clinici.
 
-/** Dimensioni delle 4 immagini (public/fig/{sesso}-{vista}.png): le zone sono in questo spazio. */
+/**
+ * Spazio di coordinate delle zone (public/fig/{sesso}-{vista}.webp). Le immagini sono piu' grandi
+ * (1408x768) ma con lo stesso rapporto d'aspetto: l'<image> le scala a 1024x559.
+ */
 export const FIGURA = { larghezza: 1024, altezza: 559 }
 
 /** Porzione visibile: il corpo occupa x 396-629 (invariato tra le 4 immagini). Le zone non cambiano. */

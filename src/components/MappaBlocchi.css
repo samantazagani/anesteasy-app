@@ -59,7 +59,8 @@
   align-items: center;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: var(--surface);
+  /* sfondo bianco: le figure sono ritagliate per il bianco, sul nero mostravano alone e frange */
+  background: #ffffff;
 }
 
 .mappa-figura svg {
@@ -76,7 +77,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: #52525a;
 }
 
 .mappa-zona {
@@ -94,13 +95,14 @@
 
 .mappa-zona:focus-visible {
   fill: rgba(139, 92, 246, 0.3);
-  stroke: var(--accent-text);
+  stroke: #4c1d95;
   stroke-width: 3;
 }
 
+/* contorno viola scuro: su sfondo bianco quello chiaro (--accent-text) non si vedrebbe */
 .mappa-zona.attiva {
   fill: rgba(139, 92, 246, 0.55);
-  stroke: var(--accent-text);
+  stroke: #4c1d95;
 }
 
 .mappa-pannello {

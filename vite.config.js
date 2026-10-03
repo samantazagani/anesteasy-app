@@ -12,7 +12,7 @@ export default defineConfig({
       // Precache di tutto il bundle (JS/CSS/HTML/icone) + dati clinici in data/.
       includeAssets: ['favicon.svg', 'icons.svg', 'apple-touch-icon.png'],
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,json,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,ico,json,woff,woff2}'],
         // Nessun runtimeCaching verso rete esterna: tutto viene servito dalla cache
         // generata al build. Le SPA route ricadono su index.html.
         navigateFallback: 'index.html',
