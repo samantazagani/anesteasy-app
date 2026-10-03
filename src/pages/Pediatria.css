@@ -200,3 +200,9 @@
   background: var(--accent-soft);
   color: var(--accent-text);
 }
+
+@media (min-width: 1024px) {
+  #pediatria {
+    max-width: 1120px;
+  }
+}

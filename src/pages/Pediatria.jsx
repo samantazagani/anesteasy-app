@@ -59,30 +59,37 @@ export function Pediatria() {
   }
 
   return (
-    <section id="pediatria">
+    <section id="pediatria" className="pagina-griglia">
       <h1>Pediatria</h1>
       <div className="riga-meta">
         <span className="chip">Età: {formatEta(etaAnni)}</span>
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
       </div>
 
-      <SezionePresidi presidi={pediatriaData.presidi} etaAnni={etaAnni} pesoKg={pesoKg} />
-      <SezioneParametriVitali parametriVitali={pediatriaData.parametri_vitali} etaAnni={etaAnni} />
-      <SezioneStime stime={pediatriaData.stime} etaAnni={etaAnni} pesoKg={pesoKg} />
-      <SezioneFluidi fluidi={pediatriaData.fluidi} pesoKg={pesoKg} />
-      <SezioneVentilazionePediatrica pesoKg={pesoKg} />
-      <SezioneIBWPediatrico calcoloPesi={pediatriaData.calcolo_pesi} altezzaCmProfilo={profile.altezzaCm} />
-      <SezionePremedicazione
-        titolo="Premedicazione e analgesia pediatrica"
-        lista={pediatriaData.premedicazione_analgesia}
-        derivati={derivati}
-      />
-      <SezionePremedicazione titolo="Altri farmaci" lista={pediatriaData.altri_farmaci} derivati={derivati} />
-      <SezioneEmergenzePediatriche
-        lista={pediatriaData.emergenze_pediatriche}
-        farmaci={farmaciData.farmaci}
-        derivati={derivati}
-      />
+      <div className="layout-2col colonne-uguali">
+        <div className="col-input">
+          <SezionePresidi presidi={pediatriaData.presidi} etaAnni={etaAnni} pesoKg={pesoKg} />
+          <SezioneParametriVitali parametriVitali={pediatriaData.parametri_vitali} etaAnni={etaAnni} />
+          <SezioneStime stime={pediatriaData.stime} etaAnni={etaAnni} pesoKg={pesoKg} />
+          <SezioneFluidi fluidi={pediatriaData.fluidi} pesoKg={pesoKg} />
+          <SezioneVentilazionePediatrica pesoKg={pesoKg} />
+          <SezioneIBWPediatrico calcoloPesi={pediatriaData.calcolo_pesi} altezzaCmProfilo={profile.altezzaCm} />
+        </div>
+
+        <div className="col-output">
+          <SezionePremedicazione
+            titolo="Premedicazione e analgesia pediatrica"
+            lista={pediatriaData.premedicazione_analgesia}
+            derivati={derivati}
+          />
+          <SezionePremedicazione titolo="Altri farmaci" lista={pediatriaData.altri_farmaci} derivati={derivati} />
+          <SezioneEmergenzePediatriche
+            lista={pediatriaData.emergenze_pediatriche}
+            farmaci={farmaciData.farmaci}
+            derivati={derivati}
+          />
+        </div>
+      </div>
     </section>
   )
 }
