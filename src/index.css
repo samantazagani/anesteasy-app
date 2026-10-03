@@ -68,6 +68,11 @@ body {
   min-height: 100svh;
 }
 
+/* Un display impostato da una classe (es. grid) non deve annullare l'attributo hidden. */
+[hidden] {
+  display: none !important;
+}
+
 h1,
 h2 {
   font-family: var(--heading);

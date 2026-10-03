@@ -122,3 +122,15 @@
   background: var(--accent-soft);
   color: var(--accent-text);
 }
+
+@media (min-width: 1024px) {
+  #anestesia-locale {
+    max-width: 1120px;
+  }
+
+  /* LAST e' un'emergenza: a tutta larghezza, non una card tra le altre */
+  #anestesia-locale .pagina-griglia > .riquadro-last {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+}

@@ -132,7 +132,7 @@ export function AnestesiaLocale() {
         </button>
       </div>
 
-      <div hidden={vista !== 'dosi'}>
+      <div hidden={vista !== 'dosi'} className="pagina-griglia">
         <p className="sottotitolo">
           Volume massimo iniettabile, diluizione, elastomero e tossicita' additiva. Dati BOZZA dal
           Manuale del giovane anestesista, da verificare.
