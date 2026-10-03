@@ -33,18 +33,17 @@ describe('coerenza dei dati (data/anestetici-locali.json)', () => {
     }
   })
 
-  // Coppie "blocco elencato per la regione, ma il catalogo dice che non la copre": ereditate
-  // dal prototipo v8. Spalla/Sovraclaveare, Inguine/Guaina del retto e Gluteo/PENG sono state
-  // tolte dai dati (revisione clinica); restano due voci in attesa di decisione. Il test ammette
-  // solo queste: una nuova incoerenza fallisce, risolverne una no.
-  const INCOERENZE_NOTE = ['anca|Cutaneo laterale della coscia (LFCN)', 'lombare|Paravertebrale']
+  // Eccezioni accettate: blocco elencato per la regione ma che, per il catalogo, non la copre.
+  // L'LFCN per l'anca e' un complemento solo cutaneo (cute dell'incisione laterale): la sua
+  // descrizione lo dice. Ogni altra incoerenza fa fallire il test.
+  const ECCEZIONI_ACCETTATE = ['anca|Cutaneo laterale della coscia (LFCN)']
 
-  it('i blocchi elencati per una regione la coprono, salvo le due incoerenze ancora aperte', () => {
+  it("i blocchi elencati per una regione la coprono, salvo l'eccezione accettata (LFCN per l'anca)", () => {
     const trovate = []
     for (const r of Object.values(mappa.regioni)) {
       for (const b of r.blocchi) if (!mappa.blocchi[b].copre.includes(r.id)) trovate.push(`${r.id}|${b}`)
     }
-    for (const t of trovate) expect(INCOERENZE_NOTE, `incoerenza nuova: ${t}`).toContain(t)
+    for (const t of trovate) expect(ECCEZIONI_ACCETTATE, `incoerenza nuova: ${t}`).toContain(t)
   })
 
   it('"vista" del JSON coincide con le regioni davvero selezionabili sulla figura', () => {
@@ -120,6 +119,16 @@ describe('suggerisciBlocchi: esempi clinici documentati in logica_combinazione',
     expect(nomi(['cosciaPost', 'gluteo', 'piede'])).toEqual(['Sciatico'])
   })
 
+  it('regione lombare: il Paravertebrale la copre, quindi torace + lombare e dorso + lombare = un solo blocco', () => {
+    expect(mappa.blocchi.Paravertebrale.copre).toContain('lombare')
+    expect(nomi(['torace', 'lombare'])).toEqual(['Paravertebrale'])
+    expect(nomi(['dorso', 'lombare'])).toEqual(['Paravertebrale'])
+  })
+
+  it('spalla + torace + lombare: due blocchi (Paravertebrale + Interscalenico), non tre', () => {
+    expect(nomi(['spalla', 'torace', 'lombare']).sort()).toEqual(['Interscalenico', 'Paravertebrale'])
+  })
+
   it('ogni blocco scelto riporta solo le regioni selezionate che copre', () => {
     const { chosen } = suggerisciBlocchi(['spalla', 'braccio', 'avambraccio', 'mano'], mappa)
     expect(chosen[0]).toEqual({ name: 'Interscalenico', copre: ['spalla', 'braccio'] })
@@ -152,6 +161,10 @@ describe('suggerisciBlocchi: regioni scoperte', () => {
 })
 
 describe('testi per il pannello', () => {
+  it("l'LFCN e presentato per l'anca come complemento solo cutaneo", () => {
+    expect(descrizioneBlocco(mappa, 'Cutaneo laterale della coscia (LFCN)')).toMatch(/complemento cutaneo.*non anestetizza l'articolazione/)
+  })
+
   it('copertura e descrizione di un blocco, con le etichette leggibili', () => {
     expect(testoCopertura(mappa, 'Interscalenico')).toBe('Spalla, Braccio / omero')
     expect(descrizioneBlocco(mappa, 'Interscalenico')).toMatch(/plesso brachiale prossimale/)

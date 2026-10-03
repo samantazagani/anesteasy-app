@@ -903,9 +903,10 @@
           "torace",
           "mammella",
           "dorso",
-          "addome"
+          "addome",
+          "lombare"
         ],
-        "descrizione": "parete toraco-addominale unilaterale, per metameri"
+        "descrizione": "parete toraco-addominale e lombare unilaterale, per metameri"
       },
       "ESP": {
         "copre": [
@@ -1009,7 +1010,7 @@
         "copre": [
           "coscia"
         ],
-        "descrizione": "cute della coscia laterale (puro sensitivo)"
+        "descrizione": "cute della coscia laterale (puro sensitivo); per l'anca solo come complemento cutaneo per l'incisione laterale, non anestetizza l'articolazione"
       },
       "Canale degli adduttori (safeno)": {
         "copre": [
