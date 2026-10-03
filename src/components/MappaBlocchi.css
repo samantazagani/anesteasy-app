@@ -1,0 +1,295 @@
+.mappa-controlli {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+
+.mappa-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.mappa-seg-etichetta {
+  padding: 0 10px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mappa-seg button {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mappa-seg button[aria-pressed='true'] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.mappa-layout {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 640px) {
+  .mappa-layout {
+    grid-template-columns: 300px minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.mappa-figura {
+  margin: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.mappa-figura svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+.mappa-figura figcaption {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mappa-zona {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 2;
+  cursor: pointer;
+  outline: none;
+  transition: fill 0.14s;
+}
+
+.mappa-zona:hover {
+  fill: rgba(139, 92, 246, 0.3);
+}
+
+.mappa-zona:focus-visible {
+  fill: rgba(139, 92, 246, 0.3);
+  stroke: var(--accent-text);
+  stroke-width: 3;
+}
+
+.mappa-zona.attiva {
+  fill: rgba(139, 92, 246, 0.55);
+  stroke: var(--accent-text);
+}
+
+.mappa-pannello {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.mappa-pannello-testa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mappa-pannello-testa h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.mappa-pulisci {
+  padding: 5px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.mappa-pulisci:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.mappa-selezionate {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 2px;
+}
+
+.mappa-selezionata {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 4px 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mappa-selezionata button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mappa-selezionata button:hover {
+  background: var(--border-strong);
+  color: var(--text);
+}
+
+.mappa-vuoto {
+  margin-top: 12px;
+  color: var(--text-secondary);
+}
+
+.mappa-gruppo {
+  margin: 18px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.mappa-gruppo-ok {
+  color: var(--success);
+}
+
+.mappa-suggerimento {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-tertiary);
+}
+
+.mappa-blocchi {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mappa-blocco {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.mappa-chip {
+  padding: 5px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mappa-chip-ok {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: var(--success-soft);
+  color: var(--success-text);
+}
+
+.mappa-copertura {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.mappa-copertura b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.mappa-avviso {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--warn);
+  border-radius: 10px;
+  background: var(--warn-soft);
+  color: var(--warn-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.mappa-avviso b {
+  color: var(--text);
+}
+
+.mappa-interventi {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mappa-interventi li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 14px;
+  color: var(--text-body);
+}
+
+.mappa-interventi li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mappa-zona {
+    transition: none;
+  }
+}

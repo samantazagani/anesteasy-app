@@ -100,3 +100,25 @@
   cursor: pointer;
 }
 
+
+.vista-switch {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 20px;
+}
+
+.vista-item {
+  font: inherit;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.vista-item.selezionato {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}

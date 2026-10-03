@@ -11,6 +11,7 @@ import { InfoFonte } from '../components/InfoFonte.jsx'
 import { TossicitaAdditiva } from '../components/TossicitaAdditiva.jsx'
 import { SezioneLAST } from '../components/SezioneLAST.jsx'
 import { BlocchiCatalogo } from '../components/BlocchiCatalogo.jsx'
+import { MappaBlocchi } from '../components/MappaBlocchi.jsx'
 import '../styles/risultato.css'
 import './AnestesiaLocale.css'
 
@@ -25,6 +26,7 @@ export function AnestesiaLocale() {
   const anestetici = anesteticiData.anestetici
   const pesoKg = profile.pesoKg
 
+  const [vista, setVista] = useState('dosi')
   const [anesteticoId, setAnesteticoId] = useState(anestetici[0].id)
   const [conAdrenalina, setConAdrenalina] = useState(false)
   const [concentrazioneInput, setConcentrazioneInput] = useState('')
@@ -109,271 +111,298 @@ export function AnestesiaLocale() {
   return (
     <section id="anestesia-locale">
       <h1>Anestetici locali</h1>
-      <p className="sottotitolo">
-        Volume massimo iniettabile, diluizione, elastomero e tossicita' additiva. Dati BOZZA dal
-        Manuale del giovane anestesista, da verificare.
-      </p>
-
-      <div className="lista-anestetici" role="listbox" aria-label="Anestetico locale">
-        {anestetici.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            role="option"
-            aria-selected={a.id === anesteticoId}
-            className={a.id === anesteticoId ? 'anestetico-item selezionato' : 'anestetico-item'}
-            onClick={() => setAnesteticoId(a.id)}
-          >
-            {a.nome}
-          </button>
-        ))}
+      <div className="vista-switch" role="tablist" aria-label="Vista">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={vista === 'dosi'}
+          className={vista === 'dosi' ? 'vista-item selezionato' : 'vista-item'}
+          onClick={() => setVista('dosi')}
+        >
+          Dosi e volumi
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={vista === 'mappa'}
+          className={vista === 'mappa' ? 'vista-item selezionato' : 'vista-item'}
+          onClick={() => setVista('mappa')}
+        >
+          Mappa dei blocchi
+        </button>
       </div>
 
-      {anestetico && (
-        <>
-          <div className="controlli-comuni">
-            <label className="toggle-adrenalina">
-              <input
-                type="checkbox"
-                checked={conAdrenalina}
-                onChange={(e) => setConAdrenalina(e.target.checked)}
-              />
-              Con adrenalina
-            </label>
-            <span className="chip">
-              Peso: {pesoKg > 0 ? `${pesoKg} kg (reale, dal profilo)` : 'non impostato'}
-            </span>
-          </div>
-          {!(pesoKg > 0) && (
-            <p className="avviso">Imposta il peso nella scheda "Profilo paziente" per calcolare.</p>
-          )}
+      <div hidden={vista !== 'dosi'}>
+        <p className="sottotitolo">
+          Volume massimo iniettabile, diluizione, elastomero e tossicita' additiva. Dati BOZZA dal
+          Manuale del giovane anestesista, da verificare.
+        </p>
 
-          {/* --- Volume massimo iniettabile --- */}
-          <div className="riquadro-calcolatore" id="volume-massimo">
-            <h2>Volume massimo iniettabile</h2>
+        <div className="lista-anestetici" role="listbox" aria-label="Anestetico locale">
+          {anestetici.map((a) => (
+            <button
+              key={a.id}
+              type="button"
+              role="option"
+              aria-selected={a.id === anesteticoId}
+              className={a.id === anesteticoId ? 'anestetico-item selezionato' : 'anestetico-item'}
+              onClick={() => setAnesteticoId(a.id)}
+            >
+              {a.nome}
+            </button>
+          ))}
+        </div>
 
-            <label className="campo-numerico">
-              Concentrazione (%)
-              <input
-                type="number"
-                min="0"
-                step="any"
-                inputMode="decimal"
-                placeholder="es. 0.5"
-                value={concentrazioneInput}
-                onChange={(e) => setConcentrazioneInput(e.target.value)}
-              />
-            </label>
-            {concentrazionePercento > 0 && (
-              <p className="nota">= {mgMlDaPercento(concentrazionePercento)} mg/ml</p>
-            )}
-            {concentrazioniDisponibili.length > 0 && (
-              <div className="chip-scelte">
-                {concentrazioniDisponibili.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    className="chip chip-bottone"
-                    onClick={() => setConcentrazioneInput(String(c))}
-                  >
-                    {c}%
-                  </button>
-                ))}
-              </div>
+        {anestetico && (
+          <>
+            <div className="controlli-comuni">
+              <label className="toggle-adrenalina">
+                <input
+                  type="checkbox"
+                  checked={conAdrenalina}
+                  onChange={(e) => setConAdrenalina(e.target.checked)}
+                />
+                Con adrenalina
+              </label>
+              <span className="chip">
+                Peso: {pesoKg > 0 ? `${pesoKg} kg (reale, dal profilo)` : 'non impostato'}
+              </span>
+            </div>
+            {!(pesoKg > 0) && (
+              <p className="avviso">Imposta il peso nella scheda "Profilo paziente" per calcolare.</p>
             )}
 
-            <label className="campo-numerico">
-              Già somministrato (mg, opzionale)
-              <input
-                type="number"
-                min="0"
-                step="any"
-                inputMode="decimal"
-                placeholder="es. 100"
-                value={giaSomministratoInput}
-                onChange={(e) => setGiaSomministratoInput(e.target.value)}
-              />
-            </label>
+            {/* --- Volume massimo iniettabile --- */}
+            <div className="riquadro-calcolatore" id="volume-massimo">
+              <h2>Volume massimo iniettabile</h2>
 
-            {erroreVolumeMassimo && <p className="avviso avviso-errore">{erroreVolumeMassimo}</p>}
-
-            {volumeMassimo && (
-              <div className="formula-a-vista">
-                <div className="riga-meta">
-                  <span className="chip">
-                    Limitato da: {LABEL_TETTO[volumeMassimo.tettoLimitante]} (
-                    {volumeMassimo.tettoLimitante === 'assoluto'
-                      ? `${volumeMassimo.tettoAssolutoMg} mg`
-                      : `${volumeMassimo.doseMgKg} mg/kg`}
-                    )
-                  </span>
+              <label className="campo-numerico">
+                Concentrazione (%)
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="es. 0.5"
+                  value={concentrazioneInput}
+                  onChange={(e) => setConcentrazioneInput(e.target.value)}
+                />
+              </label>
+              {concentrazionePercento > 0 && (
+                <p className="nota">= {mgMlDaPercento(concentrazionePercento)} mg/ml</p>
+              )}
+              {concentrazioniDisponibili.length > 0 && (
+                <div className="chip-scelte">
+                  {concentrazioniDisponibili.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className="chip chip-bottone"
+                      onClick={() => setConcentrazioneInput(String(c))}
+                    >
+                      {c}%
+                    </button>
+                  ))}
                 </div>
-                <p className="risultato-primario">
-                  {volumeMassimo.volumeMaxMl} ml
-                  <InfoFonte fonte={anestetico.fonte} pagina={anestetico.pagina} />
-                </p>
-                <p className="formula">{volumeMassimo.formula}</p>
+              )}
 
-                {volumeMassimo.residuoMl !== null && (
-                  <>
-                    <p className={volumeMassimo.superaTetto ? 'risultato-primario risultato-errore' : 'risultato-primario'}>
-                      {volumeMassimo.residuoMl} ml residui
-                    </p>
-                    <p className="formula">{volumeMassimo.formulaResiduo}</p>
-                    {volumeMassimo.superaTetto && (
-                      <p className="avviso avviso-errore">
-                        Il tetto massimo è già stato superato: non somministrare altro anestetico locale.
+              <label className="campo-numerico">
+                Già somministrato (mg, opzionale)
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="es. 100"
+                  value={giaSomministratoInput}
+                  onChange={(e) => setGiaSomministratoInput(e.target.value)}
+                />
+              </label>
+
+              {erroreVolumeMassimo && <p className="avviso avviso-errore">{erroreVolumeMassimo}</p>}
+
+              {volumeMassimo && (
+                <div className="formula-a-vista">
+                  <div className="riga-meta">
+                    <span className="chip">
+                      Limitato da: {LABEL_TETTO[volumeMassimo.tettoLimitante]} (
+                      {volumeMassimo.tettoLimitante === 'assoluto'
+                        ? `${volumeMassimo.tettoAssolutoMg} mg`
+                        : `${volumeMassimo.doseMgKg} mg/kg`}
+                      )
+                    </span>
+                  </div>
+                  <p className="risultato-primario">
+                    {volumeMassimo.volumeMaxMl} ml
+                    <InfoFonte fonte={anestetico.fonte} pagina={anestetico.pagina} />
+                  </p>
+                  <p className="formula">{volumeMassimo.formula}</p>
+
+                  {volumeMassimo.residuoMl !== null && (
+                    <>
+                      <p className={volumeMassimo.superaTetto ? 'risultato-primario risultato-errore' : 'risultato-primario'}>
+                        {volumeMassimo.residuoMl} ml residui
                       </p>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* --- Diluizione da fiala --- */}
-          <div className="riquadro-calcolatore" id="diluizione">
-            <h2>Diluizione da fiala</h2>
-            <div className="griglia-campi">
-              <label className="campo-numerico">
-                Conc. fiala (mg/ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={concFiala}
-                  onChange={(e) => setConcFiala(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                Conc. target (mg/ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={concTargetDil}
-                  onChange={(e) => setConcTargetDil(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                Volume finale (ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={volumeFinaleDil}
-                  onChange={(e) => setVolumeFinaleDil(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                Volume fiala (ml, opzionale)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={volumeFialaDil}
-                  onChange={(e) => setVolumeFialaDil(e.target.value)}
-                />
-              </label>
+                      <p className="formula">{volumeMassimo.formulaResiduo}</p>
+                      {volumeMassimo.superaTetto && (
+                        <p className="avviso avviso-errore">
+                          Il tetto massimo è già stato superato: non somministrare altro anestetico locale.
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
-            {erroreDiluizione && <p className="avviso avviso-errore">{erroreDiluizione}</p>}
-
-            {diluizione && (
-              <div className="formula-a-vista">
-                <p className="risultato-primario">{diluizione.volumeDaPrelevareMl} ml</p>
-                <p className="formula">{diluizione.formula}</p>
-                {diluizione.fialeNecessarie !== null && (
-                  <p className="nota">Fiale necessarie: {diluizione.fialeNecessarie}</p>
-                )}
-                {diluizione.superaVolumeFiala && (
-                  <p className="avviso avviso-errore">
-                    Il volume da prelevare supera quello di una singola fiala: servono piu' fiale.
-                  </p>
-                )}
+            {/* --- Diluizione da fiala --- */}
+            <div className="riquadro-calcolatore" id="diluizione">
+              <h2>Diluizione da fiala</h2>
+              <div className="griglia-campi">
+                <label className="campo-numerico">
+                  Conc. fiala (mg/ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={concFiala}
+                    onChange={(e) => setConcFiala(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  Conc. target (mg/ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={concTargetDil}
+                    onChange={(e) => setConcTargetDil(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  Volume finale (ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={volumeFinaleDil}
+                    onChange={(e) => setVolumeFinaleDil(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  Volume fiala (ml, opzionale)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={volumeFialaDil}
+                    onChange={(e) => setVolumeFialaDil(e.target.value)}
+                  />
+                </label>
               </div>
-            )}
-          </div>
 
-          {/* --- Riempimento elastomero --- */}
-          <div className="riquadro-calcolatore" id="elastomero">
-            <h2>Riempimento elastomero</h2>
-            <div className="griglia-campi">
-              <label className="campo-numerico">
-                Conc. target (mg/ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={concTargetElast}
-                  onChange={(e) => setConcTargetElast(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                Volume totale elastomero (ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={volumeTotaleElast}
-                  onChange={(e) => setVolumeTotaleElast(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                mg per fiala
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={mgPerFiala}
-                  onChange={(e) => setMgPerFiala(e.target.value)}
-                />
-              </label>
-              <label className="campo-numerico">
-                Volume fiala (ml)
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputMode="decimal"
-                  value={volumeFialaElast}
-                  onChange={(e) => setVolumeFialaElast(e.target.value)}
-                />
-              </label>
+              {erroreDiluizione && <p className="avviso avviso-errore">{erroreDiluizione}</p>}
+
+              {diluizione && (
+                <div className="formula-a-vista">
+                  <p className="risultato-primario">{diluizione.volumeDaPrelevareMl} ml</p>
+                  <p className="formula">{diluizione.formula}</p>
+                  {diluizione.fialeNecessarie !== null && (
+                    <p className="nota">Fiale necessarie: {diluizione.fialeNecessarie}</p>
+                  )}
+                  {diluizione.superaVolumeFiala && (
+                    <p className="avviso avviso-errore">
+                      Il volume da prelevare supera quello di una singola fiala: servono piu' fiale.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
-            {erroreElastomero && <p className="avviso avviso-errore">{erroreElastomero}</p>}
-
-            {elastomero && (
-              <div className="formula-a-vista">
-                <p className="risultato-primario">
-                  {elastomero.nFiale} fiale ({elastomero.volumeALMl} ml AL)
-                </p>
-                <p className="formula">{elastomero.formula}</p>
-                {elastomero.superaVolumeTotale && (
-                  <p className="avviso avviso-errore">
-                    Il volume di AL calcolato supera il volume totale dell'elastomero: riduci la
-                    concentrazione target o aumenta il volume totale.
-                  </p>
-                )}
+            {/* --- Riempimento elastomero --- */}
+            <div className="riquadro-calcolatore" id="elastomero">
+              <h2>Riempimento elastomero</h2>
+              <div className="griglia-campi">
+                <label className="campo-numerico">
+                  Conc. target (mg/ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={concTargetElast}
+                    onChange={(e) => setConcTargetElast(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  Volume totale elastomero (ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={volumeTotaleElast}
+                    onChange={(e) => setVolumeTotaleElast(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  mg per fiala
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={mgPerFiala}
+                    onChange={(e) => setMgPerFiala(e.target.value)}
+                  />
+                </label>
+                <label className="campo-numerico">
+                  Volume fiala (ml)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    value={volumeFialaElast}
+                    onChange={(e) => setVolumeFialaElast(e.target.value)}
+                  />
+                </label>
               </div>
-            )}
-          </div>
-        </>
-      )}
 
-      <TossicitaAdditiva anestetici={anestetici} pesoKg={pesoKg} />
+              {erroreElastomero && <p className="avviso avviso-errore">{erroreElastomero}</p>}
 
-      <SezioneLAST lastData={anesteticiData.last} pesoKg={pesoKg} />
+              {elastomero && (
+                <div className="formula-a-vista">
+                  <p className="risultato-primario">
+                    {elastomero.nFiale} fiale ({elastomero.volumeALMl} ml AL)
+                  </p>
+                  <p className="formula">{elastomero.formula}</p>
+                  {elastomero.superaVolumeTotale && (
+                    <p className="avviso avviso-errore">
+                      Il volume di AL calcolato supera il volume totale dell'elastomero: riduci la
+                      concentrazione target o aumenta il volume totale.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
-      <BlocchiCatalogo dati={anesteticiData.blocchi_catalogo} />
+        <TossicitaAdditiva anestetici={anestetici} pesoKg={pesoKg} />
+
+        <SezioneLAST lastData={anesteticiData.last} pesoKg={pesoKg} />
+      </div>
+
+      <div hidden={vista !== 'mappa'}>
+        <MappaBlocchi dati={anesteticiData} />
+
+        <BlocchiCatalogo dati={anesteticiData.blocchi_catalogo} />
+      </div>
     </section>
   )
 }
