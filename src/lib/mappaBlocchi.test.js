@@ -119,10 +119,21 @@ describe('suggerisciBlocchi: esempi clinici documentati in logica_combinazione',
     expect(nomi(['cosciaPost', 'gluteo', 'piede'])).toEqual(['Sciatico'])
   })
 
-  it('regione lombare: il Paravertebrale la copre, quindi torace + lombare e dorso + lombare = un solo blocco', () => {
+  it('regione lombare: il Paravertebrale la copre, quindi torace + lombare = un solo blocco', () => {
     expect(mappa.blocchi.Paravertebrale.copre).toContain('lombare')
     expect(nomi(['torace', 'lombare'])).toEqual(['Paravertebrale'])
-    expect(nomi(['dorso', 'lombare'])).toEqual(['Paravertebrale'])
+  })
+
+  it('parete toracica posteriore (dorso): ESP prima del Paravertebrale, anche in combinazione', () => {
+    expect(mappa.regioni.dorso.blocchi.slice(0, 2)).toEqual(['ESP', 'Paravertebrale'])
+    expect(nomi(['dorso'])).toEqual(['ESP'])
+    expect(nomi(['dorso', 'lombare'])).toEqual(['ESP'])
+    expect(nomi(['spalla', 'dorso']).sort()).toEqual(['ESP', 'Interscalenico'])
+  })
+
+  it('parete toracica anteriore (torace): resta Paravertebrale prima scelta', () => {
+    expect(mappa.regioni.torace.blocchi[0]).toBe('Paravertebrale')
+    expect(nomi(['torace', 'addome'])).toEqual(['Paravertebrale'])
   })
 
   it('spalla + torace + lombare: due blocchi (Paravertebrale + Interscalenico), non tre', () => {
