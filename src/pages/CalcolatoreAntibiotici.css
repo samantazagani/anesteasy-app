@@ -114,3 +114,14 @@
   margin-top: 12px;
   padding-top: 12px;
 }
+
+@media (min-width: 1024px) {
+  #calcolatore-antibiotici {
+    max-width: 1120px;
+  }
+
+  /* nelle due colonne il margine sotto la lista/risultato lo da' il gap */
+  #calcolatore-antibiotici .lista-antibiotici {
+    margin-bottom: 0;
+  }
+}

@@ -67,7 +67,7 @@ export function CalcolatoreAntibiotici() {
     (risultato.tipo === 'singolo' ? risultato.valore : risultato.max) > doseMassima
 
   return (
-    <section id="calcolatore-antibiotici">
+    <section id="calcolatore-antibiotici" className="pagina-griglia">
       <h1>Antibiotici</h1>
       <p className="sottotitolo">
         Profilassi chirurgica e terapia antibiotica come contenuto di riferimento (schede
@@ -84,108 +84,114 @@ export function CalcolatoreAntibiotici() {
         somministrazione, ridose e alternative per allergia.
       </p>
 
-      <div className="lista-antibiotici" role="listbox" aria-label="Antibiotici">
-        {antibiotici.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            role="option"
-            aria-selected={a.id === antibioticoId}
-            className={a.id === antibioticoId ? 'antibiotico-item selezionato' : 'antibiotico-item'}
-            onClick={() => setAntibioticoId(a.id)}
-          >
-            {a.nome}
-            <span className="antibiotico-indicazione">{a.indicazione}</span>
-          </button>
-        ))}
-      </div>
+      <div className="layout-2col">
+        <div className="col-input">
+          <div className="lista-antibiotici" role="listbox" aria-label="Antibiotici">
+            {antibiotici.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                role="option"
+                aria-selected={a.id === antibioticoId}
+                className={a.id === antibioticoId ? 'antibiotico-item selezionato' : 'antibiotico-item'}
+                onClick={() => setAntibioticoId(a.id)}
+              >
+                {a.nome}
+                <span className="antibiotico-indicazione">{a.indicazione}</span>
+              </button>
+            ))}
+        </div>
+        </div>
 
-      {antibiotico && (
-        <div className="risultato-antibiotico">
-          {nonCompilato ? (
-            <p className="avviso">
-              Voce non ancora compilata dal medico (struttura di template): nessuna fonte
-              assegnata, dose non mostrata.
-            </p>
-          ) : (
-            <>
-              <div className="riga-meta">
-                {peso?.chiave && (
-                  <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
-                )}
-              </div>
-
-              {peso?.pesoPediatricoEscluso && (
-                <p className="avviso avviso-pediatrico">
-                  Questo antibiotico richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido
-                  su un paziente pediatrico (formula per adulti): usato il peso reale.
-                </p>
-              )}
-
-              {erroreCalcolo && <p className="avviso avviso-errore">{erroreCalcolo}</p>}
-
-              {profiloIncompleto && (
+        <div className="col-output">
+          {antibiotico && (
+            <div className="risultato-antibiotico">
+              {nonCompilato ? (
                 <p className="avviso">
-                  Completa il profilo paziente (peso{peso?.chiave !== 'reale' ? ', altezza e sesso' : ''})
-                  per calcolare la dose: serve il {LABEL_PESO[peso?.chiave] ?? peso?.chiave}.
+                  Voce non ancora compilata dal medico (struttura di template): nessuna fonte
+                  assegnata, dose non mostrata.
                 </p>
-              )}
+              ) : (
+                <>
+                  <div className="riga-meta">
+                    {peso?.chiave && (
+                      <span className="chip">Peso usato: {LABEL_PESO[peso.chiave] ?? peso.chiave}</span>
+                    )}
+                  </div>
 
-              {risultato && (
-                <div className="formula-a-vista">
-                  <p className="risultato-primario">
-                    {formatoRisultato(risultato)}
-                    <InfoFonte fonte={antibiotico.fonte} revisione={antibiotico.revisione} />
-                  </p>
-                  <p className="formula">{risultato.formula}</p>
-                  {superaTetto && (
-                    <p className="avviso avviso-errore">
-                      Supera il tetto massimo di {doseMassima} mg: non superare questa dose.
+                  {peso?.pesoPediatricoEscluso && (
+                    <p className="avviso avviso-pediatrico">
+                      Questo antibiotico richiederebbe il peso {peso.pesoPediatricoEscluso}, non valido
+                      su un paziente pediatrico (formula per adulti): usato il peso reale.
                     </p>
                   )}
-                </div>
+
+                  {erroreCalcolo && <p className="avviso avviso-errore">{erroreCalcolo}</p>}
+
+                  {profiloIncompleto && (
+                    <p className="avviso">
+                      Completa il profilo paziente (peso{peso?.chiave !== 'reale' ? ', altezza e sesso' : ''})
+                      per calcolare la dose: serve il {LABEL_PESO[peso?.chiave] ?? peso?.chiave}.
+                    </p>
+                  )}
+
+                  {risultato && (
+                    <div className="formula-a-vista">
+                      <p className="risultato-primario">
+                        {formatoRisultato(risultato)}
+                        <InfoFonte fonte={antibiotico.fonte} revisione={antibiotico.revisione} />
+                      </p>
+                      <p className="formula">{risultato.formula}</p>
+                      {superaTetto && (
+                        <p className="avviso avviso-errore">
+                          Supera il tetto massimo di {doseMassima} mg: non superare questa dose.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
 
-          <div className="dettagli-antibiotico">
-            {antibiotico.timing?.minuti_prima_incisione > 0 && (
-              <p className="chip">Timing: {antibiotico.timing.minuti_prima_incisione} min prima dell'incisione</p>
-            )}
-            {antibiotico.timing?.nota && <p className="nota">{antibiotico.timing.nota}</p>}
+              <div className="dettagli-antibiotico">
+                {antibiotico.timing?.minuti_prima_incisione > 0 && (
+                  <p className="chip">Timing: {antibiotico.timing.minuti_prima_incisione} min prima dell'incisione</p>
+                )}
+                {antibiotico.timing?.nota && <p className="nota">{antibiotico.timing.nota}</p>}
 
-            {antibiotico.ridose?.ogni_ore > 0 && (
-              <p className="chip">Ridose: ogni {antibiotico.ridose.ogni_ore} h</p>
-            )}
-            {antibiotico.ridose?.sanguinamento_massivo_ml > 0 && (
-              <p className="chip">
-                Ridose anticipata se sanguinamento &gt; {antibiotico.ridose.sanguinamento_massivo_ml} ml
-              </p>
-            )}
-            {antibiotico.ridose?.nota && <p className="nota">{antibiotico.ridose.nota}</p>}
+                {antibiotico.ridose?.ogni_ore > 0 && (
+                  <p className="chip">Ridose: ogni {antibiotico.ridose.ogni_ore} h</p>
+                )}
+                {antibiotico.ridose?.sanguinamento_massivo_ml > 0 && (
+                  <p className="chip">
+                    Ridose anticipata se sanguinamento &gt; {antibiotico.ridose.sanguinamento_massivo_ml} ml
+                  </p>
+                )}
+                {antibiotico.ridose?.nota && <p className="nota">{antibiotico.ridose.nota}</p>}
 
-            {antibiotico.allergia?.alternative.length > 0 && (
-              <div className="allergia">
-                <span className="nota">In caso di allergia:</span>
-                {antibiotico.allergia.alternative.map((idAlt) => {
-                  const alt = antibiotici.find((a) => a.id === idAlt)
-                  return (
-                    <button
-                      key={idAlt}
-                      type="button"
-                      className="alternativa-item"
-                      onClick={() => setAntibioticoId(idAlt)}
-                    >
-                      {alt?.nome ?? idAlt}
-                    </button>
-                  )
-                })}
-                {antibiotico.allergia.nota && <p className="nota">{antibiotico.allergia.nota}</p>}
+                {antibiotico.allergia?.alternative.length > 0 && (
+                  <div className="allergia">
+                    <span className="nota">In caso di allergia:</span>
+                    {antibiotico.allergia.alternative.map((idAlt) => {
+                      const alt = antibiotici.find((a) => a.id === idAlt)
+                      return (
+                        <button
+                          key={idAlt}
+                          type="button"
+                          className="alternativa-item"
+                          onClick={() => setAntibioticoId(idAlt)}
+                        >
+                          {alt?.nome ?? idAlt}
+                        </button>
+                      )
+                    })}
+                    {antibiotico.allergia.nota && <p className="nota">{antibiotico.allergia.nota}</p>}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </section>
   )
 }
