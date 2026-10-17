@@ -1,58 +1,127 @@
-.infusione-manuale {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
-  background: var(--surface);
-}
+/* La scheda e l'intestazione sono quelle dei passi (.passo-scheda, IntestazionePasso). */
 
-.infusione-manuale h3 {
-  margin: 0 0 4px;
-  font-size: 18px;
-  color: var(--text);
-}
-
-.infusione-manuale .sottotitolo {
+.infusione-descrizione {
+  margin: -4px 0 16px;
   font-size: 13px;
   color: var(--text-secondary);
-  margin: 0 0 16px;
 }
 
-.infusione-manuale .dose-oraria-label {
+.infusione-campo {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 15px;
-  color: var(--text);
-  max-width: 200px;
-  margin-bottom: 12px;
 }
 
-.infusione-manuale input {
-  font: inherit;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border-strong);
-  background: var(--surface-2);
+.infusione-campo label {
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
 }
 
-.colonne-concentrazione {
+/* campo numerico con l'unita' dentro, cosi' non serve scriverla nell'etichetta */
+.campo-con-unita {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 8px;
-}
-
-.colonna-concentrazione {
-  flex: 1 1 220px;
-  border: 1px solid var(--border);
+  align-items: stretch;
+  max-width: 300px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
-  padding: 14px;
-  background: var(--surface);
+  background: var(--surface-2);
 }
 
-.colonna-concentrazione .risultato-primario {
-  font-size: 20px;
-  margin: 4px 0 4px;
+.campo-con-unita:focus-within {
+  border-color: var(--accent);
+}
+
+.campo-con-unita input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+}
+
+.campo-unita {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-left: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.infusione-peso {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.infusione-suggerimento {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* un risultato per concentrazione, in elenco: nome a sinistra, ml/h in evidenza a destra */
+.infusione-risultati {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.infusione-riga {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.infusione-riga:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.infusione-nome {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.infusione-nome-testo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.infusione-conc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.infusione-valore {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: right;
+  color: var(--text);
+}
+
+.infusione-valore span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.infusione-formula,
+.infusione-errore {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
