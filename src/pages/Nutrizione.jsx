@@ -24,6 +24,7 @@ import {
 import '../styles/risultato.css'
 import './Nutrizione.css'
 import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', ABW: 'ABW (peso aggiustato)' }
 const LABEL_BRACKET_PROTEICO = {
@@ -178,6 +179,7 @@ export function Nutrizione() {
         <span className="chip">BMI: {bmi !== null && bmi !== undefined ? bmi : 'non disponibile'}</span>
       </div>
 
+      <SezioniPieghevoli schede=".riquadro-nutrizione" inizio="prima" />
       <IndiceSezioni schede=".riquadro-nutrizione" />
 
       <div className="layout-2col colonne-uguali">

@@ -29,6 +29,7 @@ import {
 import '../styles/risultato.css'
 import './Pediatria.css'
 import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
 
 // Le dosi delle emergenze pediatriche non si ridefiniscono qui: si richiama la voce che
 // esiste gia' in farmaci.json (fascia_eta: "pediatrico"), una sola fonte di verita' con
@@ -67,6 +68,7 @@ export function Pediatria() {
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
       </div>
 
+      <SezioniPieghevoli schede=".riquadro-pediatria" inizio="prima" />
       <IndiceSezioni schede=".riquadro-pediatria" />
 
       <div className="layout-2col colonne-uguali">

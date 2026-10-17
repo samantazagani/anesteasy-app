@@ -40,6 +40,12 @@
   text-overflow: ellipsis;
 }
 
+.indice-tutte {
+  border-style: dashed;
+  color: var(--text);
+  font-weight: 600;
+}
+
 .indice-chip.attiva {
   border-color: var(--accent-border);
   background: var(--accent-soft);

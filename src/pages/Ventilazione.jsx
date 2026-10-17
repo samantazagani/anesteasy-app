@@ -21,6 +21,7 @@ import { BadgeFormulaDaVerificare } from '../components/BadgeFormulaDaVerificare
 import '../styles/risultato.css'
 import './Ventilazione.css'
 import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
 
 function trovaLimite(id) {
   return ventilazioneData.valori_limite.find((l) => l.id === id)
@@ -126,6 +127,7 @@ export function Ventilazione() {
         parametri qui sotto alimentano più calcolatori insieme.
       </p>
 
+      <SezioniPieghevoli schede=".riquadro-vent" titolo=".vent-titolo" aperte=".riquadro-vent-evidenza" inizio="nessuna" />
       <IndiceSezioni schede=".pannello-condiviso, .riquadro-vent" titolo="h2, .vent-titolo" />
 
       <div className="layout-2col">

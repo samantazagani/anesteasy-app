@@ -6,6 +6,7 @@ import { etaFertileEuristica, SOGLIA_ETA_FERTILE_MIN, SOGLIA_ETA_FERTILE_MAX } f
 import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
 import '../styles/risultato.css'
 import './Ostetricia.css'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
 
 function intervallo(valori, unita) {
   const [min, max] = valori
@@ -42,6 +43,7 @@ export function Ostetricia() {
         {SOGLIA_ETA_FERTILE_MAX} anni): un promemoria, non una diagnosi.
       </p>
 
+      <SezioniPieghevoli schede=".riquadro-ostetricia" aperte=".riquadro-urgente" inizio="prima" />
       <IndiceSezioni schede=".riquadro-ostetricia" />
 
       <div className="layout-2col colonne-uguali">

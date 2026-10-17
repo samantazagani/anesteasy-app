@@ -1,0 +1,62 @@
+/* ---------- Sezioni richiudibili (SezioniPieghevoli) ---------- */
+
+[data-pieghevole] > [data-intestazione] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* h2 come intestazione: il titolo a sinistra, il pulsante a destra */
+h2[data-intestazione] {
+  justify-content: space-between;
+}
+
+.sezione-chevron {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.sezione-chevron:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.sezione-chevron svg {
+  transition: transform 0.15s ease;
+}
+
+[data-pieghevole][data-aperta='true'] .sezione-chevron svg {
+  transform: rotate(180deg);
+}
+
+/* chiusa: resta solo l'intestazione, senza margine sotto */
+[data-pieghevole][data-aperta='false'] > :not([data-intestazione]) {
+  display: none !important;
+}
+
+[data-pieghevole][data-aperta='false'] > [data-intestazione] {
+  margin-bottom: 0;
+}
+
+/* chiusa: scheda compatta, cosi' un elenco di titoli si scorre in fretta */
+[data-pieghevole][data-aperta='false'] {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sezione-chevron svg {
+    transition: none;
+  }
+}

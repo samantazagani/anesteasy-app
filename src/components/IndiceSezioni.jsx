@@ -19,12 +19,16 @@ export function IndiceSezioni({ schede, titolo = 'h2' }) {
   const radice = useRef(null)
   const riga = useRef(null)
   const elementi = useRef([])
+  const sezioneRef = useRef(null)
   const [voci, setVoci] = useState([])
   const [attiva, setAttiva] = useState(0)
+  const [haPieghevoli, setHaPieghevoli] = useState(false)
+  const [tutteAperte, setTutteAperte] = useState(false)
 
   useEffect(() => {
     const sezione = radice.current?.closest('section')
     if (!sezione) return undefined
+    sezioneRef.current = sezione
     const els = [...sezione.querySelectorAll(schede)]
     elementi.current = els
     els.forEach((el) => el.setAttribute('data-sezione', ''))
@@ -47,10 +51,20 @@ export function IndiceSezioni({ schede, titolo = 'h2' }) {
     function suScroll() {
       if (!rafId) rafId = requestAnimationFrame(aggiorna)
     }
+    // sezioni richiudibili (SezioniPieghevoli): serve sapere se ce ne sono e se sono tutte aperte
+    function sincronizza() {
+      const pieghevoli = [...sezione.querySelectorAll('[data-pieghevole]')]
+      setHaPieghevoli(pieghevoli.length > 0)
+      setTutteAperte(pieghevoli.length > 0 && pieghevoli.every((c) => c.dataset.aperta === 'true'))
+    }
+    sezione.addEventListener('sezione-cambiata', sincronizza)
+    sincronizza()
+
     window.addEventListener('scroll', suScroll, { passive: true })
     window.addEventListener('resize', suScroll)
     aggiorna()
     return () => {
+      sezione.removeEventListener('sezione-cambiata', sincronizza)
       window.removeEventListener('scroll', suScroll)
       window.removeEventListener('resize', suScroll)
       if (rafId) cancelAnimationFrame(rafId)
@@ -70,13 +84,27 @@ export function IndiceSezioni({ schede, titolo = 'h2' }) {
 
   function vai(i) {
     setAttiva(i)
+    const el = elementi.current[i]
+    // una sezione chiusa si apre prima del salto (il layout si aggiorna in modo sincrono)
+    el?.dispatchEvent(new CustomEvent('sezione-imposta', { detail: { aperta: true } }))
     const riduci = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    elementi.current[i]?.scrollIntoView({ behavior: riduci ? 'auto' : 'smooth', block: 'start' })
+    el?.scrollIntoView({ behavior: riduci ? 'auto' : 'smooth', block: 'start' })
+  }
+
+  function alternaTutte() {
+    const pieghevoli = [...sezioneRef.current.querySelectorAll('[data-pieghevole]')]
+    const apri = !pieghevoli.every((c) => c.dataset.aperta === 'true')
+    pieghevoli.forEach((c) => c.dispatchEvent(new CustomEvent('sezione-imposta', { detail: { aperta: apri } })))
   }
 
   return (
     <nav ref={radice} className="indice-sezioni" aria-label="Sezioni della pagina" hidden={voci.length < 2}>
       <div className="indice-riga" ref={riga}>
+        {haPieghevoli && (
+          <button type="button" className="indice-chip indice-tutte" onClick={alternaTutte}>
+            {tutteAperte ? 'Chiudi tutte' : 'Apri tutte'}
+          </button>
+        )}
         {voci.map((testo, i) => (
           <button
             key={`${i}-${testo}`}
