@@ -26,12 +26,6 @@
   color: var(--warn-strong);
 }
 
-.riquadro-last .info-fonte-bottone {
-  border-color: var(--warn);
-  background: transparent;
-  color: var(--warn-text);
-}
-
 .badge-emergenza {
   display: inline-flex;
   align-items: center;
@@ -76,7 +70,3 @@
   color: var(--warn-strong);
 }
 
-.riquadro-last .info-fonte-bottone {
-  border-color: var(--warn);
-  color: var(--warn-text);
-}

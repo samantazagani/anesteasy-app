@@ -5,7 +5,6 @@ import { categoriaEta } from '../lib/categoriaEta'
 import { risolviPeso } from '../lib/pesoResolver'
 import { selezionaDose, etichettaVariante } from '../lib/selezioneDose'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
-import { InfoFonte } from '../components/InfoFonte.jsx'
 import { AvvertenzeFarmaco } from '../components/AvvertenzeFarmaco.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
@@ -297,7 +296,6 @@ export function CalcolatoreDoseBolo() {
                       <div className="formula-a-vista">
                         <p className="risultato-primario">
                           {formatoRisultato(risultato)}
-                          <InfoFonte fonte={doseScelta.fonte} pagina={doseScelta.pagina} revisione={doseScelta.revisione} />
                         </p>
                         <p className="formula">{risultato.formula}</p>
                         {/* se la nota e' gia' mostrata come etichetta della variante (sugammadex ecc.), non ripeterla */}

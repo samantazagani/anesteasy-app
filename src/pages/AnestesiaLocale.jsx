@@ -7,7 +7,6 @@ import {
   calcolaElastomero,
   mgMlDaPercento,
 } from '../lib/anestesiaLocaleCalculator'
-import { InfoFonte } from '../components/InfoFonte.jsx'
 import { TossicitaAdditiva } from '../components/TossicitaAdditiva.jsx'
 import { SezioneLAST } from '../components/SezioneLAST.jsx'
 import { BlocchiCatalogo } from '../components/BlocchiCatalogo.jsx'
@@ -237,7 +236,6 @@ export function AnestesiaLocale() {
                   </div>
                   <p className="risultato-primario">
                     {volumeMassimo.volumeMaxMl} ml
-                    <InfoFonte fonte={anestetico.fonte} pagina={anestetico.pagina} />
                   </p>
                   <p className="formula">{volumeMassimo.formula}</p>
 

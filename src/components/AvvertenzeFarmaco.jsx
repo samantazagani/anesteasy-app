@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './AvvertenzeFarmaco.css'
 
-// Stesso pattern di InfoFonte.jsx (icona piccola, popover al tap, si chiude al click
+// Icona piccola, popover al tap, si chiude al click
 // fuori), ma per farmaco.avvertenze (data/farmaci.json): un triangolo discreto, visibile
 // solo se il campo esiste, cosi' l'elenco dosi resta la vista primaria e non invasiva -
 // chi vuole le avvertenze le apre, chi no non le vede affatto.
