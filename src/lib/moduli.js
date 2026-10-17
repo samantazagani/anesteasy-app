@@ -7,7 +7,7 @@ export const GRUPPI_MODULI = [
     etichetta: null,
     moduli: [
       { id: 'farmaci', label: 'Farmaci' },
-      { id: 'infusione', label: 'γ/ml/h', parole: ['infusione', 'gamma', 'mcg/kg/min'] },
+      { id: 'infusione', label: 'Infusioni', parole: ['γ/ml/h', 'gamma', 'ml/h', 'mcg/kg/min'] },
       { id: 'antibiotici', label: 'Antibiotici', parole: ['profilassi'] },
       { id: 'al', label: 'Anestetici locali', parole: ['lidocaina', 'ropivacaina', 'blocchi', 'last'] },
       { id: 'emergenze', label: 'Emergenze', parole: ['als', 'anafilassi', 'arresto'] },

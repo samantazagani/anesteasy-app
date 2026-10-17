@@ -15,6 +15,13 @@ describe('moduli', () => {
     expect(TUTTI_I_MODULI).toHaveLength(12)
   })
 
+  it('il modulo delle infusioni si chiama "Infusioni" e si trova anche cercando gamma o γ/ml/h', () => {
+    expect(trovaModulo('infusione').label).toBe('Infusioni')
+    expect(cercaModuli('infusion').map((m) => m.id)).toEqual(['infusione'])
+    expect(cercaModuli('gamma').map((m) => m.id)).toEqual(['infusione'])
+    expect(cercaModuli('γ/ml/h').map((m) => m.id)).toEqual(['infusione'])
+  })
+
   it('cercaModuli: per nome o parola chiave, senza distinguere maiuscole; vuoto = nessun risultato', () => {
     expect(cercaModuli('')).toEqual([])
     expect(cercaModuli('  ')).toEqual([])
