@@ -12,6 +12,7 @@ import { tipoPasso, risolviPassoFarmaco } from '../lib/emergenzaStepEngine'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './Emergenze.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
 
@@ -61,6 +62,7 @@ export function Emergenze() {
 
       <div className="layout-2col">
         <div className="col-input">
+          <IntestazionePasso numero={1} titolo="Emergenza" />
           <div className="lista-emergenze" role="listbox" aria-label="Emergenza">
             {emergenze.map((e) => (
               <button
@@ -78,6 +80,7 @@ export function Emergenze() {
         </div>
 
         <div className="col-output">
+          <IntestazionePasso numero={2} titolo="Protocollo" />
           {ramificato ? (
             <AlgoritmoRamificato
               key={emergenzaId}

@@ -10,6 +10,7 @@ import { AvvertenzeFarmaco } from '../components/AvvertenzeFarmaco.jsx'
 import { CalcolatoreInfusioneManuale } from '../components/CalcolatoreInfusioneManuale.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreDoseBolo.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 const LABEL_CONTESTO = {
   induzione: 'Induzione',
@@ -130,6 +131,7 @@ export function CalcolatoreDoseBolo() {
 
       <div className="layout-2col">
         <div className="col-input">
+          <IntestazionePasso numero={1} titolo="Farmaco" />
           <div className="ricerca-farmaco">
             <label htmlFor="ricerca-farmaco-input">Cerca farmaco</label>
             <input
@@ -166,9 +168,10 @@ export function CalcolatoreDoseBolo() {
 
           {farmacoSelezionato && (
             <div className="dettaglio-farmaco">
-              <h2>
+              <IntestazionePasso numero={2} titolo="Contesto clinico" />
+              <h3>
                 {farmacoSelezionato.nome} <AvvertenzeFarmaco avvertenze={farmacoSelezionato.avvertenze} />
-              </h2>
+              </h3>
 
               <div className="contesti" role="tablist" aria-label="Contesto clinico">
                 {contesti.map((c) => (
@@ -208,6 +211,7 @@ export function CalcolatoreDoseBolo() {
 
         {farmacoSelezionato && (
           <div className="col-output">
+            <IntestazionePasso numero={3} titolo="Dose" />
             <div className="risultato-dose">
               {!doseScelta && <p className="avviso">Nessun dosaggio disponibile per questo contesto.</p>}
 

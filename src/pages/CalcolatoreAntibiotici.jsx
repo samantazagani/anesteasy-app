@@ -8,6 +8,7 @@ import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { InfoFonte } from '../components/InfoFonte.jsx'
 import '../styles/risultato.css'
 import './CalcolatoreAntibiotici.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
 
@@ -86,6 +87,7 @@ export function CalcolatoreAntibiotici() {
 
       <div className="layout-2col">
         <div className="col-input">
+          <IntestazionePasso numero={1} titolo="Antibiotico" />
           <div className="lista-antibiotici" role="listbox" aria-label="Antibiotici">
             {antibiotici.map((a) => (
               <button
@@ -104,6 +106,7 @@ export function CalcolatoreAntibiotici() {
         </div>
 
         <div className="col-output">
+          <IntestazionePasso numero={2} titolo="Dose e indicazioni" />
           {antibiotico && (
             <div className="risultato-antibiotico">
               {nonCompilato ? (

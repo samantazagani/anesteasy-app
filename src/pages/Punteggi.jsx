@@ -21,6 +21,7 @@ import {
 } from '../lib/punteggiCalculator'
 import '../styles/risultato.css'
 import './Punteggi.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 const CATEGORIE = [
   { id: 'vie_aeree', label: 'Vie aeree' },
@@ -81,6 +82,7 @@ export function Punteggi() {
 
       <div className="layout-2col">
         <div className="col-input">
+          <IntestazionePasso numero={1} titolo="Categoria" />
           <nav className="categorie-p" role="tablist" aria-label="Categoria">
             {CATEGORIE.map((c) => (
               <button
@@ -98,6 +100,7 @@ export function Punteggi() {
         </div>
 
         <div className="col-output">
+          <IntestazionePasso numero={2} titolo="Punteggi" />
           <div hidden={categoria !== 'vie_aeree'}>
             <CalcClassificazione dati={trova('mallampati')} opzioni={trova('mallampati').classi} chiaveLabel="classe" chiaveDescrizione="descrizione" />
             <CalcElGanzouri dati={trova('el-ganzouri')} />

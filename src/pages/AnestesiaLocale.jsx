@@ -14,6 +14,7 @@ import { BlocchiCatalogo } from '../components/BlocchiCatalogo.jsx'
 import { MappaBlocchi } from '../components/MappaBlocchi.jsx'
 import '../styles/risultato.css'
 import './AnestesiaLocale.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 const LABEL_TETTO = { peso: 'dose per kg', assoluto: 'tetto assoluto' }
 
@@ -138,6 +139,7 @@ export function AnestesiaLocale() {
           Manuale del giovane anestesista, da verificare.
         </p>
 
+        <IntestazionePasso numero={1} titolo="Anestetico locale" />
         <div className="lista-anestetici" role="listbox" aria-label="Anestetico locale">
           {anestetici.map((a) => (
             <button
@@ -173,6 +175,7 @@ export function AnestesiaLocale() {
             )}
 
             {/* --- Volume massimo iniettabile --- */}
+            <IntestazionePasso numero={2} titolo="Calcoli" />
             <div className="riquadro-calcolatore" id="volume-massimo">
               <h2>Volume massimo iniettabile</h2>
 

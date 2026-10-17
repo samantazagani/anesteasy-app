@@ -24,6 +24,7 @@ import {
 import { valutaSequenzaRotem } from '../lib/rotemCalculator'
 import '../styles/risultato.css'
 import './CalcolatoriTI.css'
+import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
 
 // Stesso raggruppamento per "categoria" di data/calcolatori-ti.json (20 calcolatori):
 // elettroliti ordinati per il campo "ordine" del JSON (flusso di un caso clinico), CPP
@@ -125,6 +126,7 @@ export function CalcolatoriTI() {
 
       <div className="layout-2col">
         <div className="col-input">
+          <IntestazionePasso numero={1} titolo="Categoria" />
           <nav className="categorie-ti" role="tablist" aria-label="Categoria">
             {CATEGORIE.map((c) => (
               <button
@@ -142,6 +144,7 @@ export function CalcolatoriTI() {
         </div>
 
         <div className="col-output">
+          <IntestazionePasso numero={2} titolo="Calcolatori" />
           {/* Ordine come da data/calcolatori-ti.json > _ordine_elettroliti: segue il flusso di
               un caso clinico (Na corretto -> gap osmolare -> deficit sodio -> Adrogue-Madias
               -> deficit idrico -> potassio -> calcio). */}

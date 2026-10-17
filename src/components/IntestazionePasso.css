@@ -1,0 +1,46 @@
+.passo-intestazione {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.passo-intestazione:first-child {
+  margin-top: 0;
+}
+
+/* la linea che chiude l'intestazione separa chiaramente una sezione dalla successiva */
+.passo-intestazione::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.passo-numero {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+/* dentro un contenitore flex con gap (colonne desktop, griglie) il margine sopra lo da' il gap */
+@media (min-width: 1024px) {
+  .layout-2col > .col-input > .passo-intestazione,
+  .layout-2col > .col-output > .passo-intestazione {
+    margin: 0;
+  }
+}
