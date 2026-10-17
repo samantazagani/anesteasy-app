@@ -30,6 +30,7 @@ function App() {
   const hamburgerRef = useRef(null)
   const chiudiRef = useRef(null)
   const ricercaRef = useRef(null)
+  const topbarRef = useRef(null)
 
   // Sotto i 1024px il menu e' un drawer: sidebar fissa solo su desktop.
   const drawerAperto = menuAperto && !desktop
@@ -46,6 +47,18 @@ function App() {
     setMenuAperto(false)
     hamburgerRef.current?.focus()
   }
+
+  // altezza reale della top bar (cresce quando si apre la ricerca su mobile): serve alle barre
+  // fisse sotto di essa (indice delle sezioni) e ai salti di scorrimento
+  useEffect(() => {
+    const el = topbarRef.current
+    if (!el) return undefined
+    const aggiorna = () => document.documentElement.style.setProperty('--topbar-h', `${el.offsetHeight}px`)
+    aggiorna()
+    const ro = new ResizeObserver(aggiorna)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!drawerAperto) return undefined
@@ -99,7 +112,7 @@ function App() {
       </aside>
 
       <div className="app-main">
-        <header className="topbar">
+        <header className="topbar" ref={topbarRef}>
           <div className="topbar-riga">
             <button
               ref={hamburgerRef}

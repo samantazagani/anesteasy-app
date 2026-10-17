@@ -20,6 +20,7 @@ import {
 import { BadgeFormulaDaVerificare } from '../components/BadgeFormulaDaVerificare.jsx'
 import '../styles/risultato.css'
 import './Ventilazione.css'
+import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
 
 function trovaLimite(id) {
   return ventilazioneData.valori_limite.find((l) => l.id === id)
@@ -124,6 +125,8 @@ export function Ventilazione() {
         Riferimento rapido: calcolatori e valori limite (data/ventilazione.json). I
         parametri qui sotto alimentano più calcolatori insieme.
       </p>
+
+      <IndiceSezioni schede=".pannello-condiviso, .riquadro-vent" titolo="h2, .vent-titolo" />
 
       <div className="layout-2col">
         <div className="col-input">

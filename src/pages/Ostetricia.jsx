@@ -3,6 +3,7 @@ import farmaciData from '../../data/farmaci.json'
 import { usePatientProfile } from '../context/PatientProfileContext.jsx'
 import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import { etaFertileEuristica, SOGLIA_ETA_FERTILE_MIN, SOGLIA_ETA_FERTILE_MAX } from '../lib/ostetriciaSblocco'
+import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
 import '../styles/risultato.css'
 import './Ostetricia.css'
 
@@ -40,6 +41,8 @@ export function Ostetricia() {
         Modulo attivo per euristica "età fertile" (sesso F, {SOGLIA_ETA_FERTILE_MIN}-
         {SOGLIA_ETA_FERTILE_MAX} anni): un promemoria, non una diagnosi.
       </p>
+
+      <IndiceSezioni schede=".riquadro-ostetricia" />
 
       <div className="layout-2col colonne-uguali">
         <div className="col-input">

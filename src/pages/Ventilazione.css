@@ -133,10 +133,11 @@
   }
 
   /* i parametri condivisi restano visibili mentre si scorrono i calcolatori */
+  /* sotto la top bar (64px) e l'indice delle sezioni (circa 52px) */
   #ventilazione .col-input {
     position: sticky;
-    top: 88px;
-    max-height: calc(100vh - 104px);
+    top: 140px;
+    max-height: calc(100vh - 156px);
     overflow-y: auto;
   }
 

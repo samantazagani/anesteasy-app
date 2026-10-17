@@ -1,0 +1,82 @@
+/* ---------- Indice delle sezioni (riga di chip fissa sotto la top bar) ---------- */
+
+.indice-sezioni {
+  position: sticky;
+  top: var(--topbar-h, 57px);
+  z-index: 25;
+  /* a tutta larghezza anche dentro il padding della pagina (20px), cosi' le card scorrono
+     dietro e non si vedono ai lati */
+  margin: 0 -20px 16px;
+  padding: 8px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.indice-riga {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.indice-riga::-webkit-scrollbar {
+  display: none;
+}
+
+.indice-chip {
+  flex: none;
+  max-width: 220px;
+  padding: 7px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.indice-chip.attiva {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+/* la sezione di arrivo non finisce sotto la top bar e l'indice */
+[data-sezione] {
+  scroll-margin-top: calc(var(--topbar-h, 57px) + 64px);
+}
+
+/* ---------- Titoli di sezione piu' riconoscibili nelle pagine lunghe ---------- */
+
+:is(.riquadro-ostetricia, .riquadro-nutrizione, .riquadro-pediatria) h2 {
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+:is(.riquadro-ostetricia, .riquadro-nutrizione, .riquadro-pediatria) h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 0.95em;
+  margin-right: 10px;
+  border-radius: 2px;
+  background: var(--accent);
+  vertical-align: -0.1em;
+}
+
+/* sezioni urgenti: segnale ambra, come gli altri avvisi di emergenza */
+.riquadro-urgente h2::before {
+  background: var(--warn);
+}
+
+@media (min-width: 1024px) {
+  .indice-sezioni {
+    top: var(--topbar-h, 64px);
+  }
+}

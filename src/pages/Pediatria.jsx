@@ -28,6 +28,7 @@ import {
 } from '../lib/pediatriaCalculator'
 import '../styles/risultato.css'
 import './Pediatria.css'
+import { IndiceSezioni } from '../components/IndiceSezioni.jsx'
 
 // Le dosi delle emergenze pediatriche non si ridefiniscono qui: si richiama la voce che
 // esiste gia' in farmaci.json (fascia_eta: "pediatrico"), una sola fonte di verita' con
@@ -65,6 +66,8 @@ export function Pediatria() {
         <span className="chip">Età: {formatEta(etaAnni)}</span>
         <span className="chip">Peso: {pesoKg > 0 ? `${pesoKg} kg (reale)` : 'non impostato'}</span>
       </div>
+
+      <IndiceSezioni schede=".riquadro-pediatria" />
 
       <div className="layout-2col colonne-uguali">
         <div className="col-input">
