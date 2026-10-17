@@ -25,6 +25,8 @@ import { valutaSequenzaRotem } from '../lib/rotemCalculator'
 import '../styles/risultato.css'
 import './CalcolatoriTI.css'
 import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
+import { SchedaPasso } from '../components/SchedaPasso.jsx'
 
 // Stesso raggruppamento per "categoria" di data/calcolatori-ti.json (20 calcolatori):
 // elettroliti ordinati per il campo "ordine" del JSON (flusso di un caso clinico), CPP
@@ -114,6 +116,7 @@ function Calcolatore({ titolo, children }) {
 
 export function CalcolatoriTI() {
   const { profile } = usePatientProfile()
+  const [sceltaAperta, setSceltaAperta] = useState(true)
   const [categoria, setCategoria] = useState('elettroliti')
 
   return (
@@ -124,23 +127,38 @@ export function CalcolatoriTI() {
         inserire manualmente ogni volta, tranne peso/età/sesso già noti dal profilo.
       </p>
 
+      <SezioniPieghevoli schede=".riquadro-calcolatore-ti" titolo=".calcolatore-titolo" inizio="gruppo" />
+
       <div className="layout-2col">
         <div className="col-input">
-          <IntestazionePasso numero={1} titolo="Categoria" />
-          <nav className="categorie-ti" role="tablist" aria-label="Categoria">
-            {CATEGORIE.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                role="tab"
-                aria-selected={c.id === categoria}
-                className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
-                onClick={() => setCategoria(c.id)}
-              >
-                {c.label}
-              </button>
-            ))}
-          </nav>
+          <SchedaPasso
+            numero={1}
+            titolo="Categoria"
+            aperta={sceltaAperta}
+            onApri={() => setSceltaAperta(true)}
+            sempreApertaDesktop
+            riassunto={
+              <span className="passo-riassunto-nome">{CATEGORIE.find((c) => c.id === categoria)?.label}</span>
+            }
+          >
+            <nav className="categorie-ti" role="tablist" aria-label="Categoria">
+              {CATEGORIE.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={c.id === categoria}
+                  className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
+                  onClick={() => {
+                    setCategoria(c.id)
+                    setSceltaAperta(false)
+                  }}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </nav>
+          </SchedaPasso>
         </div>
 
         <div className="col-output">

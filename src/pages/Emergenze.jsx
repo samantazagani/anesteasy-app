@@ -12,6 +12,7 @@ import { tipoPasso, risolviPassoFarmaco } from '../lib/emergenzaStepEngine'
 import '../styles/risultato.css'
 import './Emergenze.css'
 import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
+import { SchedaPasso } from '../components/SchedaPasso.jsx'
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
 
@@ -30,6 +31,7 @@ export function Emergenze() {
 
   const [emergenzaId, setEmergenzaId] = useState(emergenze[0].id)
   const [stepIndex, setStepIndex] = useState(0)
+  const [sceltaAperta, setSceltaAperta] = useState(true)
 
   const emergenza = emergenze.find((e) => e.id === emergenzaId)
   // Le emergenze "algoritmo_ramificato" (tachiaritmie/bradiaritmie peri-arresto) non hanno
@@ -39,6 +41,7 @@ export function Emergenze() {
 
   function selezionaEmergenza(id) {
     setEmergenzaId(id)
+    setSceltaAperta(false)
     setStepIndex(0)
   }
 
@@ -61,21 +64,31 @@ export function Emergenze() {
 
       <div className="layout-2col">
         <div className="col-input">
-          <IntestazionePasso numero={1} titolo="Emergenza" />
-          <div className="lista-emergenze" role="listbox" aria-label="Emergenza">
-            {emergenze.map((e) => (
-              <button
-                key={e.id}
-                type="button"
-                role="option"
-                aria-selected={e.id === emergenzaId}
-                className={e.id === emergenzaId ? 'emergenza-item selezionato' : 'emergenza-item'}
-                onClick={() => selezionaEmergenza(e.id)}
-              >
-                {e.titolo}
-              </button>
-            ))}
-        </div>
+          <SchedaPasso
+            numero={1}
+            titolo="Emergenza"
+            aperta={sceltaAperta}
+            onApri={() => setSceltaAperta(true)}
+            sempreApertaDesktop
+            riassunto={
+              <span className="passo-riassunto-nome">{emergenza.titolo}</span>
+            }
+          >
+            <div className="lista-emergenze" role="listbox" aria-label="Emergenza">
+              {emergenze.map((e) => (
+                <button
+                  key={e.id}
+                  type="button"
+                  role="option"
+                  aria-selected={e.id === emergenzaId}
+                  className={e.id === emergenzaId ? 'emergenza-item selezionato' : 'emergenza-item'}
+                  onClick={() => selezionaEmergenza(e.id)}
+                >
+                  {e.titolo}
+                </button>
+              ))}
+            </div>
+          </SchedaPasso>
         </div>
 
         <div className="col-output">

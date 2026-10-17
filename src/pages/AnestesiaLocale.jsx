@@ -14,6 +14,7 @@ import { MappaBlocchi } from '../components/MappaBlocchi.jsx'
 import '../styles/risultato.css'
 import './AnestesiaLocale.css'
 import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
+import { SchedaPasso } from '../components/SchedaPasso.jsx'
 
 const LABEL_TETTO = { peso: 'dose per kg', assoluto: 'tetto assoluto' }
 
@@ -28,6 +29,7 @@ export function AnestesiaLocale() {
 
   const [vista, setVista] = useState('dosi')
   const [anesteticoId, setAnesteticoId] = useState(anestetici[0].id)
+  const [sceltaAperta, setSceltaAperta] = useState(true)
   const [conAdrenalina, setConAdrenalina] = useState(false)
   const [concentrazioneInput, setConcentrazioneInput] = useState('')
   const [giaSomministratoInput, setGiaSomministratoInput] = useState('')
@@ -138,21 +140,31 @@ export function AnestesiaLocale() {
           Manuale del giovane anestesista, da verificare.
         </p>
 
-        <IntestazionePasso numero={1} titolo="Anestetico locale" />
-        <div className="lista-anestetici" role="listbox" aria-label="Anestetico locale">
-          {anestetici.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              role="option"
-              aria-selected={a.id === anesteticoId}
-              className={a.id === anesteticoId ? 'anestetico-item selezionato' : 'anestetico-item'}
-              onClick={() => setAnesteticoId(a.id)}
-            >
-              {a.nome}
-            </button>
-          ))}
-        </div>
+        <SchedaPasso
+          numero={1}
+          titolo="Anestetico locale"
+          aperta={sceltaAperta}
+          onApri={() => setSceltaAperta(true)}
+          riassunto={<span className="passo-riassunto-nome">{anestetico?.nome}</span>}
+        >
+          <div className="lista-anestetici" role="listbox" aria-label="Anestetico locale">
+            {anestetici.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                role="option"
+                aria-selected={a.id === anesteticoId}
+                className={a.id === anesteticoId ? 'anestetico-item selezionato' : 'anestetico-item'}
+                onClick={() => {
+                  setAnesteticoId(a.id)
+                  setSceltaAperta(false)
+                }}
+              >
+                {a.nome}
+              </button>
+            ))}
+          </div>
+        </SchedaPasso>
 
         {anestetico && (
           <>

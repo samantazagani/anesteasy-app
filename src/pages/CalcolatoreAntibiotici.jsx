@@ -8,6 +8,8 @@ import { calcolaDose, formatoRisultato } from '../lib/doseCalculator'
 import '../styles/risultato.css'
 import './CalcolatoreAntibiotici.css'
 import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
+import { SchedaPasso } from '../components/SchedaPasso.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
 
 const LABEL_PESO = { reale: 'peso reale', IBW: 'IBW (peso ideale)', LBW: 'LBW (peso magro)' }
 
@@ -31,6 +33,7 @@ export function CalcolatoreAntibiotici() {
   const antibiotici = antibioticiData.antibiotici
 
   const [antibioticoId, setAntibioticoId] = useState(antibiotici[0]?.id ?? null)
+  const [sceltaAperta, setSceltaAperta] = useState(true)
   const antibiotico = antibiotici.find((a) => a.id === antibioticoId) ?? null
 
   // Finche' il medico non assegna una fonte reale, la voce e' un placeholder di
@@ -75,6 +78,8 @@ export function CalcolatoreAntibiotici() {
         cefazolina, calcolata su peso reale.
       </p>
 
+      <SezioniPieghevoli schede=".riquadro-antibiotici" inizio="prima" />
+
       <SezioneProfilassi profilassi={profilassiData} profile={profile} categoria={categoria} />
       <SezioneTerapiaAntibiotica terapia={profilassiData.terapia_antibiotica} />
 
@@ -86,22 +91,37 @@ export function CalcolatoreAntibiotici() {
 
       <div className="layout-2col">
         <div className="col-input">
-          <IntestazionePasso numero={1} titolo="Antibiotico" />
-          <div className="lista-antibiotici" role="listbox" aria-label="Antibiotici">
-            {antibiotici.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                role="option"
-                aria-selected={a.id === antibioticoId}
-                className={a.id === antibioticoId ? 'antibiotico-item selezionato' : 'antibiotico-item'}
-                onClick={() => setAntibioticoId(a.id)}
-              >
-                {a.nome}
-                <span className="antibiotico-indicazione">{a.indicazione}</span>
-              </button>
-            ))}
-        </div>
+          <SchedaPasso
+            numero={1}
+            titolo="Antibiotico"
+            aperta={sceltaAperta}
+            onApri={() => setSceltaAperta(true)}
+            riassunto={
+              <>
+                <span className="passo-riassunto-nome">{antibiotico?.nome}</span>
+                <span className="passo-riassunto-dettaglio">{antibiotico?.indicazione}</span>
+              </>
+            }
+          >
+            <div className="lista-antibiotici" role="listbox" aria-label="Antibiotici">
+              {antibiotici.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  role="option"
+                  aria-selected={a.id === antibioticoId}
+                  className={a.id === antibioticoId ? 'antibiotico-item selezionato' : 'antibiotico-item'}
+                  onClick={() => {
+                    setAntibioticoId(a.id)
+                    setSceltaAperta(false)
+                  }}
+                >
+                  {a.nome}
+                  <span className="antibiotico-indicazione">{a.indicazione}</span>
+                </button>
+              ))}
+          </div>
+          </SchedaPasso>
         </div>
 
         <div className="col-output">

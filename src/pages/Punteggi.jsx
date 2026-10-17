@@ -22,6 +22,8 @@ import {
 import '../styles/risultato.css'
 import './Punteggi.css'
 import { IntestazionePasso } from '../components/IntestazionePasso.jsx'
+import { SezioniPieghevoli } from '../components/SezioniPieghevoli.jsx'
+import { SchedaPasso } from '../components/SchedaPasso.jsx'
 
 const CATEGORIE = [
   { id: 'vie_aeree', label: 'Vie aeree' },
@@ -70,6 +72,7 @@ function Punteggio({ titolo, children }) {
 
 export function Punteggi() {
   const { profile } = usePatientProfile()
+  const [sceltaAperta, setSceltaAperta] = useState(true)
   const [categoria, setCategoria] = useState('vie_aeree')
 
   return (
@@ -80,23 +83,38 @@ export function Punteggi() {
         (data/punteggi.json).
       </p>
 
+      <SezioniPieghevoli schede=".riquadro-punteggio" titolo=".punteggio-titolo" inizio="gruppo" />
+
       <div className="layout-2col">
         <div className="col-input">
-          <IntestazionePasso numero={1} titolo="Categoria" />
-          <nav className="categorie-p" role="tablist" aria-label="Categoria">
-            {CATEGORIE.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                role="tab"
-                aria-selected={c.id === categoria}
-                className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
-                onClick={() => setCategoria(c.id)}
-              >
-                {c.label}
-              </button>
-            ))}
-          </nav>
+          <SchedaPasso
+            numero={1}
+            titolo="Categoria"
+            aperta={sceltaAperta}
+            onApri={() => setSceltaAperta(true)}
+            sempreApertaDesktop
+            riassunto={
+              <span className="passo-riassunto-nome">{CATEGORIE.find((c) => c.id === categoria)?.label}</span>
+            }
+          >
+            <nav className="categorie-p" role="tablist" aria-label="Categoria">
+              {CATEGORIE.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={c.id === categoria}
+                  className={c.id === categoria ? 'categoria-item selezionato' : 'categoria-item'}
+                  onClick={() => {
+                    setCategoria(c.id)
+                    setSceltaAperta(false)
+                  }}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </nav>
+          </SchedaPasso>
         </div>
 
         <div className="col-output">
