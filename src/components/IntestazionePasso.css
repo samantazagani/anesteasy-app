@@ -16,12 +16,37 @@
   margin-top: 0;
 }
 
-/* la linea che chiude l'intestazione separa chiaramente una sezione dalla successiva */
-.passo-intestazione::after {
-  content: '';
+/* la linea separa chiaramente una sezione dalla successiva */
+.passo-linea {
   flex: 1;
+  min-width: 12px;
   height: 1px;
   background: var(--border-strong);
+}
+
+.passo-dettaglio {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-secondary);
+}
+
+.passo-intestazione-azione {
+  flex: none;
+  padding: 6px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .passo-numero {
@@ -37,10 +62,32 @@
   letter-spacing: 0;
 }
 
+/* Scheda di un passo: il passo come contenitore con sfondo e bordo (intestazione + contenuto) */
+.passo-scheda {
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.passo-scheda > .passo-intestazione {
+  margin: 0 0 14px;
+}
+
+/* il passo con il risultato e' quello che conta: bordo accent */
+.passo-scheda-risultato {
+  border-color: var(--accent-border);
+}
+
 /* dentro un contenitore flex con gap (colonne desktop, griglie) il margine sopra lo da' il gap */
 @media (min-width: 1024px) {
   .layout-2col > .col-input > .passo-intestazione,
   .layout-2col > .col-output > .passo-intestazione {
     margin: 0;
+  }
+
+  .layout-2col .passo-scheda {
+    margin-bottom: 0;
   }
 }

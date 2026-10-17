@@ -76,9 +76,6 @@
   color: var(--text-secondary);
 }
 
-.dettaglio-farmaco h3 {
-  margin-top: 0;
-}
 
 .contesti {
   display: flex;
@@ -144,4 +141,30 @@
   #calcolatore-dose {
     max-width: 1120px;
   }
+}
+
+/* Passi come schede: dentro la scheda il blocco non ha un secondo bordo e niente margini extra */
+.passo-scheda .ricerca-farmaco {
+  margin-bottom: 0;
+}
+
+.passo-scheda .risultato-dose {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.farmaco-scelto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.farmaco-scelto-nome {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
 }
