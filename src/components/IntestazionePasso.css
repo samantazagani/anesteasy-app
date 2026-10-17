@@ -1,14 +1,13 @@
 .passo-intestazione {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 26px 0 12px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  line-height: 1.25;
+  letter-spacing: -0.1px;
   color: var(--text);
 }
 
@@ -24,15 +23,19 @@
   background: var(--border-strong);
 }
 
-.passo-dettaglio {
+.passo-testi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
+}
+
+.passo-dettaglio {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
   color: var(--text-secondary);
 }
 
@@ -53,13 +56,23 @@
   display: inline-grid;
   place-items: center;
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: 13px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0;
+}
+
+/* dentro una scheda il bordo separa gia': niente linea, e l'azione va a destra */
+.passo-scheda .passo-linea {
+  display: none;
+}
+
+.passo-scheda .passo-intestazione-azione {
+  margin-left: auto;
 }
 
 /* Scheda di un passo: il passo come contenitore con sfondo e bordo (intestazione + contenuto) */

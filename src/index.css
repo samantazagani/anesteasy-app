@@ -68,6 +68,19 @@ body {
   min-height: 100svh;
 }
 
+/* Visibile solo ai lettori di schermo. */
+.solo-lettori {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Un display impostato da una classe (es. grid) non deve annullare l'attributo hidden. */
 [hidden] {
   display: none !important;

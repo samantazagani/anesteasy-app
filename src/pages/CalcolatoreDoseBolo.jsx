@@ -150,11 +150,13 @@ export function CalcolatoreDoseBolo() {
             />
             {sceltaAperta || !farmacoSelezionato ? (
               <div className="ricerca-farmaco">
-                <label htmlFor="ricerca-farmaco-input">Cerca farmaco</label>
+                <label htmlFor="ricerca-farmaco-input" className="solo-lettori">
+                  Cerca farmaco
+                </label>
                 <input
                   id="ricerca-farmaco-input"
                   type="search"
-                  placeholder="es. propofol"
+                  placeholder="Cerca farmaco, es. propofol"
                   value={ricerca}
                   onChange={(e) => setRicerca(e.target.value)}
                 />
